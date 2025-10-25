@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Proxy PHP-API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        h1 {
+            color: #58a6ff;
+            border-bottom: 2px solid #21262d;
+            padding-bottom: 10px;
+        }
+        .test-box {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #2ea043;
+        }
+        .result {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { color: #3fb950; }
+        .error { color: #f85149; }
+        .info { color: #58a6ff; }
+        .warning { color: #d29922; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Proxy Vite (/php-api)</h1>
+
+    <div class="test-box">
+        <h2>Test 1: API Test Endpoint</h2>
+        <button onclick="testAPI()">Tester /php-api/test.php</button>
+        <div id="result1" class="result"></div>
+    </div>
+
+    <div class="test-box">
+        <h2>Test 2: Inscription</h2>
+        <button onclick="testRegister()">Tester /php-api/auth/register.php</button>
+        <div id="result2" class="result"></div>
+    </div>
+
+    <div class="test-box">
+        <h2>Test 3: Login Admin</h2>
+        <button onclick="testLogin()">Tester /php-api/auth/login.php</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <div class="test-box">
+        <h2>Informations</h2>
+        <div id="info" class="result"></div>
+    </div>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info';
+            const timestamp = new Date().toLocaleTimeString();
+            el.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+        }
+
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function testAPI() {
+            clear('result1');
+            log('result1', '🔄 Test en cours...', 'info');
+            
+            try {
+                const response = await fetch('/php-api/test.php', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                log('result1', `Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                log('result1', `URL: ${response.url}`, 'info');
+                
+                const text = await response.text();
+                log('result1', `Réponse brute (${text.length} chars):`, 'info');
+                log('result1', text.substring(0, 500), 'info');
+                
+                try {
+                    const data = JSON.parse(text);
+                    log('result1', '\n✅ JSON valide:', 'success');
+                    log('result1', JSON.stringify(data, null, 2), 'success');
+                } catch (e) {
+                    log('result1', `❌ Erreur JSON: ${e.message}`, 'error');
+                }
+            } catch (error) {
+                log('result1', `❌ ERREUR RÉSEAU: ${error.message}`, 'error');
+                log('result1', `Type: ${error.name}`, 'error');
+                log('result1', '\n⚠️ Le proxy Vite ne fonctionne pas ou Apache est arrêté', 'warning');
+            }
+        }
+
+        async function testRegister() {
+            clear('result2');
+            log('result2', '🔄 Test inscription...', 'info');
+            
+            const email = `test${Date.now()}@example.com`;
+            const body = {
+                username: 'TestProxy',
+                email: email,
+                password: 'test1234'
+            };
+            
+            log('result2', `Email: ${email}`, 'info');
+            log('result2', `Body: ${JSON.stringify(body, null, 2)}`, 'info');
+            
+            try {
+                const response = await fetch('/php-api/auth/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('result2', `\nStatus: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                log('result2', `URL: ${response.url}`, 'info');
+                
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    if (response.ok) {
+                        log('result2', '\n✅ INSCRIPTION RÉUSSIE!', 'success');
+                        log('result2', `Utilisateur créé:`, 'success');
+                        log('result2', JSON.stringify(data.user, null, 2), 'success');
+                    } else {
+                        log('result2', `\n❌ Erreur API: ${data.error}`, 'error');
+                    }
+                } catch (e) {
+                    log('result2', `\n❌ Réponse non-JSON:`, 'error');
+                    log('result2', text.substring(0, 500), 'error');
+                }
+            } catch (error) {
+                log('result2', `\n❌ ERREUR RÉSEAU: ${error.message}`, 'error');
+                log('result2', '\n⚠️ Causes possibles:', 'warning');
+                log('result2', '  - Proxy Vite non configuré', 'warning');
+                log('result2', '  - Apache non démarré', 'warning');
+                log('result2', '  - Conflit avec routes Hono (/api)', 'warning');
+            }
+        }
+
+        async function testLogin() {
+            clear('result3');
+            log('result3', '🔄 Test login admin...', 'info');
+            
+            const body = {
+                email: 'admin@gamezone.fr',
+                password: 'demo123'
+            };
+            
+            try {
+                const response = await fetch('/php-api/auth/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('result3', `Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                if (response.ok) {
+                    log('result3', '\n✅ LOGIN RÉUSSI!', 'success');
+                    log('result3', `Admin: ${data.user.username} (${data.user.role})`, 'success');
+                    log('result3', JSON.stringify(data.user, null, 2), 'success');
+                } else {
+                    log('result3', `\n❌ Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log('result3', `\n❌ ERREUR: ${error.message}`, 'error');
+            }
+        }
+
+        // Afficher les infos au chargement
+        window.onload = () => {
+            const info = document.getElementById('info');
+            info.innerHTML = `
+<span class="info">🌐 Origin: ${window.location.origin}</span>
+<span class="info">📍 URL: ${window.location.href}</span>
+<span class="info">🔧 Port: ${window.location.port}</span>
+
+<span class="warning">⚠️ IMPORTANT:</span>
+<span class="warning">Cette page doit être servie par Vite (port 4000)</span>
+<span class="warning">Ouvrez: http://localhost:4000/TEST_PROXY.html</span>
+
+<span class="success">✅ Configuration attendue:</span>
+<span class="success">  - Proxy Vite: /php-api → http://localhost/projet%20ismo/api</span>
+<span class="success">  - Routes Hono: /api (pas de conflit)</span>
+<span class="success">  - Same-origin requests (pas de CORS/CSP)</span>
+            `;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vidéo 1 - Correction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 { color: #a855f7; }
+        .test-box {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #a855f7;
+        }
+        video {
+            width: 100%;
+            max-width: 600px;
+            border: 3px solid #22c55e;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+        .success { color: #22c55e; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+        button {
+            background: #a855f7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #9333ea; }
+        code {
+            background: #1f2937;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Vidéo 1 - Solutions de Correction</h1>
+
+    <!-- Solution 1: Test direct -->
+    <div class="test-box">
+        <h2>Solution 1: Vidéo avec Nom Original</h2>
+        <p>Fichier: <code>Cyber_Arcade_Neon_Ember.mp4</code></p>
+        <video id="video-original" controls muted>
+            <source src="/images/video/Cyber_Arcade_Neon_Ember.mp4" type="video/mp4">
+        </video>
+        <div id="status-original"></div>
+        <button onclick="testVideo('video-original', 'status-original')">🔄 Retester</button>
+        <button onclick="document.getElementById('video-original').play()">▶️ Lecture</button>
+    </div>
+
+    <!-- Solution 2: Test avec timestamp pour forcer le reload -->
+    <div class="test-box">
+        <h2>Solution 2: Avec Cache Busting</h2>
+        <p>Fichier: <code>Cyber_Arcade_Neon_Ember.mp4?t=[timestamp]</code></p>
+        <p style="font-size: 14px; color: #999;">Ajoute un paramètre pour forcer le rechargement</p>
+        <video id="video-cache" controls muted></video>
+        <div id="status-cache"></div>
+        <button onclick="loadWithCacheBusting()">🔄 Charger avec Cache Busting</button>
+    </div>
+
+    <!-- Solution 3: Nouveau nom -->
+    <div class="test-box">
+        <h2>Solution 3: Nouveau Nom de Fichier</h2>
+        <p>Fichier: <code>cyber-arcade-neon.mp4</code></p>
+        <p style="font-size: 14px; color: #999;">Copie avec nom simplifié (si créée)</p>
+        <video id="video-new" controls muted>
+            <source src="/images/video/cyber-arcade-neon.mp4" type="video/mp4">
+        </video>
+        <div id="status-new"></div>
+        <button onclick="testVideo('video-new', 'status-new')">🔄 Retester</button>
+    </div>
+
+    <!-- Infos debug -->
+    <div class="test-box" style="border-color: #3b82f6;">
+        <h2>📊 Diagnostic</h2>
+        <div id="debug-info"></div>
+        <button onclick="runDiagnostic()">🔍 Lancer Diagnostic</button>
+    </div>
+
+    <script>
+        function testVideo(videoId, statusId) {
+            const video = document.getElementById(videoId);
+            const status = document.getElementById(statusId);
+
+            if (!video) {
+                status.innerHTML = '<span class="error">❌ Élément vidéo introuvable</span>';
+                return;
+            }
+
+            status.innerHTML = '⏳ Test en cours...';
+
+            // Reset
+            video.load();
+
+            // Test chargement
+            video.onloadeddata = () => {
+                status.innerHTML = '<span class="success">✅ Vidéo chargée avec succès!</span>';
+                console.log('✅ Vidéo OK:', videoId);
+            };
+
+            video.onerror = (e) => {
+                const error = video.error;
+                let errorMsg = 'Erreur inconnue';
+                if (error) {
+                    switch(error.code) {
+                        case 1: errorMsg = 'Chargement abandonné'; break;
+                        case 2: errorMsg = 'Erreur réseau'; break;
+                        case 3: errorMsg = 'Erreur de décodage'; break;
+                        case 4: errorMsg = 'Format non supporté'; break;
+                    }
+                }
+                status.innerHTML = `<span class="error">❌ ${errorMsg}</span>`;
+                console.error('❌ Erreur vidéo:', videoId, error);
+            };
+        }
+
+        function loadWithCacheBusting() {
+            const video = document.getElementById('video-cache');
+            const status = document.getElementById('status-cache');
+            const timestamp = new Date().getTime();
+            
+            status.innerHTML = '⏳ Chargement avec cache busting...';
+            
+            video.innerHTML = `<source src="/images/video/Cyber_Arcade_Neon_Ember.mp4?t=${timestamp}" type="video/mp4">`;
+            video.load();
+
+            video.onloadeddata = () => {
+                status.innerHTML = '<span class="success">✅ Chargé avec succès!</span>';
+                console.log('✅ Cache busting OK');
+            };
+
+            video.onerror = (e) => {
+                status.innerHTML = '<span class="error">❌ Échec même avec cache busting</span>';
+                console.error('❌ Cache busting échec');
+            };
+        }
+
+        function runDiagnostic() {
+            const debug = document.getElementById('debug-info');
+            let html = '<h3>Résultats du diagnostic:</h3>';
+
+            // Test 1: Fetch de la vidéo
+            html += '<p>⏳ Test de fetch...</p>';
+            debug.innerHTML = html;
+
+            fetch('/images/video/Cyber_Arcade_Neon_Ember.mp4')
+                .then(response => {
+                    console.log('Fetch response:', response);
+                    const contentType = response.headers.get('content-type');
+                    
+                    html += `<p><strong>Status HTTP:</strong> ${response.status} ${response.statusText}</p>`;
+                    html += `<p><strong>Content-Type:</strong> <code>${contentType}</code></p>`;
+                    
+                    if (contentType && contentType.includes('video')) {
+                        html += '<p class="success">✅ Content-Type correct!</p>';
+                    } else if (contentType && contentType.includes('html')) {
+                        html += '<p class="error">❌ Serveur retourne du HTML (404?)</p>';
+                        html += '<p><strong>Solution:</strong> La vidéo n\'est pas trouvée par le serveur</p>';
+                    } else {
+                        html += '<p class="error">⚠️ Content-Type inattendu</p>';
+                    }
+
+                    html += `<p><strong>Taille:</strong> ${response.headers.get('content-length') || 'Inconnue'}</p>`;
+                    
+                    debug.innerHTML = html;
+                })
+                .catch(error => {
+                    html += `<p class="error">❌ Erreur fetch: ${error.message}</p>`;
+                    debug.innerHTML = html;
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        // Tests automatiques au chargement
+        window.onload = () => {
+            console.log('🔧 Page de correction vidéo chargée');
+            
+            // Test automatique après 1 seconde
+            setTimeout(() => {
+                testVideo('video-original', 'status-original');
+                testVideo('video-new', 'status-new');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

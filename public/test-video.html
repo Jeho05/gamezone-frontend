@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vidéos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        h1 { color: #a855f7; text-align: center; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .video-test {
+            margin: 30px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            border: 2px solid #a855f7;
+        }
+        .video-test h2 {
+            color: #ec4899;
+            margin-top: 0;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            border: 3px solid #22c55e;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #22c55e; color: white; }
+        .error { background: #ef4444; color: white; }
+        .info { background: #3b82f6; color: white; }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background: #a855f7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #9333ea;
+        }
+        .info-box {
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info-box p {
+            margin: 5px 0;
+        }
+        code {
+            background: #1f2937;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Test des Vidéos</h1>
+
+        <!-- Test 1: Cyber Arcade -->
+        <div class="video-test">
+            <h2>Test 1: Cyber Arcade Neon Ember</h2>
+            <div class="info-box">
+                <p><strong>Fichier:</strong> <code>Cyber_Arcade_Neon_Ember.mp4</code></p>
+                <p><strong>Taille:</strong> 1.2 MB</p>
+                <p><strong>Utilisé dans:</strong> Page d'accueil</p>
+            </div>
+            <video id="video1" controls muted>
+                <source src="/images/video/Cyber_Arcade_Neon_Ember.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+            <div id="status1" class="status info">⏳ Chargement...</div>
+            <div class="controls">
+                <button onclick="playVideo('video1')">▶️ Lecture</button>
+                <button onclick="pauseVideo('video1')">⏸️ Pause</button>
+                <button onclick="reloadVideo('video1')">🔄 Recharger</button>
+            </div>
+        </div>
+
+        <!-- Test 2: Arcade Welcome -->
+        <div class="video-test">
+            <h2>Test 2: Arcade Welcome Manager Loop</h2>
+            <div class="info-box">
+                <p><strong>Fichier:</strong> <code>Arcade_Welcome_Manager_Loop.mp4</code></p>
+                <p><strong>Taille:</strong> 1.4 MB</p>
+                <p><strong>Utilisé dans:</strong> Page Login</p>
+            </div>
+            <video id="video2" controls muted>
+                <source src="/images/video/Arcade_Welcome_Manager_Loop.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+            <div id="status2" class="status info">⏳ Chargement...</div>
+            <div class="controls">
+                <button onclick="playVideo('video2')">▶️ Lecture</button>
+                <button onclick="pauseVideo('video2')">⏸️ Pause</button>
+                <button onclick="reloadVideo('video2')">🔄 Recharger</button>
+            </div>
+        </div>
+
+        <!-- Test 3: Kling Animation -->
+        <div class="video-test">
+            <h2>Test 3: Kling Image to Video</h2>
+            <div class="info-box">
+                <p><strong>Fichier:</strong> <code>kling_20251010_Image_to_Video.mp4</code></p>
+                <p><strong>Taille:</strong> 13.3 MB</p>
+                <p><strong>Utilisé dans:</strong> Page Register</p>
+                <p><strong>⚠️ Note:</strong> Fichier lourd, peut prendre quelques secondes</p>
+            </div>
+            <video id="video3" controls muted>
+                <source src="/images/video/kling_20251010_Image_to_Video_Use_the_up_4875_0.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+            <div id="status3" class="status info">⏳ Chargement...</div>
+            <div class="controls">
+                <button onclick="playVideo('video3')">▶️ Lecture</button>
+                <button onclick="pauseVideo('video3')">⏸️ Pause</button>
+                <button onclick="reloadVideo('video3')">🔄 Recharger</button>
+            </div>
+        </div>
+
+        <!-- Informations de débogage -->
+        <div class="video-test" style="border-color: #3b82f6;">
+            <h2>📊 Informations de Débogage</h2>
+            <div class="info-box">
+                <p><strong>Console:</strong> Ouvrez F12 pour voir les logs détaillés</p>
+                <p><strong>Network:</strong> Vérifiez l'onglet Network (F12) pour voir le chargement</p>
+                <p id="browser-info"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🎬 Test des vidéos');
+        console.log('URL de base:', window.location.origin);
+
+        // Détection du navigateur
+        const browserInfo = document.getElementById('browser-info');
+        browserInfo.innerHTML = `<strong>Navigateur:</strong> ${navigator.userAgent}`;
+
+        // Fonction pour tester chaque vidéo
+        function setupVideoTest(videoId, statusId) {
+            const video = document.getElementById(videoId);
+            const status = document.getElementById(statusId);
+
+            if (!video) {
+                console.error(`❌ Vidéo ${videoId} non trouvée`);
+                return;
+            }
+
+            // Event: Vidéo peut commencer à être lue
+            video.addEventListener('loadeddata', () => {
+                console.log(`✅ ${videoId}: Données chargées`);
+                status.className = 'status success';
+                status.textContent = '✅ Vidéo chargée - Prête à lire';
+            });
+
+            // Event: Métadonnées chargées
+            video.addEventListener('loadedmetadata', () => {
+                console.log(`📊 ${videoId}: Durée = ${video.duration}s, ${video.videoWidth}x${video.videoHeight}`);
+            });
+
+            // Event: Lecture en cours
+            video.addEventListener('play', () => {
+                console.log(`▶️ ${videoId}: Lecture démarrée`);
+            });
+
+            // Event: Erreur
+            video.addEventListener('error', (e) => {
+                console.error(`❌ ${videoId}: Erreur de chargement`, e);
+                console.error('Détails erreur:', video.error);
+                status.className = 'status error';
+                status.textContent = `❌ Erreur: ${getErrorMessage(video.error)}`;
+            });
+
+            // Event: En attente de données
+            video.addEventListener('waiting', () => {
+                console.log(`⏳ ${videoId}: En attente de données...`);
+            });
+
+            // Event: Données en cours de chargement
+            video.addEventListener('progress', () => {
+                const buffered = video.buffered;
+                if (buffered.length > 0) {
+                    const percent = (buffered.end(0) / video.duration) * 100;
+                    console.log(`📥 ${videoId}: ${percent.toFixed(0)}% chargé`);
+                }
+            });
+        }
+
+        // Messages d'erreur lisibles
+        function getErrorMessage(error) {
+            if (!error) return 'Erreur inconnue';
+            switch(error.code) {
+                case 1: return 'Chargement abandonné';
+                case 2: return 'Erreur réseau';
+                case 3: return 'Erreur de décodage';
+                case 4: return 'Format non supporté';
+                default: return `Erreur code ${error.code}`;
+            }
+        }
+
+        // Fonctions de contrôle
+        function playVideo(id) {
+            const video = document.getElementById(id);
+            video.play().catch(e => {
+                console.error(`Erreur lecture ${id}:`, e);
+                alert('Erreur lors de la lecture: ' + e.message);
+            });
+        }
+
+        function pauseVideo(id) {
+            const video = document.getElementById(id);
+            video.pause();
+        }
+
+        function reloadVideo(id) {
+            const video = document.getElementById(id);
+            const status = document.getElementById(id.replace('video', 'status'));
+            status.className = 'status info';
+            status.textContent = '🔄 Rechargement...';
+            video.load();
+        }
+
+        // Initialiser les tests
+        setupVideoTest('video1', 'status1');
+        setupVideoTest('video2', 'status2');
+        setupVideoTest('video3', 'status3');
+
+        // Test des URLs
+        console.log('🔗 URLs des vidéos:');
+        console.log('1. Cyber Arcade:', '/images/video/Cyber_Arcade_Neon_Ember.mp4');
+        console.log('2. Arcade Loop:', '/images/video/Arcade_Welcome_Manager_Loop.mp4');
+        console.log('3. Kling:', '/images/video/kling_20251010_Image_to_Video_Use_the_up_4875_0.mp4');
+
+        // Tester l'accessibilité des fichiers
+        setTimeout(() => {
+            console.log('📊 État des vidéos après 2s:');
+            ['video1', 'video2', 'video3'].forEach(id => {
+                const video = document.getElementById(id);
+                console.log(`${id}:`, {
+                    readyState: video.readyState,
+                    networkState: video.networkState,
+                    error: video.error ? video.error.code : 'aucune'
+                });
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

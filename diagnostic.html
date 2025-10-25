@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 GameZone - Diagnostic Complet</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Consolas', 'Monaco', monospace;
+      background: #0a0a0a;
+      color: #00ff00;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { 
+      color: #00ffff; 
+      margin-bottom: 20px; 
+      font-size: 2rem;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    h2 { 
+      color: #ffff00; 
+      margin: 30px 0 15px;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #ffff00;
+      padding-bottom: 5px;
+    }
+    .section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .test-item {
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #666;
+      background: #0f0f0f;
+    }
+    .success { border-left-color: #00ff00; color: #00ff00; }
+    .error { border-left-color: #ff0000; color: #ff0000; }
+    .warning { border-left-color: #ffaa00; color: #ffaa00; }
+    .info { border-left-color: #00aaff; color: #00aaff; }
+    .label { 
+      display: inline-block; 
+      width: 300px; 
+      font-weight: bold;
+    }
+    .value { color: #fff; }
+    button {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    button:hover { background: #00cc00; }
+    .copy-btn {
+      background: #00aaff;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+    #errorLog {
+      background: #1a0000;
+      border: 2px solid #ff0000;
+      padding: 15px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+    .timestamp { color: #888; font-size: 0.85rem; }
+    pre {
+      background: #000;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      color: #fff;
+      margin: 10px 0;
+    }
+    .progress {
+      width: 100%;
+      height: 30px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff00, #00aa00);
+      width: 0%;
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: bold;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .stat-box {
+      background: #1a1a1a;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .stat-label {
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 DIAGNOSTIC COMPLET - GAMEZONE</h1>
+    
+    <div class="section">
+      <button onclick="runAllTests()">▶ LANCER TOUS LES TESTS</button>
+      <button onclick="testAssets()">📦 Tester Assets</button>
+      <button onclick="testReactApp()">⚛️ Tester React</button>
+      <button onclick="testRouter()">🔀 Tester Router</button>
+      <button onclick="clearResults()">🗑️ Effacer</button>
+      <button class="copy-btn" onclick="copyReport()">📋 Copier Rapport</button>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat-box">
+        <div class="stat-label">Tests Réussis</div>
+        <div class="stat-value success" id="successCount">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Tests Échoués</div>
+        <div class="stat-value error" id="errorCount">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Avertissements</div>
+        <div class="stat-value warning" id="warningCount">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Temps Écoulé</div>
+        <div class="stat-value info" id="timeElapsed">0s</div>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progress">0%</div>
+    </div>
+
+    <div id="results"></div>
+    
+    <div id="errorLog" style="display: none;">
+      <h2>📋 Log des Erreurs</h2>
+      <div id="errorContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let startTime;
+    let stats = { success: 0, error: 0, warning: 0 };
+    let allErrors = [];
+    let allResults = [];
+
+    // Intercepter TOUTES les erreurs
+    window.addEventListener('error', (e) => {
+      logError('GLOBAL ERROR', `${e.message} at ${e.filename}:${e.lineno}:${e.colno}`);
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      logError('PROMISE REJECTION', e.reason);
+    });
+
+    console.error = (function(originalError) {
+      return function(...args) {
+        logError('CONSOLE ERROR', args.join(' '));
+        originalError.apply(console, args);
+      };
+    })(console.error);
+
+    function logError(type, message) {
+      const timestamp = new Date().toLocaleTimeString();
+      allErrors.push({ timestamp, type, message });
+      
+      const errorLog = document.getElementById('errorLog');
+      const errorContent = document.getElementById('errorContent');
+      errorLog.style.display = 'block';
+      
+      errorContent.innerHTML += `
+        <div class="error">
+          <span class="timestamp">[${timestamp}]</span>
+          <strong>${type}:</strong> ${message}
+        </div>
+      `;
+      
+      updateStats('error');
+    }
+
+    function log(message, type = 'info') {
+      const item = document.createElement('div');
+      item.className = `test-item ${type}`;
+      item.innerHTML = message;
+      document.getElementById('results').appendChild(item);
+      
+      allResults.push({ type, message });
+      
+      if (type === 'success') updateStats('success');
+      if (type === 'warning') updateStats('warning');
+      if (type === 'error') updateStats('error');
+    }
+
+    function updateStats(type) {
+      stats[type]++;
+      document.getElementById(`${type}Count`).textContent = stats[type];
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const total = stats.success + stats.error + stats.warning;
+      const percent = Math.min((total / 30) * 100, 100); // Assume 30 tests
+      const progressBar = document.getElementById('progress');
+      progressBar.style.width = percent + '%';
+      progressBar.textContent = Math.round(percent) + '%';
+      
+      if (startTime) {
+        const elapsed = Math.round((Date.now() - startTime) / 1000);
+        document.getElementById('timeElapsed').textContent = elapsed + 's';
+      }
+    }
+
+    function clearResults() {
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('errorContent').innerHTML = '';
+      document.getElementById('errorLog').style.display = 'none';
+      stats = { success: 0, error: 0, warning: 0 };
+      allErrors = [];
+      allResults = [];
+      document.getElementById('successCount').textContent = '0';
+      document.getElementById('errorCount').textContent = '0';
+      document.getElementById('warningCount').textContent = '0';
+      document.getElementById('timeElapsed').textContent = '0s';
+      document.getElementById('progress').style.width = '0%';
+      document.getElementById('progress').textContent = '0%';
+    }
+
+    async function runAllTests() {
+      clearResults();
+      startTime = Date.now();
+      
+      log('<h2>🚀 DÉMARRAGE DES TESTS COMPLETS</h2>', 'info');
+      
+      await testEnvironment();
+      await testAssets();
+      await testReactApp();
+      await testRouter();
+      await testNetwork();
+      
+      log('<h2>✅ TESTS TERMINÉS</h2>', 'success');
+      generateSummary();
+    }
+
+    async function testEnvironment() {
+      log('<h2>🌐 TEST ENVIRONNEMENT</h2>', 'info');
+      
+      // Navigateur
+      log(`<span class="label">Navigateur:</span> <span class="value">${navigator.userAgent}</span>`, 'info');
+      log(`<span class="label">Langue:</span> <span class="value">${navigator.language}</span>`, 'info');
+      log(`<span class="label">Plateforme:</span> <span class="value">${navigator.platform}</span>`, 'info');
+      log(`<span class="label">Online:</span> <span class="value">${navigator.onLine ? '✅ Oui' : '❌ Non'}</span>`, navigator.onLine ? 'success' : 'error');
+      
+      // URL
+      log(`<span class="label">URL:</span> <span class="value">${window.location.href}</span>`, 'info');
+      log(`<span class="label">Pathname:</span> <span class="value">${window.location.pathname}</span>`, 'info');
+      log(`<span class="label">Base Path:</span> <span class="value">/gamezone/</span>`, 'info');
+      
+      // Écran
+      log(`<span class="label">Résolution:</span> <span class="value">${window.screen.width}x${window.screen.height}</span>`, 'info');
+      log(`<span class="label">Viewport:</span> <span class="value">${window.innerWidth}x${window.innerHeight}</span>`, 'info');
+      
+      // Storage
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        log(`<span class="label">LocalStorage:</span> <span class="value">✅ Disponible</span>`, 'success');
+      } catch (e) {
+        log(`<span class="label">LocalStorage:</span> <span class="value">❌ Indisponible</span>`, 'error');
+      }
+      
+      // Console
+      log(`<span class="label">Console:</span> <span class="value">${typeof console !== 'undefined' ? '✅ Disponible' : '❌ Indisponible'}</span>`, typeof console !== 'undefined' ? 'success' : 'error');
+    }
+
+    async function testAssets() {
+      log('<h2>📦 TEST DES ASSETS</h2>', 'info');
+      
+      const assets = [
+        '/gamezone/assets/index-BObHIKTZ.js',
+        '/gamezone/assets/react-vendor-Ct9RIpkg.js',
+        '/gamezone/assets/ui-vendor-Bm7JQX2T.js',
+        '/gamezone/assets/index-BNvCO-8l.css',
+        '/gamezone/index.html'
+      ];
+      
+      for (const asset of assets) {
+        try {
+          const response = await fetch(asset, { method: 'HEAD' });
+          if (response.ok) {
+            const size = response.headers.get('content-length');
+            const type = response.headers.get('content-type');
+            log(`<span class="label">✅ ${asset}</span> <span class="value">(${size ? Math.round(size/1024) + 'KB' : 'unknown'}, ${type})</span>`, 'success');
+          } else {
+            log(`<span class="label">❌ ${asset}</span> <span class="value">Status: ${response.status}</span>`, 'error');
+          }
+        } catch (error) {
+          log(`<span class="label">❌ ${asset}</span> <span class="value">Error: ${error.message}</span>`, 'error');
+        }
+      }
+    }
+
+    async function testReactApp() {
+      log('<h2>⚛️ TEST REACT APPLICATION</h2>', 'info');
+      
+      // DOM
+      const root = document.getElementById('root');
+      if (root) {
+        log(`<span class="label">Root Element:</span> <span class="value">✅ Trouvé</span>`, 'success');
+        log(`<span class="label">Root Children:</span> <span class="value">${root.children.length} enfant(s)</span>`, root.children.length > 0 ? 'success' : 'warning');
+        log(`<span class="label">Root innerHTML:</span> <span class="value">${root.innerHTML.length} caractères</span>`, root.innerHTML.length > 0 ? 'success' : 'warning');
+      } else {
+        log(`<span class="label">Root Element:</span> <span class="value">❌ Introuvable</span>`, 'error');
+      }
+      
+      // React
+      if (typeof React !== 'undefined') {
+        log(`<span class="label">React:</span> <span class="value">✅ Chargé (v${React.version || 'unknown'})</span>`, 'success');
+      } else {
+        log(`<span class="label">React:</span> <span class="value">⚠️ Non détecté dans window (normal avec modules)</span>`, 'warning');
+      }
+      
+      // ReactDOM
+      if (typeof ReactDOM !== 'undefined') {
+        log(`<span class="label">ReactDOM:</span> <span class="value">✅ Chargé</span>`, 'success');
+      } else {
+        log(`<span class="label">ReactDOM:</span> <span class="value">⚠️ Non détecté dans window (normal avec modules)</span>`, 'warning');
+      }
+    }
+
+    async function testRouter() {
+      log('<h2>🔀 TEST REACT ROUTER</h2>', 'info');
+      
+      // Router dans window
+      if (typeof ReactRouterDOM !== 'undefined') {
+        log(`<span class="label">React Router DOM:</span> <span class="value">✅ Chargé</span>`, 'success');
+      } else {
+        log(`<span class="label">React Router DOM:</span> <span class="value">⚠️ Non détecté dans window (normal avec modules)</span>`, 'warning');
+      }
+      
+      // Test navigation
+      const routes = [
+        '/gamezone/',
+        '/gamezone/auth/login',
+        '/gamezone/auth/register',
+        '/gamezone/player/dashboard',
+        '/gamezone/admin/dashboard'
+      ];
+      
+      log(`<span class="label">Routes configurées:</span> <span class="value">${routes.length} routes</span>`, 'info');
+    }
+
+    async function testNetwork() {
+      log('<h2>🌐 TEST RÉSEAU</h2>', 'info');
+      
+      // Test API
+      const apiBase = 'http://ismo.gamer.gd/api';
+      try {
+        log(`<span class="label">Test API Base:</span> <span class="value">${apiBase}</span>`, 'info');
+        log(`<span class="label">Note:</span> <span class="value">Test CORS désactivé (nécessite backend actif)</span>`, 'warning');
+      } catch (error) {
+        log(`<span class="label">API Error:</span> <span class="value">${error.message}</span>`, 'error');
+      }
+      
+      // Performance
+      if (performance && performance.timing) {
+        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+        log(`<span class="label">Page Load Time:</span> <span class="value">${loadTime}ms</span>`, loadTime < 3000 ? 'success' : 'warning');
+      }
+    }
+
+    function generateSummary() {
+      log('<h2>📊 RÉSUMÉ FINAL</h2>', 'info');
+      
+      const total = stats.success + stats.error + stats.warning;
+      const successRate = total > 0 ? Math.round((stats.success / total) * 100) : 0;
+      
+      log(`<pre>
+╔════════════════════════════════════╗
+║     RÉSUMÉ DES TESTS              ║
+╠════════════════════════════════════╣
+║ ✅ Réussis     : ${String(stats.success).padStart(3)} tests    ║
+║ ❌ Échoués     : ${String(stats.error).padStart(3)} tests    ║
+║ ⚠️  Avertissements : ${String(stats.warning).padStart(3)} tests    ║
+║ 📊 Total       : ${String(total).padStart(3)} tests    ║
+║ 📈 Taux succès : ${String(successRate).padStart(3)}%        ║
+╚════════════════════════════════════╝
+</pre>`, successRate > 80 ? 'success' : successRate > 50 ? 'warning' : 'error');
+      
+      if (allErrors.length > 0) {
+        log(`<h3>❌ ${allErrors.length} ERREUR(S) DÉTECTÉE(S)</h3>`, 'error');
+      } else {
+        log(`<h3>✅ AUCUNE ERREUR DÉTECTÉE</h3>`, 'success');
+      }
+    }
+
+    function copyReport() {
+      let report = '=== RAPPORT DIAGNOSTIC GAMEZONE ===\n\n';
+      report += `Date: ${new Date().toLocaleString()}\n`;
+      report += `URL: ${window.location.href}\n\n`;
+      report += `STATISTIQUES:\n`;
+      report += `- Tests réussis: ${stats.success}\n`;
+      report += `- Tests échoués: ${stats.error}\n`;
+      report += `- Avertissements: ${stats.warning}\n\n`;
+      
+      if (allErrors.length > 0) {
+        report += `ERREURS (${allErrors.length}):\n`;
+        allErrors.forEach(err => {
+          report += `[${err.timestamp}] ${err.type}: ${err.message}\n`;
+        });
+        report += '\n';
+      }
+      
+      report += `RÉSULTATS DÉTAILLÉS:\n`;
+      allResults.forEach(res => {
+        const cleanMsg = res.message.replace(/<[^>]*>/g, '');
+        report += `[${res.type.toUpperCase()}] ${cleanMsg}\n`;
+      });
+      
+      navigator.clipboard.writeText(report).then(() => {
+        alert('✅ Rapport copié dans le presse-papier !');
+      }).catch(err => {
+        alert('❌ Erreur de copie: ' + err.message);
+      });
+    }
+
+    // Auto-start minimal test
+    window.addEventListener('load', () => {
+      log('<h2>🎯 Page de diagnostic chargée</h2>', 'success');
+      log('<p>Cliquez sur "LANCER TOUS LES TESTS" pour commencer le diagnostic complet.</p>', 'info');
+    });
+  </script>
+</body>
+</html>

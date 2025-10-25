@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Images et Vidéos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        h1, h2 {
+            color: #a855f7;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .success { background: #22c55e; color: white; }
+        .error { background: #ef4444; color: white; }
+        .loading { background: #eab308; color: black; }
+        img {
+            max-width: 200px;
+            margin: 10px;
+            border: 2px solid #a855f7;
+            border-radius: 8px;
+        }
+        video {
+            max-width: 400px;
+            margin: 10px;
+            border: 2px solid #ec4899;
+            border-radius: 8px;
+        }
+        .image-container, .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .item {
+            text-align: center;
+        }
+        .item p {
+            font-size: 12px;
+            color: #999;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Test Chargement Images et Vidéos</h1>
+    
+    <div class="test-section">
+        <h2>📹 Test Vidéos <span id="video-status" class="status loading">Chargement...</span></h2>
+        <div class="video-container" id="videos"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 Test Photos Admin <span id="admin-status" class="status loading">Chargement...</span></h2>
+        <div class="image-container" id="admin-photos"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎮 Test Objets Gaming <span id="objects-status" class="status loading">Chargement...</span></h2>
+        <div class="image-container" id="gaming-objects"></div>
+    </div>
+
+    <script>
+        // Vidéos à tester
+        const videos = [
+            '/images/video/Arcade_Welcome_Manager_Loop.mp4',
+            '/images/video/Cyber_Arcade_Neon_Ember.mp4',
+            '/images/video/kling_20251010_Image_to_Video_Use_the_up_4875_0.mp4'
+        ];
+
+        // Photos admin à tester
+        const adminPhotos = [
+            '/images/gaming tof/Boss/ismo_PDG.jpg',
+            '/images/gaming tof/Boss/ismo_Pro.jpg',
+            '/images/gaming tof/Boss/ismo_décontracté_pro.jpg',
+            '/images/gaming tof/Boss/ismo_pro1.jpg'
+        ];
+
+        // Objets gaming à tester
+        const gamingObjects = [
+            '/images/objet/Goku-Blue-PNG-Photo.png',
+            '/images/objet/Kratos-PNG-Clipart.png',
+            '/images/objet/Console-PNG-Clipart.png',
+            '/images/objet/Dragon-Ball-Z-Logo-PNG-HD.png',
+            '/images/objet/Naruto-Ashura-Transparent-PNG.png',
+            '/images/objet/FIFA-Logo-PNG-Isolated-Image.png'
+        ];
+
+        // Fonction de test pour vidéos
+        function testVideos() {
+            const container = document.getElementById('videos');
+            const status = document.getElementById('video-status');
+            let loaded = 0;
+            let errors = 0;
+
+            videos.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                
+                const video = document.createElement('video');
+                video.src = src;
+                video.controls = true;
+                video.muted = true;
+                
+                const name = document.createElement('p');
+                name.textContent = src.split('/').pop();
+                
+                video.onloadeddata = () => {
+                    loaded++;
+                    updateStatus();
+                };
+                
+                video.onerror = () => {
+                    errors++;
+                    video.style.borderColor = '#ef4444';
+                    name.style.color = '#ef4444';
+                    name.textContent += ' ❌';
+                    updateStatus();
+                };
+
+                item.appendChild(video);
+                item.appendChild(name);
+                container.appendChild(item);
+            });
+
+            function updateStatus() {
+                if (loaded + errors === videos.length) {
+                    if (errors === 0) {
+                        status.className = 'status success';
+                        status.textContent = `✅ ${loaded}/${videos.length} vidéos OK`;
+                    } else {
+                        status.className = 'status error';
+                        status.textContent = `❌ ${errors}/${videos.length} erreurs`;
+                    }
+                }
+            }
+        }
+
+        // Fonction de test pour images
+        function testImages(images, containerId, statusId) {
+            const container = document.getElementById(containerId);
+            const status = document.getElementById(statusId);
+            let loaded = 0;
+            let errors = 0;
+
+            images.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                
+                const img = document.createElement('img');
+                img.src = src;
+                
+                const name = document.createElement('p');
+                name.textContent = src.split('/').pop();
+                
+                img.onload = () => {
+                    loaded++;
+                    updateStatus();
+                };
+                
+                img.onerror = () => {
+                    errors++;
+                    img.style.borderColor = '#ef4444';
+                    name.style.color = '#ef4444';
+                    name.textContent += ' ❌';
+                    updateStatus();
+                };
+
+                item.appendChild(img);
+                item.appendChild(name);
+                container.appendChild(item);
+            });
+
+            function updateStatus() {
+                if (loaded + errors === images.length) {
+                    if (errors === 0) {
+                        status.className = 'status success';
+                        status.textContent = `✅ ${loaded}/${images.length} images OK`;
+                    } else {
+                        status.className = 'status error';
+                        status.textContent = `❌ ${errors}/${images.length} erreurs`;
+                    }
+                }
+            }
+        }
+
+        // Lancer les tests
+        testVideos();
+        testImages(adminPhotos, 'admin-photos', 'admin-status');
+        testImages(gamingObjects, 'gaming-objects', 'objects-status');
+
+        // Logs dans console
+        console.log('🎮 Test des assets GameZone');
+        console.log('📹 Vidéos:', videos);
+        console.log('👤 Photos admin:', adminPhotos);
+        console.log('🎮 Objets gaming:', gamingObjects);
+    </script>
+</body>
+</html>

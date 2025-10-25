@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test CORS Final - GameZone</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .test-section {
+            margin-bottom: 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .test-section:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success { color: #28a745; font-weight: bold; }
+        .error { color: #dc3545; font-weight: bold; }
+        .info { color: #17a2b8; }
+        .timestamp { color: #6c757d; font-size: 11px; }
+        .status-ok { color: #28a745; }
+        .status-error { color: #dc3545; }
+        .footer {
+            padding: 20px;
+            background: #f8f9fa;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 GameZone - Test CORS Final</h1>
+            <p>Vérification des endpoints API avec CORS</p>
+        </div>
+        
+        <div class="content">
+            <div class="test-section">
+                <h2>✅ Test 1: Inscription</h2>
+                <button onclick="testRegister()">Tester l'inscription</button>
+                <div id="result1" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>🔐 Test 2: Login (avec le compte créé)</h2>
+                <button onclick="testLogin()">Tester le login</button>
+                <div id="result2" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>👤 Test 3: Login Admin</h2>
+                <button onclick="testLoginAdmin()">Tester login admin</button>
+                <div id="result3" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>URL:</strong> <span id="currentUrl"></span><br>
+            <strong>Origin:</strong> <span id="currentOrigin"></span><br>
+            <strong>API Base:</strong> http://localhost/projet%20ismo/api
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost/projet%20ismo/api';
+        let lastEmail = '';
+        let lastPassword = '';
+
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('currentOrigin').textContent = window.location.origin;
+
+        function showResult(elementId) {
+            document.getElementById(elementId).style.display = 'block';
+        }
+
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            el.innerHTML += `<span class="timestamp">[${timestamp}]</span> <span class="${className}">${message}</span>\n`;
+            showResult(elementId);
+        }
+
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function testRegister() {
+            clear('result1');
+            log('result1', '🔄 Test d\\'inscription en cours...', 'info');
+            
+            lastEmail = `test${Date.now()}@example.com`;
+            lastPassword = 'test1234';
+            
+            const body = {
+                username: 'TestCORS',
+                email: lastEmail,
+                password: lastPassword
+            };
+            
+            log('result1', `📧 Email: ${lastEmail}`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('result1', `📊 Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    if (response.ok) {
+                        log('result1', '\n✅ INSCRIPTION RÉUSSIE!', 'success');
+                        log('result1', `👤 Utilisateur: ${data.user.username}`, 'success');
+                        log('result1', `📧 Email: ${data.user.email}`, 'success');
+                        log('result1', `🆔 ID: ${data.user.id}`, 'success');
+                        log('result1', `\n💡 Vous pouvez maintenant tester le login avec ce compte`, 'info');
+                    } else {
+                        log('result1', `\n❌ Erreur: ${data.error}`, 'error');
+                    }
+                } catch (e) {
+                    log('result1', `\n❌ Réponse non-JSON:`, 'error');
+                    log('result1', text.substring(0, 200), 'error');
+                }
+            } catch (error) {
+                log('result1', `\n❌ ERREUR RÉSEAU: ${error.message}`, 'error');
+                log('result1', '\n🔍 Vérifiez:', 'info');
+                log('result1', '  - Apache est démarré', 'info');
+                log('result1', '  - Headers CORS dans config.php', 'info');
+                log('result1', '  - Pas de * dans .htaccess', 'info');
+            }
+        }
+
+        async function testLogin() {
+            clear('result2');
+            
+            if (!lastEmail) {
+                log('result2', '⚠️ Faites d\\'abord Test 1 (Inscription)', 'error');
+                return;
+            }
+            
+            log('result2', '🔄 Test de login avec le compte créé...', 'info');
+            log('result2', `📧 Email: ${lastEmail}`, 'info');
+            
+            const body = {
+                email: lastEmail,
+                password: lastPassword
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('result2', `📊 Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                if (response.ok) {
+                    log('result2', '\n✅ LOGIN RÉUSSI!', 'success');
+                    log('result2', `👤 Utilisateur: ${data.user.username}`, 'success');
+                    log('result2', `📧 Email: ${data.user.email}`, 'success');
+                    log('result2', `🎭 Rôle: ${data.user.role}`, 'success');
+                } else {
+                    log('result2', `\n❌ Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log('result2', `\n❌ ERREUR RÉSEAU: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLoginAdmin() {
+            clear('result3');
+            log('result3', '🔄 Test de login admin...', 'info');
+            log('result3', '📧 Email: admin@gmail.com', 'info');
+            
+            const body = {
+                email: 'admin@gmail.com',
+                password: 'demo123'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('result3', `📊 Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                if (response.ok) {
+                    log('result3', '\n✅ LOGIN ADMIN RÉUSSI!', 'success');
+                    log('result3', `👤 Admin: ${data.user.username}`, 'success');
+                    log('result3', `🎭 Rôle: ${data.user.role}`, 'success');
+                    log('result3', `🆔 ID: ${data.user.id}`, 'success');
+                } else {
+                    log('result3', `\n❌ Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log('result3', `\n❌ ERREUR RÉSEAU: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

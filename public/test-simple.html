@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        h1 { color: #a855f7; }
+        h2 { color: #ec4899; margin-top: 30px; }
+        img, video {
+            max-width: 300px;
+            margin: 10px;
+            border: 3px solid #22c55e;
+            border-radius: 10px;
+        }
+        .success { color: #22c55e; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🎮 Test Simple - Images Locales</h1>
+    <p class="success">✅ Les images sont maintenant dans le dossier public/</p>
+
+    <h2>📹 Test Vidéo</h2>
+    <video src="/images/video/Cyber_Arcade_Neon_Ember.mp4" controls muted style="max-width: 500px;"></video>
+    <p>Vidéo: Cyber_Arcade_Neon_Ember.mp4</p>
+
+    <h2>👤 Test Photo Admin</h2>
+    <img src="/images/gaming tof/Boss/ismo_PDG.jpg" alt="ISMO PDG">
+    <p>Photo: ismo_PDG.jpg</p>
+
+    <h2>🎮 Test Objet Gaming</h2>
+    <img src="/images/objet/Goku-Blue-PNG-Photo.png" alt="Goku Blue">
+    <p>Objet: Goku-Blue-PNG-Photo.png</p>
+
+    <h2>✅ Résultat</h2>
+    <p>Si vous voyez les images ci-dessus avec des bordures vertes:</p>
+    <ul>
+        <li class="success">✅ La copie a fonctionné</li>
+        <li class="success">✅ Les images sont accessibles</li>
+        <li class="success">✅ Vous pouvez tester les pages principales</li>
+    </ul>
+
+    <h2>🔗 Pages à Tester</h2>
+    <ul>
+        <li><a href="/" style="color: #a855f7;">Page d'accueil</a> - Vidéo + 8 objets flottants</li>
+        <li><a href="/auth/login" style="color: #a855f7;">Login</a> - Vidéo arcade</li>
+        <li><a href="/auth/register" style="color: #a855f7;">Register</a> - Vidéo animée</li>
+    </ul>
+
+    <script>
+        console.log('🎮 Test images locales');
+        console.log('✅ 43 fichiers copiés dans public/images/');
+        
+        // Tester le chargement
+        const imgs = document.querySelectorAll('img');
+        const vids = document.querySelectorAll('video');
+        
+        imgs.forEach(img => {
+            img.onload = () => console.log('✅ Image chargée:', img.src);
+            img.onerror = () => console.error('❌ Erreur image:', img.src);
+        });
+        
+        vids.forEach(vid => {
+            vid.onloadeddata = () => console.log('✅ Vidéo chargée:', vid.src);
+            vid.onerror = () => console.error('❌ Erreur vidéo:', vid.src);
+        });
+    </script>
+</body>
+</html>

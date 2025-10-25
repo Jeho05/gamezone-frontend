@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API GameZone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        .test-section {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #0f3460;
+        }
+        h1 { color: #00d4ff; }
+        h2 { color: #00a8cc; }
+        button {
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #00a8cc; }
+        .result {
+            background: #0f1419;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #00d4ff; }
+    </style>
+</head>
+<body>
+    <h1>🎮 GameZone - Test API</h1>
+    
+    <div class="test-section">
+        <h2>1. Test direct de l'API</h2>
+        <button onclick="testAPI()">Tester API test.php</button>
+        <div id="test1" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test inscription</h2>
+        <button onclick="testRegister()">Tester inscription</button>
+        <div id="test2" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test login admin</h2>
+        <button onclick="testLogin()">Tester login admin</button>
+        <div id="test3" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Vérifier API_BASE</h2>
+        <button onclick="checkAPIBase()">Vérifier configuration</button>
+        <div id="test4" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost/projet%20ismo/api';
+
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            el.innerHTML += `<span class="${className}">${message}</span>\n`;
+        }
+
+        async function testAPI() {
+            const el = document.getElementById('test1');
+            el.innerHTML = '<span class="info">Test en cours...</span>\n';
+            
+            try {
+                const response = await fetch(`${API_BASE}/test.php`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                log('test1', `Status: ${response.status} ${response.statusText}`, 'info');
+                
+                const text = await response.text();
+                log('test1', `Réponse brute:\n${text}`, 'success');
+                
+                try {
+                    const data = JSON.parse(text);
+                    log('test1', `JSON parsé:\n${JSON.stringify(data, null, 2)}`, 'success');
+                } catch (e) {
+                    log('test1', `Erreur JSON: ${e.message}`, 'error');
+                }
+            } catch (error) {
+                log('test1', `ERREUR: ${error.message}`, 'error');
+                log('test1', `Type d'erreur: ${error.name}`, 'error');
+                log('test1', `\nVérifiez:\n- Apache est démarré\n- L'URL est accessible: ${API_BASE}/test.php`, 'error');
+            }
+        }
+
+        async function testRegister() {
+            const el = document.getElementById('test2');
+            el.innerHTML = '<span class="info">Test en cours...</span>\n';
+            
+            const email = `test${Math.floor(Math.random()*9999)}@example.com`;
+            const body = {
+                username: 'TestUser',
+                email: email,
+                password: 'password123'
+            };
+            
+            log('test2', `Envoi vers: ${API_BASE}/auth/register.php`, 'info');
+            log('test2', `Body: ${JSON.stringify(body, null, 2)}`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('test2', `Status: ${response.status} ${response.statusText}`, 'info');
+                
+                const text = await response.text();
+                log('test2', `Réponse brute:\n${text.substring(0, 500)}`, 'info');
+                
+                try {
+                    const data = JSON.parse(text);
+                    if (response.ok) {
+                        log('test2', `✓ Inscription réussie!`, 'success');
+                        log('test2', `Utilisateur créé:\n${JSON.stringify(data.user, null, 2)}`, 'success');
+                    } else {
+                        log('test2', `Erreur API: ${data.error}`, 'error');
+                    }
+                } catch (e) {
+                    log('test2', `Erreur JSON: ${e.message}`, 'error');
+                }
+            } catch (error) {
+                log('test2', `ERREUR RÉSEAU: ${error.message}`, 'error');
+                log('test2', `\nCauses possibles:\n- Apache non démarré\n- CORS bloqué\n- URL incorrecte`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const el = document.getElementById('test3');
+            el.innerHTML = '<span class="info">Test en cours...</span>\n';
+            
+            const body = {
+                email: 'admin@gamezone.fr',
+                password: 'demo123'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                
+                log('test3', `Status: ${response.status}`, 'info');
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                if (response.ok) {
+                    log('test3', `✓ Login réussi!`, 'success');
+                    log('test3', `Admin: ${data.user.username} (${data.user.role})`, 'success');
+                } else {
+                    log('test3', `Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log('test3', `ERREUR: ${error.message}`, 'error');
+            }
+        }
+
+        function checkAPIBase() {
+            const el = document.getElementById('test4');
+            el.innerHTML = '';
+            
+            log('test4', `window.APP_API_BASE: ${window.APP_API_BASE || 'non défini'}`, 'info');
+            log('test4', `API_BASE (ce fichier): ${API_BASE}`, 'info');
+            log('test4', `window.location.origin: ${window.location.origin}`, 'info');
+            log('test4', `window.location.href: ${window.location.href}`, 'info');
+            
+            log('test4', '\n--- URLs de test ---', 'info');
+            log('test4', `API test: ${API_BASE}/test.php`, 'info');
+            log('test4', `API register: ${API_BASE}/auth/register.php`, 'info');
+            log('test4', `API login: ${API_BASE}/auth/login.php`, 'info');
+        }
+
+        // Auto-check au chargement
+        window.onload = () => {
+            checkAPIBase();
+        };
+    </script>
+</body>
+</html>

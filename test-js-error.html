@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Error Test</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    console.log('Testing JavaScript execution...');
+    
+    // Simulate what the app might be doing
+    setTimeout(() => {
+      const root = document.getElementById('root');
+      if (root) {
+        root.innerHTML = '<h1 style="color: white; background: purple; padding: 20px; text-align: center;">JavaScript is working!</h1>';
+        console.log('✅ DOM manipulation successful');
+      } else {
+        console.error('❌ Root element not found');
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

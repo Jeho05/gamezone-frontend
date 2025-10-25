@@ -1,0 +1,2 @@
+/api/*  http://ismo.gamer.gd/api/:splat  200
+/*      /index.html                        200
