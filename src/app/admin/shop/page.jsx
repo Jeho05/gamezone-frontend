@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Navigation from '../../../components/Navigation';
 import ImageUpload from '../../../components/ImageUpload';
 import PackageModal from '../../../components/admin/PackageModal';
@@ -25,6 +26,7 @@ import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
 
 export default function AdminShop() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('games');
   const [games, setGames] = useState([]);
   const [packages, setPackages] = useState([]);
@@ -32,6 +34,7 @@ export default function AdminShop() {
   const [purchases, setPurchases] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showGameModal, setShowGameModal] = useState(false);
   const [editingGame, setEditingGame] = useState(null);
@@ -232,14 +235,36 @@ export default function AdminShop() {
     is_featured: false
   };
 
+  // Vérifier l'authentification au chargement
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok || !data?.user || data.user.role !== 'admin') {
+          toast.error('Accès non autorisé. Redirection...');
+          setTimeout(() => navigate('/auth/login'), 1500);
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Erreur authentification:', error);
+        toast.error('Erreur d\'authentification');
+        setTimeout(() => navigate('/auth/login'), 1500);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return; // Ne charger que si authentifié
     console.log('🔀 Onglet actif changé:', activeTab);
     if (activeTab === 'games') loadGames();
     if (activeTab === 'packages') loadPackages();
     if (activeTab === 'payment-methods') loadPaymentMethods();
     if (activeTab === 'purchases') loadPurchases();
     if (activeTab === 'reservations') loadReservations();
-  }, [activeTab]);
+  }, [activeTab, isAuthenticated]);
 
   const loadGames = async () => {
     try {
@@ -545,6 +570,18 @@ export default function AdminShop() {
     { id: 'purchases', label: 'Achats', icon: ShoppingCart },
     { id: 'reservations', label: 'Réservations', icon: Calendar }
   ];
+
+  // Afficher loading pendant vérification auth
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white mb-4"></div>
+          <p className="text-white text-xl">Vérification de l'authentification...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
@@ -1084,7 +1121,7 @@ export default function AdminShop() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Nom */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold mb-2">Nom du Jeu *</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Nom du Jeu *</label>
                   <input
                     type="text"
                     required
@@ -1097,7 +1134,7 @@ export default function AdminShop() {
 
                 {/* Slug */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold mb-2">Slug (URL) - Auto-généré</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Slug (URL) - Auto-généré</label>
                   <input
                     type="text"
                     value={gameForm.slug}
@@ -1110,7 +1147,7 @@ export default function AdminShop() {
 
                 {/* Short Description */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold mb-2">Description Courte</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Description Courte</label>
                   <input
                     type="text"
                     value={gameForm.short_description}
@@ -1122,7 +1159,7 @@ export default function AdminShop() {
 
                 {/* Description */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold mb-2">Description Complète</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Description Complète</label>
                   <textarea
                     value={gameForm.description}
                     onChange={(e) => handleGameFormChange('description', e.target.value)}
@@ -1143,7 +1180,7 @@ export default function AdminShop() {
 
                 {/* Category */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Catégorie *</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Catégorie *</label>
                   <select
                     value={gameForm.category}
                     onChange={(e) => handleGameFormChange('category', e.target.value)}
@@ -1165,7 +1202,7 @@ export default function AdminShop() {
 
                 {/* Platform */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Plateforme</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Plateforme</label>
                   <input
                     type="text"
                     value={gameForm.platform}
@@ -1177,7 +1214,7 @@ export default function AdminShop() {
 
                 {/* Min Players */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Joueurs Min</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Joueurs Min</label>
                   <input
                     type="number"
                     min="1"
@@ -1189,7 +1226,7 @@ export default function AdminShop() {
 
                 {/* Max Players */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Joueurs Max</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Joueurs Max</label>
                   <input
                     type="number"
                     min="1"
@@ -1201,7 +1238,7 @@ export default function AdminShop() {
 
                 {/* Age Rating */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Classification d'âge</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Classification d'âge</label>
                   <input
                     type="text"
                     value={gameForm.age_rating}
@@ -1213,7 +1250,7 @@ export default function AdminShop() {
 
                 {/* Points per Hour */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Points par Heure</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Points par Heure</label>
                   <input
                     type="number"
                     min="0"
@@ -1225,7 +1262,7 @@ export default function AdminShop() {
 
                 {/* Base Price */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Prix de Base (XOF/h)</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Prix de Base (XOF/h)</label>
                   <input
                     type="number"
                     min="0"
@@ -1252,7 +1289,7 @@ export default function AdminShop() {
                 {/* Reservation Fee (shown only if reservable) */}
                 {gameForm.is_reservable && (
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold mb-2">Frais de Réservation (XOF)</label>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">Frais de Réservation (XOF)</label>
                     <input
                       type="number"
                       min="0"
