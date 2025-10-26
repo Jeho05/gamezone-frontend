@@ -1282,7 +1282,7 @@ export default function AdminShop() {
                       onChange={(e) => handleGameFormChange('is_reservable', e.target.checked)}
                       className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
                     />
-                    <span className="text-sm font-semibold">Jeu réservable (avec créneau horaire)</span>
+                    <span className="text-sm font-semibold text-gray-900">Jeu réservable (avec créneau horaire)</span>
                   </label>
                 </div>
 
@@ -1312,7 +1312,7 @@ export default function AdminShop() {
                       onChange={(e) => handleGameFormChange('is_featured', e.target.checked)}
                       className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
                     />
-                    <span className="text-sm font-semibold">Mettre en avant (Featured)</span>
+                    <span className="text-sm font-semibold text-gray-900">Mettre en avant (Featured)</span>
                   </label>
                 </div>
               </div>

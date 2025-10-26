@@ -131,7 +131,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Nom */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Nom *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Nom *</label>
               <input
                 type="text"
                 value={form.name}
@@ -144,7 +144,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Slug */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Slug (identifiant) *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Slug (identifiant) *</label>
               <input
                 type="text"
                 value={form.slug}
@@ -158,7 +158,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Description */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold mb-2">Description</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Description</label>
               <textarea
                 value={form.description}
                 onChange={(e) => handleChange('description', e.target.value)}
@@ -170,7 +170,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Provider */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Fournisseur</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Fournisseur</label>
               <select
                 value={form.provider}
                 onChange={(e) => handleChange('provider', e.target.value)}
@@ -188,7 +188,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Display Order */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Ordre d'Affichage</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Ordre d'Affichage</label>
               <input
                 type="number"
                 value={form.display_order}
@@ -199,7 +199,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Frais Pourcentage */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Frais (%)</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Frais (%)</label>
               <input
                 type="number"
                 value={form.fee_percentage}
@@ -212,7 +212,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
 
             {/* Frais Fixes */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Frais Fixes (XOF)</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Frais Fixes (XOF)</label>
               <input
                 type="number"
                 value={form.fee_fixed}

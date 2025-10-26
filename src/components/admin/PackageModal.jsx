@@ -128,7 +128,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Jeu */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold mb-2">Jeu *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Jeu *</label>
               <select
                 value={form.game_id}
                 onChange={(e) => handleChange('game_id', e.target.value)}
@@ -144,7 +144,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Nom */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold mb-2">Nom du Package *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Nom du Package *</label>
               <input
                 type="text"
                 value={form.name}
@@ -157,7 +157,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Durée */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Durée (minutes) *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Durée (minutes) *</label>
               <input
                 type="number"
                 value={form.duration_minutes}
@@ -170,7 +170,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Prix */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Prix (XOF) *</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Prix (XOF) *</label>
               <input
                 type="number"
                 value={form.price}
@@ -184,7 +184,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Prix Original */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Prix Original (Promo)</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Prix Original (Promo)</label>
               <input
                 type="number"
                 value={form.original_price}
@@ -198,7 +198,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Points Gagnés (INFO ONLY) */}
             <div>
-              <label className="block text-sm font-semibold mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Points Gagnés 
                 <span className="text-xs text-gray-500 ml-2">(Auto-calculés par temps réel)</span>
               </label>
@@ -217,7 +217,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Bonus Multiplier */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Multiplicateur Bonus</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Multiplicateur Bonus</label>
               <input
                 type="number"
                 value={form.bonus_multiplier}
@@ -230,7 +230,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Max Achats par Utilisateur */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Max Achats/Utilisateur</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Max Achats/Utilisateur</label>
               <input
                 type="number"
                 value={form.max_purchases_per_user}
@@ -243,7 +243,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
 
             {/* Display Order */}
             <div>
-              <label className="block text-sm font-semibold mb-2">Ordre d'Affichage</label>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Ordre d'Affichage</label>
               <input
                 type="number"
                 value={form.display_order}
@@ -268,7 +268,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
             {/* Promotional Label (if promotional) */}
             {form.is_promotional && (
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold mb-2">Label Promotionnel</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Label Promotionnel</label>
                 <input
                   type="text"
                   value={form.promotional_label}
