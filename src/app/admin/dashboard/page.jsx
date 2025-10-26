@@ -393,7 +393,7 @@ export default function AdminDashboard() {
 
                 {/* Alertes de Sécurité */}
                 <div className="space-y-3">
-                  <div className="text-sm font-semibold text-gray-300 mb-3">🔒 Alertes de Sécurité</div>
+                  <div className="text-sm font-semibold text-gray-900 mb-3">🔒 Alertes de Sécurité</div>
                   
                   <div className="grid grid-cols-2 gap-3">
                     {/* Transactions échouées */}

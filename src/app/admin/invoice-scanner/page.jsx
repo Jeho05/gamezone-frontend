@@ -513,7 +513,7 @@ export default function InvoiceScanner() {
               {networkStatus === 'offline' && (
                 <div className="flex items-center gap-2 px-3 py-2 bg-red-100 text-red-700 rounded-lg">
                   <WifiOff className="w-5 h-5" />
-                  <span className="text-sm font-semibold">Hors ligne</span>
+                  <span className="text-sm font-semibold text-white">Hors ligne</span>
                 </div>
               )}
             </div>
@@ -741,7 +741,7 @@ export default function InvoiceScanner() {
                         
                         {result.solution && (
                           <div className="bg-red-100 border border-red-300 rounded-lg p-4 mb-4">
-                            <p className="text-sm font-semibold text-red-800 mb-2">💡 Solution:</p>
+                            <p className="text-sm font-semibold text-red-900 mb-2">💡 Solution:</p>
                             <p className="text-sm text-red-700">{result.solution}</p>
                           </div>
                         )}

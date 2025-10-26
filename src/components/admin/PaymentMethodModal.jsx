@@ -232,7 +232,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
                   onChange={(e) => handleChange('is_active', e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold">Méthode Active</span>
+                <span className="text-sm font-semibold text-gray-900">Méthode Active</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -242,7 +242,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
                   onChange={(e) => handleChange('auto_confirm', e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold">Confirmation Automatique</span>
+                <span className="text-sm font-semibold text-gray-900">Confirmation Automatique</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -252,7 +252,7 @@ export default function PaymentMethodModal({ isOpen, onClose, editingPayment, on
                   onChange={(e) => handleChange('requires_online_payment', e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold">Paiement en Ligne Requis</span>
+                <span className="text-sm font-semibold text-gray-900">Paiement en Ligne Requis</span>
               </label>
             </div>
           </div>

@@ -677,7 +677,7 @@ export default function AdminContent() {
                       onChange={(e) => setForm({...form, is_published: e.target.checked})}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm font-semibold">Publier immédiatement</span>
+                    <span className="text-sm font-semibold text-gray-900">Publier immédiatement</span>
                   </label>
 
                   <label className="flex items-center gap-2">
@@ -687,7 +687,7 @@ export default function AdminContent() {
                       onChange={(e) => setForm({...form, is_pinned: e.target.checked})}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm font-semibold">Épingler en haut</span>
+                    <span className="text-sm font-semibold text-gray-900">Épingler en haut</span>
                   </label>
                 </div>
               </div>

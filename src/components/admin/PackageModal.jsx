@@ -261,7 +261,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
                   onChange={(e) => handleChange('is_promotional', e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold">Package Promotionnel</span>
+                <span className="text-sm font-semibold text-gray-900">Package Promotionnel</span>
               </label>
             </div>
 
@@ -288,7 +288,7 @@ export default function PackageModal({ isOpen, onClose, editingPackage, games, o
                   onChange={(e) => handleChange('is_active', e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold">Package Actif</span>
+                <span className="text-sm font-semibold text-gray-900">Package Actif</span>
               </label>
             </div>
           </div>
