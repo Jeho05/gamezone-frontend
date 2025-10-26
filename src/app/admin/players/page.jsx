@@ -19,6 +19,7 @@ import { resolveAvatarUrl } from '../../../utils/avatarUrl';
 
 export default function PlayersManagement() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [showPointsModal, setShowPointsModal] = useState(false);
@@ -27,6 +28,26 @@ export default function PlayersManagement() {
   const [playersData, setPlayersData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Vérifier auth
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok || !data?.user || data.user.role !== 'admin') {
+          toast.error('Accès non autorisé');
+          setTimeout(() => navigate('/auth/login'), 1500);
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        toast.error('Erreur authentification');
+        setTimeout(() => navigate('/auth/login'), 1500);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   const fetchPlayers = useCallback(async () => {
     try {
@@ -56,6 +77,7 @@ export default function PlayersManagement() {
   }, []);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchPlayers();
   }, [fetchPlayers]);
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import Navigation from '../../../components/Navigation';
 import API_BASE from '../../../utils/apiBase';
@@ -6,11 +7,33 @@ import API_BASE from '../../../utils/apiBase';
  
 
 export default function RewardsManagementPage() {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [rewards, setRewards] = useState([]);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingReward, setEditingReward] = useState(null);
+
+  // Vérifier auth
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok || !data?.user || data.user.role !== 'admin') {
+          toast.error('Accès non autorisé');
+          setTimeout(() => navigate('/auth/login'), 1500);
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        toast.error('Erreur authentification');
+        setTimeout(() => navigate('/auth/login'), 1500);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   const fetchGames = async () => {
     try {

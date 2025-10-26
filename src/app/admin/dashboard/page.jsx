@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import Navigation from '../../../components/Navigation';
 import { 
   Users, 
@@ -24,6 +26,8 @@ import { resolveAvatarUrl } from '../../../utils/avatarUrl';
  
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [timeFilter, setTimeFilter] = useState('week');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,10 +138,6 @@ export default function AdminDashboard() {
     if (diff < 86400) return Math.floor(diff / 3600) + 'h';
     return Math.floor(diff / 86400) + 'j';
   };
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
 
   const loadTransactionStats = async () => {
     try {

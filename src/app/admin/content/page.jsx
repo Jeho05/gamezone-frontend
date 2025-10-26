@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Navigation from '../../../components/Navigation';
 import ImageUpload from '../../../components/ImageUpload';
 import { 
@@ -18,6 +19,8 @@ import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
 
 export default function AdminContent() {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('news');
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +50,28 @@ export default function AdminContent() {
     { id: 'stream', label: 'Streams', icon: Video }
   ];
 
+  // Vérifier auth
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok || !data?.user || data.user.role !== 'admin') {
+          toast.error('Accès non autorisé');
+          setTimeout(() => navigate('/auth/login'), 1500);
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        toast.error('Erreur authentification');
+        setTimeout(() => navigate('/auth/login'), 1500);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
     loadContent();
     loadStats();
   }, [activeTab]);
@@ -533,7 +557,7 @@ export default function AdminContent() {
               <div className="space-y-4">
                 {/* Titre */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Titre *</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Titre *</label>
                   <input
                     type="text"
                     required
@@ -546,7 +570,7 @@ export default function AdminContent() {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Description courte</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Description courte</label>
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm({...form, description: e.target.value})}
@@ -558,7 +582,7 @@ export default function AdminContent() {
 
                 {/* Contenu */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Contenu complet</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Contenu complet</label>
                   <textarea
                     value={form.content}
                     onChange={(e) => setForm({...form, content: e.target.value})}
@@ -582,7 +606,7 @@ export default function AdminContent() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-2">Date événement</label>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Date événement</label>
                         <input
                           type="datetime-local"
                           value={form.event_date}
@@ -591,7 +615,7 @@ export default function AdminContent() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-2">Lieu</label>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Lieu</label>
                         <input
                           type="text"
                           value={form.event_location}
@@ -607,7 +631,7 @@ export default function AdminContent() {
                 {/* Champs spécifiques stream */}
                 {form.type === 'stream' && (
                   <div>
-                    <label className="block text-sm font-semibold mb-2">URL du Stream</label>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">URL du Stream</label>
                     <input
                       type="url"
                       value={form.stream_url}
@@ -621,7 +645,7 @@ export default function AdminContent() {
                 {/* Champs spécifiques galerie */}
                 {form.type === 'gallery' && (
                   <div>
-                    <label className="block text-sm font-semibold mb-2">URL de la vidéo</label>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">URL de la vidéo</label>
                     <input
                       type="url"
                       value={form.video_url}
@@ -634,7 +658,7 @@ export default function AdminContent() {
 
                 {/* Lien externe */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Lien externe (optionnel)</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Lien externe (optionnel)</label>
                   <input
                     type="url"
                     value={form.external_link}
