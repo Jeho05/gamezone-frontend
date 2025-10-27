@@ -6,6 +6,8 @@
   "framework": null,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://overflowing-fulfillment-production-36c6.up.railway.app/$1" },
+    { "source": "/uploads/(.*)", "destination": "https://overflowing-fulfillment-production-36c6.up.railway.app/uploads/$1" },
+    { "source": "/images/(.*)", "destination": "https://overflowing-fulfillment-production-36c6.up.railway.app/images/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
