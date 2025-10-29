@@ -67,14 +67,35 @@ export default function TestAPI() {
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: 'admin@gamezone.com',
-          password: 'Admin123!'
+          email: 'admin@gmail.com',
+          password: 'demo123'
         })
       });
       const data = await response.json();
-      addResult('Login: ' + (data.success ? 'SUCCÈS ✅' : 'ERREUR'), data, data.success ? 'success' : 'error');
+      addResult('Login: ' + (response.ok ? 'SUCCÈS ✅' : 'ERREUR'), { status: response.status, data }, response.ok ? 'success' : 'error');
+
+      // Enchaîner sur me.php
+      const meRes = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+      const meData = await meRes.json();
+      addResult('me.php', { status: meRes.status, data: meData }, meRes.ok && meData?.user ? 'success' : 'error');
+
+      // Enchaîner sur dashboard admin
+      const dashRes = await fetch(`${API_BASE}/admin/dashboard_stats.php`, { credentials: 'include' });
+      const dashData = await dashRes.json();
+      addResult('dashboard_stats.php', { status: dashRes.status, data: dashData }, dashRes.ok ? 'success' : 'error');
     } catch (error) {
       addResult('Login: ERREUR ❌', error.message, 'error');
+    }
+  };
+
+  const createAdmin = async () => {
+    try {
+      addResult('Créer Admin', 'Appel create_admin.php...', 'info');
+      const res = await fetch(`${API_BASE}/create_admin.php`, { credentials: 'include' });
+      const data = await res.json();
+      addResult('Créer Admin', { status: res.status, data }, res.ok ? 'success' : 'error');
+    } catch (error) {
+      addResult('Créer Admin: ERREUR ❌', error.message, 'error');
     }
   };
 
@@ -102,6 +123,7 @@ export default function TestAPI() {
         <button onClick={test2} style={buttonStyle}>Test 2: Fetch + Credentials</button>
         <button onClick={test3} style={buttonStyle}>Test 3: Statistics</button>
         <button onClick={loginTest} style={buttonStyle}>Login Admin</button>
+        <button onClick={createAdmin} style={buttonStyle}>Créer Admin</button>
         <button onClick={() => setResults([])} style={{ ...buttonStyle, background: '#ef4444' }}>
           Effacer
         </button>
