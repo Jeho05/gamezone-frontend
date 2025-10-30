@@ -79,7 +79,7 @@ export default function PlayersManagement() {
   useEffect(() => {
     if (!isAuthenticated) return;
     fetchPlayers();
-  }, [fetchPlayers]);
+  }, [isAuthenticated, fetchPlayers]);
 
   const filteredPlayers = playersData.filter(player => {
     const matchesSearch = player.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
