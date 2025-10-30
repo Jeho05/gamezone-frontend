@@ -167,6 +167,10 @@ export default function AdminDashboard() {
     }
   };
 
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
   // Pas besoin de maxPlayers/maxPoints
 
   return (
