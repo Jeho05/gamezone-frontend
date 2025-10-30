@@ -1,5 +1,6 @@
-// Central API base: prefer Vite env, fallback to dev proxy or local Apache
-let API_BASE = import.meta.env.NEXT_PUBLIC_API_BASE;
+// Central API base: prefer explicit environment variable, otherwise derive fallbacks
+const envBase = import.meta.env.NEXT_PUBLIC_API_BASE || import.meta.env.VITE_API_BASE_URL;
+let API_BASE = envBase;
 
 if (!API_BASE) {
   if (typeof window !== 'undefined' && (window.location.port === '4000' || window.location.port === '5173' || window.location.port === '5174')) {
@@ -21,10 +22,16 @@ if (!API_BASE) {
   }
 }
 
-// Debug: log API base in development
-if (typeof window !== 'undefined' && import.meta.env.DEV) {
-  console.log('[API Config] API_BASE:', API_BASE);
-  console.log('[API Config] Window location:', window.location.href);
+if (typeof window !== 'undefined') {
+  const hostname = window.location.hostname;
+  if (!API_BASE && hostname.endsWith('.vercel.app')) {
+    console.warn('[API Config] Aucun API_BASE explicite détecté pour Vercel – default local fallback utilisé:', API_BASE);
+  }
+
+  if (import.meta.env.DEV) {
+    console.log('[API Config] API_BASE:', API_BASE);
+    console.log('[API Config] Window location:', window.location.href);
+  }
 }
 
 export { API_BASE };
