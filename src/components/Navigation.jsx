@@ -66,11 +66,19 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
   };
 
   useEffect(() => {
-    document.body.classList.add('has-bottom-nav');
+    const body = document.body;
+    const themeClass = userType === 'admin' ? 'admin-theme' : 'player-theme';
+    const oppositeClass = userType === 'admin' ? 'player-theme' : 'admin-theme';
+
+    body.classList.add('has-bottom-nav');
+    body.classList.add(themeClass);
+    body.classList.remove(oppositeClass);
+
     return () => {
-      document.body.classList.remove('has-bottom-nav');
+      body.classList.remove('has-bottom-nav');
+      body.classList.remove(themeClass);
     };
-  }, []);
+  }, [userType]);
 
   // Détecter la page active depuis l'URL
   const getActivePageId = () => {

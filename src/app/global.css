@@ -14,6 +14,9 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    transition: background 0.3s ease, color 0.3s ease;
   }
   img, video {
     max-width: 100%;
@@ -25,6 +28,26 @@
   }
   :root {
     color-scheme: light dark;
+  }
+
+  body.admin-theme {
+    background-color: #0f172a;
+    background-image: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.35), transparent 55%),
+      radial-gradient(circle at 80% 0%, rgba(30, 64, 175, 0.45), transparent 50%),
+      linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%);
+    color: #f8fafc;
+    min-height: 100vh;
+    background-attachment: fixed;
+  }
+
+  body.player-theme {
+    background-color: #0f172a;
+    background-image: radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.35), transparent 55%),
+      radial-gradient(circle at 85% 0%, rgba(59, 130, 246, 0.4), transparent 50%),
+      linear-gradient(135deg, #0f172a 0%, #312e81 50%, #0f172a 100%);
+    color: #f8fafc;
+    min-height: 100vh;
+    background-attachment: fixed;
   }
 }
 

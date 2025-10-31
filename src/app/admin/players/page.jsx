@@ -146,22 +146,22 @@ export default function PlayersManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-slate-100">
       <Navigation userType="admin" currentPage="players" />
       
       <div className="lg:pl-64">
         <div className="p-4 lg:p-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2 flex items-center space-x-3">
+            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-2 flex items-center space-x-3">
               <Users className="w-10 h-10 text-blue-400" />
               <span>Gestion des Joueurs</span>
             </h1>
-            <p className="text-gray-300">Gérez les comptes et points de vos joueurs</p>
+            <p className="text-gray-600">Gérez les comptes et points de vos joueurs</p>
           </div>
 
           {/* Search and Filter Bar */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mb-8">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8 shadow-sm">
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Search */}
               <div className="flex-1 relative">
@@ -171,7 +171,7 @@ export default function PlayersManagement() {
                   placeholder="Rechercher par pseudo ou email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                  className="w-full bg-white border border-gray-300 rounded-xl pl-10 pr-4 py-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
                 />
               </div>
 
@@ -182,7 +182,7 @@ export default function PlayersManagement() {
                   className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 ${
                     selectedFilter === 'all'
                       ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   <Filter className="w-4 h-4" />
@@ -193,7 +193,7 @@ export default function PlayersManagement() {
                   className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${
                     selectedFilter === 'active'
                       ? 'bg-gradient-to-r from-green-600 to-green-500 text-white'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   Actifs
@@ -203,7 +203,7 @@ export default function PlayersManagement() {
                   className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${
                     selectedFilter === 'inactive'
                       ? 'bg-gradient-to-r from-red-600 to-red-500 text-white'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   Inactifs
@@ -213,29 +213,29 @@ export default function PlayersManagement() {
           </div>
 
           {/* Players Table */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               {error && (
-                <div className="p-4 text-red-200 bg-red-500/20 border-b border-red-400/30">{error}</div>
+                <div className="p-4 text-red-700 bg-red-50 border-b border-red-200">{error}</div>
               )}
               {loading && (
-                <div className="p-4 text-gray-300">Chargement...</div>
+                <div className="p-4 text-gray-600">Chargement...</div>
               )}
               <table className="w-full">
-                <thead className="bg-white/5 border-b border-white/10">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Joueur</th>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Points</th>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Niveau</th>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Sessions</th>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Statut</th>
-                    <th className="text-left py-4 px-6 text-gray-300 font-semibold">Dernière activité</th>
-                    <th className="text-center py-4 px-6 text-gray-300 font-semibold">Actions</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Joueur</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Points</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Niveau</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Sessions</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Statut</th>
+                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Dernière activité</th>
+                    <th className="text-center py-4 px-6 text-gray-600 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPlayers.map((player) => (
-                    <tr key={player.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr key={player.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-3">
                           <img
@@ -244,8 +244,8 @@ export default function PlayersManagement() {
                             className="w-10 h-10 rounded-full border-2 border-white/20"
                           />
                           <div>
-                            <p className="text-white font-semibold">{player.username}</p>
-                            <p className="text-gray-400 text-sm">{player.email}</p>
+                            <p className="text-gray-900 font-semibold">{player.username}</p>
+                            <p className="text-gray-500 text-sm">{player.email}</p>
                           </div>
                         </div>
                       </td>
@@ -261,7 +261,7 @@ export default function PlayersManagement() {
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-white font-medium">{player.totalSessions}</span>
+                        <span className="text-gray-900 font-medium">{player.totalSessions}</span>
                       </td>
                       <td className="py-4 px-6">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(player.status)}`}>
@@ -269,7 +269,7 @@ export default function PlayersManagement() {
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-gray-300">{formatDate(player.lastActive)}</span>
+                        <span className="text-gray-600">{formatDate(player.lastActive)}</span>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center space-x-2">
@@ -305,24 +305,24 @@ export default function PlayersManagement() {
 
           {/* Stats Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center">
-              <Users className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-              <h3 className="text-white font-bold text-lg">Total Joueurs</h3>
-              <p className="text-blue-400 text-2xl font-bold">{playersData.length}</p>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm">
+              <Users className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+              <h3 className="text-slate-900 font-bold text-lg">Total Joueurs</h3>
+              <p className="text-blue-600 text-2xl font-bold">{playersData.length}</p>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center">
-              <Star className="w-8 h-8 text-green-400 mx-auto mb-3" />
-              <h3 className="text-white font-bold text-lg">Joueurs Actifs</h3>
-              <p className="text-green-400 text-2xl font-bold">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm">
+              <Star className="w-8 h-8 text-green-500 mx-auto mb-3" />
+              <h3 className="text-slate-900 font-bold text-lg">Joueurs Actifs</h3>
+              <p className="text-green-600 text-2xl font-bold">
                 {playersData.filter(p => p.status === 'active').length}
               </p>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center">
-              <Coins className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-              <h3 className="text-white font-bold text-lg">Points Totaux</h3>
-              <p className="text-yellow-400 text-2xl font-bold">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm">
+              <Coins className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
+              <h3 className="text-slate-900 font-bold text-lg">Points Totaux</h3>
+              <p className="text-yellow-600 text-2xl font-bold">
                 {playersData.reduce((sum, p) => sum + p.points, 0).toLocaleString()}
               </p>
             </div>
@@ -332,15 +332,15 @@ export default function PlayersManagement() {
 
       {/* Points Adjustment Modal */}
       {showPointsModal && selectedPlayer && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold text-white mb-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 max-w-md w-full shadow-xl">
+            <h3 className="text-2xl font-bold text-slate-900 mb-4">
               Ajuster les points de {selectedPlayer.username}
             </h3>
             
             <div className="mb-6">
-              <p className="text-gray-300 mb-2">Points actuels: 
-                <span className="text-yellow-400 font-semibold ml-2">
+              <p className="text-gray-600 mb-2">Points actuels: 
+                <span className="text-amber-500 font-semibold ml-2">
                   {selectedPlayer.points.toLocaleString()}
                 </span>
               </p>
@@ -348,31 +348,31 @@ export default function PlayersManagement() {
               <div className="flex items-center space-x-4 mb-4">
                 <button
                   onClick={() => setPointsToAdd(prev => prev - 10)}
-                  className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-colors"
+                  className="p-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
                 >
-                  <Minus className="w-4 h-4 text-red-400" />
+                  <Minus className="w-4 h-4 text-red-500" />
                 </button>
                 
                 <input
                   type="number"
                   value={pointsToAdd}
                   onChange={(e) => setPointsToAdd(parseInt(e.target.value) || 0)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white text-center focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2 text-slate-900 text-center focus:outline-none focus:ring-2 focus:ring-purple-400"
                   placeholder="0"
                 />
                 
                 <button
                   onClick={() => setPointsToAdd(prev => prev + 10)}
-                  className="p-2 bg-green-500/20 hover:bg-green-500/30 rounded-lg transition-colors"
+                  className="p-2 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
                 >
-                  <Plus className="w-4 h-4 text-green-400" />
+                  <Plus className="w-4 h-4 text-emerald-500" />
                 </button>
               </div>
               
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-600 text-sm">
                 Nouveaux points: 
                 <span className={`font-semibold ml-2 ${
-                  selectedPlayer.points + pointsToAdd >= 0 ? 'text-green-400' : 'text-red-400'
+                  selectedPlayer.points + pointsToAdd >= 0 ? 'text-emerald-500' : 'text-red-500'
                 }`}>
                   {Math.max(0, selectedPlayer.points + pointsToAdd).toLocaleString()}
                 </span>
@@ -386,14 +386,14 @@ export default function PlayersManagement() {
                   setPointsToAdd(0);
                   setSelectedPlayer(null);
                 }}
-                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-xl font-semibold transition-colors"
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-slate-700 py-3 rounded-xl font-semibold transition-colors"
               >
                 Annuler
               </button>
               <button
                 onClick={applyPointsChange}
                 disabled={pointsToAdd === 0}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white py-3 rounded-xl font-semibold transition-colors disabled:cursor-not-allowed"
+                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 text-white py-3 rounded-xl font-semibold transition-colors disabled:cursor-not-allowed"
               >
                 Appliquer
               </button>
