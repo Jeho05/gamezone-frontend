@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
+import { resolveGameImageUrl, isGradient, getGradientClass } from '../../../utils/gameImageUrl';
 
 export default function AdminShop() {
   const navigate = useNavigate();
