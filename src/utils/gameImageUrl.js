@@ -1,4 +1,9 @@
 import API_BASE from './apiBase';
+import {
+  REMOTE_APP_ORIGIN,
+  REMOTE_API_BASE,
+  LEGACY_LOCAL_HOSTS
+} from './remoteConfig';
 
 // Utilitaire pour résoudre les URLs d'images de jeux
 // Similaire à avatarUrl.js mais pour les images de jeux
@@ -8,8 +13,6 @@ const envImageBase =
     ? import.meta.env?.NEXT_PUBLIC_IMAGE_BASE || import.meta.env?.VITE_IMAGE_BASE_URL
     : undefined;
 
-const DEFAULT_REMOTE_BASE = 'https://overflowing-fulfillment-production-36c6.up.railway.app';
-
 const stripTrailingSlash = (value) => value?.replace(/\/+$/, '') ?? value;
 const ensureTrailingSlash = (value) => (value?.endsWith('/') ? value : `${value}/`);
 const isAbsoluteUrl = (value) => typeof value === 'string' && /^https?:\/\//.test(value);
@@ -18,13 +21,13 @@ const expandAbsoluteBase = (base) => {
   if (!isAbsoluteUrl(base)) return [];
 
   const trimmed = stripTrailingSlash(base);
-  const candidates = [trimmed];
 
   if (trimmed.endsWith('/api')) {
-    candidates.push(stripTrailingSlash(trimmed.slice(0, -4)));
+    const root = stripTrailingSlash(trimmed.slice(0, -4));
+    return [root, trimmed];
   }
 
-  return candidates;
+  return [trimmed];
 };
 
 const buildBaseCandidates = () => {
@@ -32,15 +35,15 @@ const buildBaseCandidates = () => {
 
   expandAbsoluteBase(envImageBase).forEach((candidate) => ordered.push(candidate));
   expandAbsoluteBase(API_BASE).forEach((candidate) => ordered.push(candidate));
+  expandAbsoluteBase(REMOTE_API_BASE).forEach((candidate) => ordered.push(candidate));
 
-  // Toujours ajouter la base distante connue en priorité si aucune des précédentes n'est fournie
-  ordered.push(DEFAULT_REMOTE_BASE);
+  // Toujours ajouter la base distante connue
+  ordered.push(REMOTE_APP_ORIGIN);
 
   if (typeof window !== 'undefined') {
     const { origin, hostname, pathname } = window.location;
 
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      ordered.push('http://localhost/projet%20ismo');
+    if (LEGACY_LOCAL_HOSTS.has(hostname)) {
       ordered.push(origin);
     } else {
       if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {

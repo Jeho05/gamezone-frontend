@@ -1,6 +1,11 @@
+import {
+  REMOTE_APP_ORIGIN,
+  LEGACY_LOCAL_HOSTS
+} from './remoteConfig';
+
 /**
  * Résout l'URL complète d'un avatar
- * Les avatars doivent être chargés directement depuis Apache, pas via le proxy Vite
+ * Les avatars doivent être chargés directement depuis l'origine distante
  * 
  * @param {string|null} avatarUrl - L'URL de l'avatar depuis l'API (peut être null ou relative)
  * @param {string} fallbackUsername - Nom d'utilisateur pour le fallback pravatar
@@ -14,18 +19,19 @@ export function resolveAvatarUrl(avatarUrl, fallbackUsername = 'user') {
   
   // Si l'URL est déjà complète (commence par http:// ou https://), la retourner telle quelle
   if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
-    return avatarUrl;
+    try {
+      const parsed = new URL(avatarUrl);
+      if (LEGACY_LOCAL_HOSTS.has(parsed.hostname)) {
+        return `${REMOTE_APP_ORIGIN}${parsed.pathname}`;
+      }
+      return parsed.toString().replace('http://', 'https://');
+    } catch {
+      return avatarUrl;
+    }
   }
   
-  // Pour les URLs relatives, pointer directement vers Apache
-  // Ne pas utiliser window.location.origin car ça pointerait vers localhost:4000 (Vite)
-  // Les avatars doivent être chargés depuis le serveur Apache
-  const apacheBase = 'http://localhost/projet%20ismo';
-  
-  // Assurer que l'URL commence par /
   const normalizedUrl = avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`;
-  
-  return `${apacheBase}${normalizedUrl}`;
+  return `${REMOTE_APP_ORIGIN}${normalizedUrl}`;
 }
 
 export default resolveAvatarUrl;
