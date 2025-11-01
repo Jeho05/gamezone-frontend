@@ -80,13 +80,21 @@ const ensureHttps = (url) => {
   }
 };
 
+// Fallback image URLs that are more reliable
+const getFallbackImageUrl = (gameName) => {
+  // Using a more reliable placeholder service
+  const encodedName = encodeURIComponent(gameName || 'Jeu');
+  return `https://placehold.co/600x400?text=${encodedName}&font=roboto`;
+};
+
 /**
  * Résout l'URL d'une image de jeu
  * @param {string|null} imageUrl - URL de l'image du jeu
  * @param {string|null} gameSlug - Slug du jeu pour fallback
+ * @param {string|null} gameName - Nom du jeu pour placeholder
  * @returns {string} URL complète de l'image
  */
-export function resolveGameImageUrl(imageUrl, gameSlug = null) {
+export function resolveGameImageUrl(imageUrl, gameSlug = null, gameName = null) {
   // Si pas d'image, utiliser un placeholder avec le slug
   if (!imageUrl) {
     // Placeholder coloré basé sur le slug

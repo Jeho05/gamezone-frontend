@@ -665,8 +665,8 @@ export default function AdminShop() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {games.map((game) => {
-                  const resolvedImage = resolveGameImageUrl(game.image_url || game.thumbnail_url, game.slug || game.name);
-                  const fallbackImage = `https://via.placeholder.com/600x400?text=${encodeURIComponent(game.name || 'Jeu')}`;
+                  const resolvedImage = resolveGameImageUrl(game.image_url || game.thumbnail_url, game.slug || game.name, game.name);
+                  const fallbackImage = `https://placehold.co/600x400?text=${encodeURIComponent(game.name || 'Jeu')}&font=roboto`;
                   const isGradientBg = isGradient(resolvedImage);
                   const gradientClass = isGradientBg ? getGradientClass(resolvedImage) : '';
 
