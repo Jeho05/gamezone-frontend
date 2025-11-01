@@ -8,38 +8,45 @@ const envImageBase =
     ? import.meta.env?.NEXT_PUBLIC_IMAGE_BASE || import.meta.env?.VITE_IMAGE_BASE_URL
     : undefined;
 
+const DEFAULT_REMOTE_BASE = 'https://overflowing-fulfillment-production-36c6.up.railway.app';
+
 const stripTrailingSlash = (value) => value?.replace(/\/+$/, '') ?? value;
+const ensureTrailingSlash = (value) => (value?.endsWith('/') ? value : `${value}/`);
 
-const deriveImageBase = () => {
-  if (envImageBase) {
-    return stripTrailingSlash(envImageBase);
+const expandBaseCandidates = (base) => {
+  if (!base) return [];
+  const trimmed = stripTrailingSlash(base);
+  const candidates = [trimmed];
+
+  const match = trimmed.match(/^(.*\/)(api)$/i);
+  if (match) {
+    candidates.push(stripTrailingSlash(match[1]));
   }
 
-  if (API_BASE && /^https?:\/\//.test(API_BASE)) {
-    try {
-      const apiUrl = new URL(API_BASE);
-      apiUrl.pathname = apiUrl.pathname.replace(/\/api\/?$/, '/');
-      return stripTrailingSlash(`${apiUrl.origin}${apiUrl.pathname}`);
-    } catch (error) {
-      console.warn('[Image Resolver] Impossible de parser API_BASE pour déterminer IMAGE_BASE:', error);
-    }
-  }
-
-  if (typeof window !== 'undefined') {
-    const { origin, pathname, hostname } = window.location;
-    if (hostname.endsWith('vercel.app')) {
-      return 'https://overflowing-fulfillment-production-36c6.up.railway.app';
-    }
-    if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {
-      return `${origin}/projet%20ismo`;
-    }
-    return origin;
-  }
-
-  return 'http://localhost/projet%20ismo';
+  return candidates;
 };
 
-const IMAGE_BASE = deriveImageBase();
+const buildBaseCandidates = () => {
+  const bases = new Set();
+
+  expandBaseCandidates(envImageBase).forEach((candidate) => bases.add(candidate));
+  expandBaseCandidates(API_BASE).forEach((candidate) => bases.add(candidate));
+
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    const pathname = window.location.pathname;
+    bases.add(stripTrailingSlash(origin));
+
+    if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {
+      bases.add(stripTrailingSlash(`${origin}/projet%20ismo`));
+    }
+  }
+
+  expandBaseCandidates(`${DEFAULT_REMOTE_BASE}/api`).forEach((candidate) => bases.add(candidate));
+  bases.add(stripTrailingSlash(DEFAULT_REMOTE_BASE));
+
+  return Array.from(bases).filter(Boolean);
+};
 
 const ensureHttps = (url) => {
   if (!url || !url.startsWith('http://')) {
@@ -82,8 +89,20 @@ export function resolveGameImageUrl(imageUrl, gameSlug = null) {
     return ensureHttps(imageUrl);
   }
 
-  const normalizedPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
-  return `${IMAGE_BASE}${normalizedPath}`;
+  const relativePath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
+  const baseCandidates = buildBaseCandidates();
+
+  for (const base of baseCandidates) {
+    try {
+      const absoluteUrl = new URL(relativePath, ensureTrailingSlash(base)).toString();
+      return ensureHttps(absoluteUrl);
+    } catch (error) {
+      // Continuer sur le prochain candidat
+    }
+  }
+
+  // En dernier recours, retourner l'URL telle quelle (peut échouer mais laisse une chance au navigateur)
+  return relativePath;
 }
 
 /**
