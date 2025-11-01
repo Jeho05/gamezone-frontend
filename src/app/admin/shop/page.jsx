@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
+import { resolveGameImageUrl } from '../../../utils/gameImageUrl';
 
 export default function AdminShop() {
   const navigate = useNavigate();
@@ -574,17 +575,17 @@ export default function AdminShop() {
   // Afficher loading pendant vérification auth
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white mb-4"></div>
-          <p className="text-white text-xl">Vérification de l'authentification...</p>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="inline-block h-16 w-16 rounded-full border-4 border-slate-200 border-t-purple-600 animate-spin"></div>
+          <p className="text-slate-600 text-lg font-semibold">Vérification de l'authentification...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
+    <div className="min-h-screen bg-slate-100">
       <Navigation userType="admin" />
       
       {/* Main Content with Sidebar Offset */}
@@ -666,9 +667,12 @@ export default function AdminShop() {
                 {games.map((game) => (
                   <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                     <img
-                      src={game.image_url || 'https://via.placeholder.com/400x200'}
+                      src={resolveGameImageUrl(game.image_url) || 'https://via.placeholder.com/400x200'}
                       alt={game.name}
                       className="w-full h-40 object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/400x200?text=Image+non+disponible';
+                      }}
                     />
                     <div className="p-4">
                       <h3 className="font-bold text-lg mb-2">{game.name}</h3>

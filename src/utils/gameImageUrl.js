@@ -1,6 +1,8 @@
 // Utilitaire pour résoudre les URLs d'images de jeux
 // Similaire à avatarUrl.js mais pour les images de jeux
 
+import API_BASE from './apiBase';
+
 /**
  * Résout l'URL d'une image de jeu
  * @param {string|null} imageUrl - URL de l'image du jeu
@@ -25,6 +27,13 @@ export function resolveGameImageUrl(imageUrl, gameSlug = null) {
   // Si c'est déjà une URL complète (http:// ou https://), la retourner telle quelle
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     return imageUrl;
+  }
+
+  // Pour les environnements Vercel avec backend Railway, utiliser le chemin /images/
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('.vercel.app')) {
+    // Enlever le slash initial si présent
+    const cleanPath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
+    return `/images/${cleanPath}`;
   }
 
   // Sinon, c'est une URL relative, la convertir vers le backend Apache
