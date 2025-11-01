@@ -12,40 +12,53 @@ const DEFAULT_REMOTE_BASE = 'https://overflowing-fulfillment-production-36c6.up.
 
 const stripTrailingSlash = (value) => value?.replace(/\/+$/, '') ?? value;
 const ensureTrailingSlash = (value) => (value?.endsWith('/') ? value : `${value}/`);
+const isAbsoluteUrl = (value) => typeof value === 'string' && /^https?:\/\//.test(value);
 
-const expandBaseCandidates = (base) => {
-  if (!base) return [];
+const expandAbsoluteBase = (base) => {
+  if (!isAbsoluteUrl(base)) return [];
+
   const trimmed = stripTrailingSlash(base);
   const candidates = [trimmed];
 
-  const match = trimmed.match(/^(.*\/)(api)$/i);
-  if (match) {
-    candidates.push(stripTrailingSlash(match[1]));
+  if (trimmed.endsWith('/api')) {
+    candidates.push(stripTrailingSlash(trimmed.slice(0, -4)));
   }
 
   return candidates;
 };
 
 const buildBaseCandidates = () => {
-  const bases = new Set();
+  const ordered = [];
 
-  expandBaseCandidates(envImageBase).forEach((candidate) => bases.add(candidate));
-  expandBaseCandidates(API_BASE).forEach((candidate) => bases.add(candidate));
+  expandAbsoluteBase(envImageBase).forEach((candidate) => ordered.push(candidate));
+  expandAbsoluteBase(API_BASE).forEach((candidate) => ordered.push(candidate));
+
+  // Toujours ajouter la base distante connue en priorité si aucune des précédentes n'est fournie
+  ordered.push(DEFAULT_REMOTE_BASE);
 
   if (typeof window !== 'undefined') {
-    const origin = window.location.origin;
-    const pathname = window.location.pathname;
-    bases.add(stripTrailingSlash(origin));
+    const { origin, hostname, pathname } = window.location;
 
-    if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {
-      bases.add(stripTrailingSlash(`${origin}/projet%20ismo`));
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      ordered.push('http://localhost/projet%20ismo');
+      ordered.push(origin);
+    } else {
+      if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {
+        ordered.push(stripTrailingSlash(`${origin}/projet%20ismo`));
+      }
+      ordered.push(origin);
     }
   }
 
-  expandBaseCandidates(`${DEFAULT_REMOTE_BASE}/api`).forEach((candidate) => bases.add(candidate));
-  bases.add(stripTrailingSlash(DEFAULT_REMOTE_BASE));
-
-  return Array.from(bases).filter(Boolean);
+  // Supprimer valeurs falsy et doublons en conservant l'ordre
+  const seen = new Set();
+  return ordered.filter((candidate) => {
+    if (!candidate) return false;
+    const trimmed = stripTrailingSlash(candidate);
+    if (seen.has(trimmed)) return false;
+    seen.add(trimmed);
+    return true;
+  });
 };
 
 const ensureHttps = (url) => {
