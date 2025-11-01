@@ -1,7 +1,61 @@
+import API_BASE from './apiBase';
+
 // Utilitaire pour résoudre les URLs d'images de jeux
 // Similaire à avatarUrl.js mais pour les images de jeux
 
-import API_BASE from './apiBase';
+const envImageBase =
+  typeof import.meta !== 'undefined'
+    ? import.meta.env?.NEXT_PUBLIC_IMAGE_BASE || import.meta.env?.VITE_IMAGE_BASE_URL
+    : undefined;
+
+const stripTrailingSlash = (value) => value?.replace(/\/+$/, '') ?? value;
+
+const deriveImageBase = () => {
+  if (envImageBase) {
+    return stripTrailingSlash(envImageBase);
+  }
+
+  if (API_BASE && /^https?:\/\//.test(API_BASE)) {
+    try {
+      const apiUrl = new URL(API_BASE);
+      apiUrl.pathname = apiUrl.pathname.replace(/\/api\/?$/, '/');
+      return stripTrailingSlash(`${apiUrl.origin}${apiUrl.pathname}`);
+    } catch (error) {
+      console.warn('[Image Resolver] Impossible de parser API_BASE pour déterminer IMAGE_BASE:', error);
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    const { origin, pathname, hostname } = window.location;
+    if (hostname.endsWith('vercel.app')) {
+      return 'https://overflowing-fulfillment-production-36c6.up.railway.app';
+    }
+    if (pathname.includes('/projet%20ismo') || pathname.includes('/projet ismo')) {
+      return `${origin}/projet%20ismo`;
+    }
+    return origin;
+  }
+
+  return 'http://localhost/projet%20ismo';
+};
+
+const IMAGE_BASE = deriveImageBase();
+
+const ensureHttps = (url) => {
+  if (!url || !url.startsWith('http://')) {
+    return url;
+  }
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
+      return url;
+    }
+    parsed.protocol = 'https:';
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+};
 
 /**
  * Résout l'URL d'une image de jeu
@@ -24,27 +78,12 @@ export function resolveGameImageUrl(imageUrl, gameSlug = null) {
     return `gradient-${colors[colorIndex]}`;
   }
 
-  // Si c'est déjà une URL complète (http:// ou https://), la retourner telle quelle
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
+  if (/^https?:\/\//.test(imageUrl)) {
+    return ensureHttps(imageUrl);
   }
 
-  // Pour les environnements Vercel avec backend Railway, utiliser le chemin /images/
-  if (typeof window !== 'undefined' && window.location.hostname.endsWith('.vercel.app')) {
-    // Enlever le slash initial si présent
-    const cleanPath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
-    return `/images/${cleanPath}`;
-  }
-
-  // Sinon, c'est une URL relative, la convertir vers le backend Apache
-  // Le frontend Vite tourne sur localhost:4000
-  // Le backend Apache tourne sur localhost/projet%20ismo
-  const baseUrl = 'http://localhost/projet%20ismo';
-  
-  // Enlever le slash initial si présent
-  const cleanPath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
-  
-  return `${baseUrl}/${cleanPath}`;
+  const normalizedPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+  return `${IMAGE_BASE}${normalizedPath}`;
 }
 
 /**

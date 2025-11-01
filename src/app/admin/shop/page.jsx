@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
-import { resolveGameImageUrl } from '../../../utils/gameImageUrl';
 
 export default function AdminShop() {
   const navigate = useNavigate();
@@ -590,27 +589,27 @@ export default function AdminShop() {
       
       {/* Main Content with Sidebar Offset */}
       <div className="lg:pl-64">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 space-y-6">
           {/* Header */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6 text-gray-900">
-            <h1 className="text-3xl font-bold text-purple-600 mb-2 flex items-center gap-3">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-gray-900">
+            <h1 className="text-3xl font-bold text-purple-700 mb-2 flex items-center gap-3">
               <Gamepad2 className="w-8 h-8" />
               Gestion Boutique de Jeux
             </h1>
             <p className="text-gray-600">Gérez vos jeux, packages et méthodes de paiement</p>
 
             {/* Tabs */}
-            <div className="flex gap-4 mt-6 border-b">
+            <div className="flex flex-wrap gap-2 mt-6 border-b border-gray-200 pb-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 font-semibold border-b-2 transition-colors ${
+                    className={`flex items-center gap-2 px-4 py-2 font-semibold border-b-2 rounded-t-lg transition-colors ${
                       activeTab === tab.id
-                        ? 'border-purple-600 text-purple-600'
-                        : 'border-transparent text-gray-500 hover:text-purple-600'
+                        ? 'border-purple-600 text-purple-700 bg-purple-50'
+                        : 'border-transparent text-gray-500 hover:text-purple-600 hover:bg-purple-50/60'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -623,7 +622,7 @@ export default function AdminShop() {
 
           {/* Games Tab */}
           {activeTab === 'games' && (
-          <div className="bg-white rounded-xl shadow-lg p-6 text-gray-900">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-gray-900">
             <div className="flex justify-between items-center mb-6">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -664,16 +663,39 @@ export default function AdminShop() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {games.map((game) => (
-                  <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    <img
-                      src={resolveGameImageUrl(game.image_url) || 'https://via.placeholder.com/400x200'}
-                      alt={game.name}
-                      className="w-full h-40 object-cover"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x200?text=Image+non+disponible';
-                      }}
-                    />
+                {games.map((game) => {
+                  const resolvedImage = resolveGameImageUrl(game.image_url || game.thumbnail_url, game.slug || game.name);
+                  const fallbackImage = `https://via.placeholder.com/600x400?text=${encodeURIComponent(game.name || 'Jeu')}`;
+                  const isGradientBg = isGradient(resolvedImage);
+                  const gradientClass = isGradientBg ? getGradientClass(resolvedImage) : '';
+
+                  return (
+                    <div
+                      key={game.id}
+                      className="group rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-shadow bg-white"
+                    >
+                      <div className="relative h-44">
+                        {isGradientBg ? (
+                          <div className={`w-full h-full bg-gradient-to-br ${gradientClass} flex items-center justify-center text-white text-3xl font-bold`}> 
+                            {game.name?.charAt(0) || '🎮'}
+                          </div>
+                        ) : (
+                          <img
+                            src={resolvedImage}
+                            alt={game.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = fallbackImage;
+                            }}
+                          />
+                        )}
+                        {game.is_featured == 1 && (
+                          <div className="absolute top-3 right-3 bg-white/95 text-purple-600 text-xs font-semibold px-3 py-1 rounded-full shadow">
+                            ⭐ Mis en avant
+                          </div>
+                        )}
+                      </div>
                     <div className="p-4">
                       <h3 className="font-bold text-lg mb-2">{game.name}</h3>
                       <p className="text-sm text-gray-600 mb-2">{game.short_description}</p>
@@ -721,8 +743,9 @@ export default function AdminShop() {
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -730,7 +753,7 @@ export default function AdminShop() {
 
           {/* Packages Tab */}
           {activeTab === 'packages' && (
-          <div className="bg-white rounded-xl shadow-lg p-6 text-gray-900">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-gray-900">
             <div className="flex justify-end mb-6">
               <button
                 onClick={() => {
@@ -826,7 +849,7 @@ export default function AdminShop() {
 
           {/* Payment Methods Tab */}
           {activeTab === 'payment-methods' && (
-          <div className="bg-white rounded-xl shadow-lg p-6 text-gray-900">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-gray-900">
             <div className="flex justify-end mb-6">
               <button
                 onClick={() => {
