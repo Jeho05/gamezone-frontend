@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import Navigation from '../../../components/Navigation';
@@ -166,6 +167,11 @@ export default function AdminDashboard() {
       console.error('Erreur chargement alertes:', error);
     }
   };
+
+  // Load data on component mount
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   // Pas besoin de maxPlayers/maxPoints
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '../../../components/Navigation';
 import { 
   Coins, 

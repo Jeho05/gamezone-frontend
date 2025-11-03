@@ -93,8 +93,8 @@ export default defineConfig({
         target: 'http://localhost',
         changeOrigin: true,
         secure: false,
-        // Map /php-api/* to /projet%20ismo/api/* on Apache
-        rewrite: (path) => path.replace(/^\/php-api/, '/projet%20ismo/api'),
+        // Map /php-api/* to /EXAMEN/projet%20ismo/api/* on Apache
+        rewrite: (path) => path.replace(/^\/php-api/, '/EXAMEN/projet%20ismo/api'),
         configure: (proxy, options) => {
           proxy.on('error', (err, req, res) => {
             console.log('proxy error', err);
@@ -111,8 +111,8 @@ export default defineConfig({
         target: 'http://localhost',
         changeOrigin: true,
         secure: false,
-        // Map /uploads/* to /projet%20ismo/uploads/* on Apache
-        rewrite: (path) => path.replace(/^\/uploads/, '/projet%20ismo/uploads'),
+        // Map /uploads/* to /EXAMEN/projet%20ismo/uploads/* on Apache
+        rewrite: (path) => path.replace(/^\/uploads/, '/EXAMEN/projet%20ismo/uploads'),
         configure: (proxy, options) => {
           proxy.on('error', (err, req, res) => {
             console.log('uploads proxy error', err);
@@ -129,8 +129,8 @@ export default defineConfig({
         target: 'http://localhost',
         changeOrigin: true,
         secure: false,
-        // Map /images/* to /projet%20ismo/images/* on Apache
-        rewrite: (path) => path.replace(/^\/images/, '/projet%20ismo/images'),
+        // Map /images/* to /EXAMEN/projet%20ismo/images/* on Apache
+        rewrite: (path) => path.replace(/^\/images/, '/EXAMEN/projet%20ismo/images'),
         configure: (proxy, options) => {
           proxy.on('error', (err, req, res) => {
             console.log('images proxy error', err);

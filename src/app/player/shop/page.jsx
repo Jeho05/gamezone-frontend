@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '../../../components/Navigation';
+import { resolveGameImageUrl, isGradient, getGradientClass } from '../../../utils/gameImageUrl';
 import { 
   ShoppingCart, 
   Star, 

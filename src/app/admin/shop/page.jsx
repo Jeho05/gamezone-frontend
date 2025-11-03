@@ -6,6 +6,7 @@ import Navigation from '../../../components/Navigation';
 import ImageUpload from '../../../components/ImageUpload';
 import PackageModal from '../../../components/admin/PackageModal';
 import PaymentMethodModal from '../../../components/admin/PaymentMethodModal';
+import { resolveGameImageUrl, isGradient, getGradientClass } from '../../../utils/gameImageUrl';
 import { 
   Gamepad2, 
   Package, 
@@ -663,13 +664,27 @@ export default function AdminShop() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {games.map((game) => (
+                {games.map((game) => {
+                  const gameImageSrc = resolveGameImageUrl(game.image_url, game.slug);
+                  const isGrad = isGradient(gameImageSrc);
+                  
+                  return (
                   <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    <img
-                      src={game.image_url || 'https://via.placeholder.com/400x200'}
-                      alt={game.name}
-                      className="w-full h-40 object-cover"
-                    />
+                    {isGrad ? (
+                      <div className={`w-full h-40 bg-gradient-to-br ${getGradientClass(gameImageSrc)} flex items-center justify-center`}>
+                        <Gamepad2 className="w-16 h-16 text-white/50" />
+                      </div>
+                    ) : (
+                      <img
+                        src={gameImageSrc}
+                        alt={game.name}
+                        className="w-full h-40 object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `<div class="w-full h-40 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center"><div class="text-white text-center"><div class="text-4xl mb-2">🎮</div><div class="text-sm">${game.name}</div></div></div>`;
+                        }}
+                      />
+                    )}
                     <div className="p-4">
                       <h3 className="font-bold text-lg mb-2">{game.name}</h3>
                       <p className="text-sm text-gray-600 mb-2">{game.short_description}</p>

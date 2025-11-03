@@ -29,8 +29,8 @@ export function resolveGameImageUrl(imageUrl, gameSlug = null) {
 
   // Sinon, c'est une URL relative, la convertir vers le backend Apache
   // Le frontend Vite tourne sur localhost:4000
-  // Le backend Apache tourne sur localhost/projet%20ismo
-  const baseUrl = 'http://localhost/projet%20ismo';
+  // Le backend Apache tourne sur localhost/EXAMEN/projet%20ismo
+  const baseUrl = 'http://localhost/EXAMEN/projet%20ismo';
   
   // Enlever le slash initial si présent
   const cleanPath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
