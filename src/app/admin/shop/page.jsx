@@ -667,73 +667,76 @@ export default function AdminShop() {
                 {games.map((game) => {
                   const gameImageSrc = resolveGameImageUrl(game.image_url, game.slug);
                   const isGrad = isGradient(gameImageSrc);
-                  
+
                   return (
-                  <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    {isGrad ? (
-                      <div className={`w-full h-40 bg-gradient-to-br ${getGradientClass(gameImageSrc)} flex items-center justify-center`}>
-                        <Gamepad2 className="w-16 h-16 text-white/50" />
-                      </div>
-                    ) : (
-                      <img
-                        src={gameImageSrc}
-                        alt={game.name}
-                        className="w-full h-40 object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = `<div class="w-full h-40 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center"><div class="text-white text-center"><div class="text-4xl mb-2">🎮</div><div class="text-sm">${game.name}</div></div></div>`;
-                        }}
-                      />
-                    )}
-                    <div className="p-4">
-                      <h3 className="font-bold text-lg mb-2">{game.name}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{game.short_description}</p>
-                      <div className="flex gap-2 mb-3">
-                        <span className={`px-2 py-1 text-xs rounded ${
-                          game.is_active == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                        }`}>
-                          {game.is_active == 1 ? 'Actif' : 'Inactif'}
-                        </span>
-                        <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 capitalize">
-                          {game.category}
-                        </span>
-                        {game.is_reservable == 1 && (
-                          <span className="px-2 py-1 text-xs rounded bg-purple-100 text-purple-700">
-                            Réservable
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm mb-3">
-                        <strong>{game.points_per_hour} pts/h</strong> • 
-                        <strong> {game.base_price} XOF/h</strong>
-                      </div>
-                      {game.is_reservable == 1 && (
-                        <div className="text-xs text-gray-600 mb-3">
-                          Frais de réservation: <strong className="text-purple-700">{game.reservation_fee} XOF</strong>
+                    <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                      {isGrad ? (
+                        <div className={`w-full h-40 bg-gradient-to-br ${getGradientClass(gameImageSrc)} flex items-center justify-center`}>
+                          <Gamepad2 className="w-16 h-16 text-white/50" />
                         </div>
+                      ) : (
+                        <img
+                          src={gameImageSrc}
+                          alt={game.name}
+                          className="w-full h-40 object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = `<div class="w-full h-40 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center"><div class="text-white text-center"><div class="text-4xl mb-2">🎮</div><div class="text-sm">${game.name}</div></div></div>`;
+                          }}
+                        />
                       )}
-                      <div className="text-xs text-gray-500 mb-3">
-                        📦 {game.active_packages_count || 0} packages • 
-                        🛒 {game.total_purchases || 0} achats
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleOpenEditModal(game)}
-                          className="flex-1 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
-                        >
-                          <Edit className="w-4 h-4 inline-block mr-1" />
-                          Modifier
-                        </button>
-                        <button
-                          onClick={() => deleteGame(game.id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                      <div className="p-4">
+                        <h3 className="font-bold text-lg mb-2">{game.name}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{game.short_description}</p>
+                        <div className="flex gap-2 mb-3">
+                          <span
+                            className={`px-2 py-1 text-xs rounded ${
+                              game.is_active == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            }`}
+                          >
+                            {game.is_active == 1 ? 'Actif' : 'Inactif'}
+                          </span>
+                          <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 capitalize">
+                            {game.category}
+                          </span>
+                          {game.is_reservable == 1 && (
+                            <span className="px-2 py-1 text-xs rounded bg-purple-100 text-purple-700">
+                              Réservable
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm mb-3">
+                          <strong>{game.points_per_hour} pts/h</strong> •
+                          <strong> {game.base_price} XOF/h</strong>
+                        </div>
+                        {game.is_reservable == 1 && (
+                          <div className="text-xs text-gray-600 mb-3">
+                            Frais de réservation: <strong className="text-purple-700">{game.reservation_fee} XOF</strong>
+                          </div>
+                        )}
+                        <div className="text-xs text-gray-500 mb-3">
+                          📦 {game.active_packages_count || 0} packages •
+                          🛒 {game.total_purchases || 0} achats
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleOpenEditModal(game)}
+                            className="flex-1 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                          >
+                            <Edit className="w-4 h-4 inline-block mr-1" />
+                            Modifier
+                          </button>
+                          <button
+                            onClick={() => deleteGame(game.id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
