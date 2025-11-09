@@ -27,15 +27,9 @@ export function resolveGameImageUrl(imageUrl, gameSlug = null) {
     return imageUrl;
   }
 
-  // Sinon, c'est une URL relative, la convertir vers le backend Apache
-  // Le frontend Vite tourne sur localhost:4000
-  // Le backend Apache tourne sur localhost/EXAMEN/projet%20ismo
-  const baseUrl = 'http://localhost/EXAMEN/projet%20ismo';
-  
-  // Enlever le slash initial si présent
-  const cleanPath = imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl;
-  
-  return `${baseUrl}/${cleanPath}`;
+  // Sinon, c'est une URL relative, utiliser placeholder
+  // Les images doivent être en BASE64 via l'API
+  return `https://via.placeholder.com/400x300?text=No+Image`;
 }
 
 /**

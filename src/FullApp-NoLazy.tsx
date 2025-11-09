@@ -129,6 +129,10 @@ export default function FullApp() {
       element: <PlayerShop />,
     },
     {
+      path: "/player/shop/:gameId",
+      element: <GameDetail />,
+    },
+    {
       path: "/player/rewards",
       element: <PlayerRewards />,
     },
