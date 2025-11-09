@@ -349,67 +349,40 @@ export default function PlayerDashboard() {
                   <span>Récompenses</span>
                 </h2>
                 
-                <div className="space-y-4">
-                  {availableRewards.map((reward) => (
-                    <div key={reward.id} className="p-4 bg-white/5 rounded-xl border border-white/10">
-                      <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-white font-medium text-sm">{reward.name}</h3>
-                        <div className="flex items-center space-x-1 text-yellow-400">
-                          <Coins className="w-4 h-4" />
-                          <span className="font-semibold text-sm">{reward.cost}</span>
+                <div className="space-y-6">
+                  {/* Quick Action - Daily Bonus */}
+                  <div className="p-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-purple-400/30">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <Zap className="w-6 h-6 text-purple-400" />
+                      <span className="text-white font-semibold">Bonus journalier</span>
+                    </div>
+                    <p className="text-gray-300 text-sm mb-3">Récupère tes 25 points quotidiens !</p>
+                    <button onClick={claimDailyBonus} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-2 rounded-lg font-semibold transition-all duration-200">
+                      Récupérer
+                    </button>
+                  </div>
+
+                  {/* Shop Promotion Widget */}
+                  <div className="relative bg-gradient-to-br from-orange-500 to-pink-600 rounded-xl overflow-hidden">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="relative p-4">
+                      <div className="flex items-start space-x-3 mb-3">
+                        <div className="p-2 bg-white/20 rounded-lg">
+                          <ShoppingCart className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-white font-bold text-sm mb-1">Boutique de Jeux</h3>
+                          <p className="text-white/90 text-xs">Achetez du temps et gagnez jusqu'à 20 pts/h !</p>
                         </div>
                       </div>
-                      
-                      <button
-                        onClick={() => handleRewardExchange(reward.id)}
-                        disabled={!reward.available || playerData.points < reward.cost}
-                        className={`w-full py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
-                          reward.available && playerData.points >= reward.cost
-                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-                            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        }`}
+                      <button 
+                        onClick={() => navigate('/player/shop')}
+                        className="w-full bg-white hover:bg-gray-100 text-orange-600 py-2 rounded-lg font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2"
                       >
-                        {reward.available 
-                          ? (playerData.points >= reward.cost ? 'Échanger' : 'Points insuffisants')
-                          : 'Indisponible'
-                        }
+                        Explorer
+                        <ArrowRight className="w-4 h-4" />
                       </button>
                     </div>
-                  ))}
-                </div>
-
-                {/* Quick Action - Daily Bonus */}
-                <div className="mt-6 p-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-purple-400/30">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <Zap className="w-6 h-6 text-purple-400" />
-                    <span className="text-white font-semibold">Bonus journalier</span>
-                  </div>
-                  <p className="text-gray-300 text-sm mb-3">Récupère tes 25 points quotidiens !</p>
-                  <button onClick={claimDailyBonus} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-2 rounded-lg font-semibold transition-all duration-200">
-                    Récupérer
-                  </button>
-                </div>
-
-                {/* Shop Promotion Widget */}
-                <div className="mt-6 relative bg-gradient-to-br from-orange-500 to-pink-600 rounded-xl overflow-hidden">
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="relative p-4">
-                    <div className="flex items-start space-x-3 mb-3">
-                      <div className="p-2 bg-white/20 rounded-lg">
-                        <ShoppingCart className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-white font-bold text-sm mb-1">Boutique de Jeux</h3>
-                        <p className="text-white/90 text-xs">Achetez du temps et gagnez jusqu'à 20 pts/h !</p>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => navigate('/player/shop')}
-                      className="w-full bg-white hover:bg-gray-100 text-orange-600 py-2 rounded-lg font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2"
-                    >
-                      Explorer
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               </div>
