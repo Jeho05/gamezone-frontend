@@ -53,9 +53,21 @@ export default function PlayersManagement() {
     try {
       setLoading(true);
       setError(null);
+      console.log('[Players] Fetching from:', `${API_BASE}/users/index.php?limit=100`);
       const res = await fetch(`${API_BASE}/users/index.php?limit=100`, { credentials: 'include' });
+      console.log('[Players] Response status:', res.status);
+      
+      if (res.status === 401) {
+        toast.error('Session expirée');
+        setTimeout(() => navigate('/admin/login'), 1500);
+        return;
+      }
+      
       const data = await res.json();
+      console.log('[Players] Response data:', data);
+      
       if (!res.ok) throw new Error(data?.error || 'Échec du chargement des joueurs');
+      
       const items = (data.items || []).map((u) => ({
         id: u.id,
         username: u.username,
@@ -68,13 +80,21 @@ export default function PlayersManagement() {
         totalSessions: u.totalSessions || 0,
         status: u.status || 'active',
       }));
+      
+      console.log('[Players] Mapped items:', items.length);
       setPlayersData(items);
+      
+      if (items.length === 0) {
+        toast.info('Aucun joueur trouvé');
+      }
     } catch (e) {
+      console.error('[Players] Error:', e);
       setError(e.message);
+      toast.error('Erreur: ' + e.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
