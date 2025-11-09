@@ -188,7 +188,7 @@ export default function PlayerProfile() {
       const formData = new FormData();
       formData.append('avatar', file);
       
-      const res = await fetch(`${API_BASE}/users/avatar.php`, {
+      const res = await fetch(`${API_BASE}/users/avatar_simple.php`, {
         method: 'POST',
         credentials: 'include',
         body: formData

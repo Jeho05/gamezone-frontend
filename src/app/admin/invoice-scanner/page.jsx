@@ -293,7 +293,7 @@ export default function InvoiceScanner() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // Timeout 15s
 
-      const res = await fetch(`${API_BASE}/admin/scan_invoice.php`, {
+      const res = await fetch(`${API_BASE}/admin/scan_invoice_simple.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
