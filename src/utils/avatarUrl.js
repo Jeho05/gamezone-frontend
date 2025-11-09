@@ -1,8 +1,10 @@
+import API_BASE from './apiBase';
+
 /**
  * Résout l'URL complète d'un avatar
- * Les avatars doivent être chargés directement depuis Apache, pas via le proxy Vite
+ * Gère les data URLs (base64), URLs complètes et URLs relatives
  * 
- * @param {string|null} avatarUrl - L'URL de l'avatar depuis l'API (peut être null ou relative)
+ * @param {string|null} avatarUrl - L'URL de l'avatar depuis l'API (peut être null, data URL, relative ou complète)
  * @param {string} fallbackUsername - Nom d'utilisateur pour le fallback pravatar
  * @returns {string} URL complète de l'avatar
  */
@@ -12,20 +14,21 @@ export function resolveAvatarUrl(avatarUrl, fallbackUsername = 'user') {
     return `https://i.pravatar.cc/150?u=${encodeURIComponent(fallbackUsername)}`;
   }
   
+  // Si c'est une data URL (base64), la retourner telle quelle
+  if (avatarUrl.startsWith('data:')) {
+    return avatarUrl;
+  }
+  
   // Si l'URL est déjà complète (commence par http:// ou https://), la retourner telle quelle
   if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
     return avatarUrl;
   }
   
-  // Pour les URLs relatives, pointer directement vers Apache
-  // Ne pas utiliser window.location.origin car ça pointerait vers localhost:4000 (Vite)
-  // Les avatars doivent être chargés depuis le serveur Apache
-  const apacheBase = 'http://localhost/projet%20ismo';
-  
+  // Pour les URLs relatives, pointer vers l'API backend
   // Assurer que l'URL commence par /
   const normalizedUrl = avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`;
   
-  return `${apacheBase}${normalizedUrl}`;
+  return `${API_BASE}${normalizedUrl}`;
 }
 
 export default resolveAvatarUrl;
