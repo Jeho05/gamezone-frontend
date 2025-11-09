@@ -34,13 +34,24 @@ export default function PlayersManagement() {
     const checkAuth = async () => {
       try {
         const res = await fetch(`${API_BASE}/auth/me.php`, { credentials: 'include' });
+        if (res.status === 401) {
+          toast.error('Session expirée');
+          setTimeout(() => navigate('/auth/login'), 1500);
+          return;
+        }
+
         const data = await res.json();
         if (!res.ok || !data?.user || data.user.role !== 'admin') {
           toast.error('Accès non autorisé');
           setTimeout(() => navigate('/auth/login'), 1500);
           return;
         }
+
         setIsAuthenticated(true);
+        // Pinger manage_session pour garder la session active
+        fetch(`${API_BASE}/auth/manage_session.php?action=keep_alive`, {
+          credentials: 'include'
+        }).catch(() => {});
       } catch (error) {
         toast.error('Erreur authentification');
         setTimeout(() => navigate('/auth/login'), 1500);
@@ -98,8 +109,23 @@ export default function PlayersManagement() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    fetchPlayers();
-  }, [fetchPlayers]);
+
+    let active = true;
+    const load = async (retry = 0) => {
+      await fetchPlayers();
+      if (!active) return;
+      if (playersData.length === 0 && retry < 1) {
+        // Retenter une fois après 1 seconde si la liste est vide
+        setTimeout(() => load(retry + 1), 1000);
+      }
+    };
+
+    load();
+
+    return () => {
+      active = false;
+    };
+  }, [isAuthenticated, fetchPlayers]);
 
   const filteredPlayers = playersData.filter(player => {
     const matchesSearch = player.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
