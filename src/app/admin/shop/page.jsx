@@ -488,16 +488,26 @@ export default function AdminShop() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
     
+    // Nettoyer les valeurs NaN et undefined
+    const cleanedData = {
+      ...gameForm,
+      slug: slug,
+      points_per_hour: parseFloat(gameForm.points_per_hour) || 10,
+      base_price: parseFloat(gameForm.base_price) || 0,
+      reservation_fee: parseFloat(gameForm.reservation_fee) || 0,
+      min_players: parseInt(gameForm.min_players) || 1,
+      max_players: parseInt(gameForm.max_players) || 1,
+      is_reservable: gameForm.is_reservable ? 1 : 0,
+      is_featured: gameForm.is_featured ? 1 : 0
+    };
+    
     try {
       setSubmitting(true);
       const res = await fetch(`${API_BASE}/admin/games.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...gameForm,
-          slug: slug
-        })
+        body: JSON.stringify(cleanedData)
       });
       
       const data = await res.json();
@@ -533,17 +543,27 @@ export default function AdminShop() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
     
+    // Nettoyer les valeurs NaN et undefined
+    const cleanedData = {
+      id: editingGame.id,
+      ...gameForm,
+      slug: slug,
+      points_per_hour: parseFloat(gameForm.points_per_hour) || 10,
+      base_price: parseFloat(gameForm.base_price) || 0,
+      reservation_fee: parseFloat(gameForm.reservation_fee) || 0,
+      min_players: parseInt(gameForm.min_players) || 1,
+      max_players: parseInt(gameForm.max_players) || 1,
+      is_reservable: gameForm.is_reservable ? 1 : 0,
+      is_featured: gameForm.is_featured ? 1 : 0
+    };
+    
     try {
       setSubmitting(true);
       const res = await fetch(`${API_BASE}/admin/games.php`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: editingGame.id,
-          ...gameForm,
-          slug: slug
-        })
+        body: JSON.stringify(cleanedData)
       });
       
       const data = await res.json();
@@ -1285,26 +1305,28 @@ export default function AdminShop() {
 
                 {/* Points per Hour */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">Points par Heure</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Points par Heure *</label>
                   <input
                     type="number"
                     min="0"
                     value={gameForm.points_per_hour}
-                    onChange={(e) => handleGameFormChange('points_per_hour', parseInt(e.target.value))}
+                    onChange={(e) => handleGameFormChange('points_per_hour', parseInt(e.target.value) || 0)}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    required
                   />
                 </div>
 
                 {/* Base Price */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">Prix de Base (XOF/h)</label>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Prix de Base (XOF/h) *</label>
                   <input
                     type="number"
                     min="0"
                     step="0.01"
                     value={gameForm.base_price}
-                    onChange={(e) => handleGameFormChange('base_price', parseFloat(e.target.value))}
+                    onChange={(e) => handleGameFormChange('base_price', parseFloat(e.target.value) || 0)}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    required
                   />
                 </div>
 
@@ -1330,7 +1352,7 @@ export default function AdminShop() {
                       min="0"
                       step="0.01"
                       value={gameForm.reservation_fee}
-                      onChange={(e) => handleGameFormChange('reservation_fee', parseFloat(e.target.value))}
+                      onChange={(e) => handleGameFormChange('reservation_fee', parseFloat(e.target.value) || 0)}
                       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       placeholder="Ex: 500"
                     />
