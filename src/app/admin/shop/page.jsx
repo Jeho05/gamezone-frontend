@@ -87,6 +87,7 @@ export default function AdminShop() {
     is_featured: false
   });
   const [submitting, setSubmitting] = useState(false);
+  const [brokenGameImages, setBrokenGameImages] = useState({});
 
   // Helpers: formatters for UI
   const formatPriceXOF = (value) => {
@@ -572,6 +573,16 @@ export default function AdminShop() {
     { id: 'reservations', label: 'Réservations', icon: Calendar }
   ];
 
+  const markGameImageBroken = (gameIdentifier) => {
+    if (!gameIdentifier) return;
+    setBrokenGameImages((prev) => {
+      if (prev[gameIdentifier]) {
+        return prev;
+      }
+      return { ...prev, [gameIdentifier]: true };
+    });
+  };
+
   // Afficher loading pendant vérification auth
   if (!isAuthenticated) {
     return (
@@ -666,11 +677,20 @@ export default function AdminShop() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {games.map((game) => {
                   const gameImageSrc = resolveGameImageUrl(game.image_url, game.slug);
-                  const isGrad = isGradient(gameImageSrc);
+                  const gameIdentifier = game.id ?? game.slug ?? game.name;
+                  const imageBroken = brokenGameImages[gameIdentifier];
+                  const isGrad = !imageBroken && isGradient(gameImageSrc);
 
                   return (
                     <div key={game.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                      {isGrad ? (
+                      {imageBroken ? (
+                        <div className="w-full h-40 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <div className="text-4xl mb-2">🎮</div>
+                            <div className="text-sm font-semibold">{game.name}</div>
+                          </div>
+                        </div>
+                      ) : isGrad ? (
                         <div className={`w-full h-40 bg-gradient-to-br ${getGradientClass(gameImageSrc)} flex items-center justify-center`}>
                           <Gamepad2 className="w-16 h-16 text-white/50" />
                         </div>
@@ -679,10 +699,7 @@ export default function AdminShop() {
                           src={gameImageSrc}
                           alt={game.name}
                           className="w-full h-40 object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentElement.innerHTML = `<div class="w-full h-40 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center"><div class="text-white text-center"><div class="text-4xl mb-2">🎮</div><div class="text-sm">${game.name}</div></div></div>`;
-                          }}
+                          onError={() => markGameImageBroken(gameIdentifier)}
                         />
                       )}
                       <div className="p-4">
