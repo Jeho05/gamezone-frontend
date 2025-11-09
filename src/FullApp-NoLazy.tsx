@@ -1,8 +1,11 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { ErrorBoundary } from './components/ErrorBoundary';
+
+// Import dynamique pour GameDetail (problème de path avec crochets)
+const GameDetail = lazy(() => import('./app/player/shop/[gameId]/page'));
 
 import HomePage from './app/page';
 import PlayerDashboard from './app/player/dashboard/page';
@@ -130,7 +133,16 @@ export default function FullApp() {
     },
     {
       path: "/player/shop/:gameId",
-      element: <GameDetail />,
+      element: (
+        <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#1a1a2e' }}>
+          <div style={{ textAlign: 'center', color: 'white' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🎮</div>
+            <div>Chargement...</div>
+          </div>
+        </div>}>
+          <GameDetail />
+        </Suspense>
+      ),
     },
     {
       path: "/player/rewards",
