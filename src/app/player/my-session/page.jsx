@@ -48,10 +48,17 @@ export default function MySession() {
       status: serverSession.status,
       total: serverSession.total_minutes,
       used: serverSession.used_minutes,
-      remaining: serverSession.remaining_minutes
+      remaining: serverSession.remaining_minutes,
+      started_at: serverSession.started_at
     });
 
-    // Premier heartbeat après 10 secondes (pas immédiatement)
+    // Si started_at est NULL, appeler IMMÉDIATEMENT pour démarrer le chronomètre
+    if (!serverSession.started_at) {
+      console.log('[MySession] started_at est NULL, démarrage immédiat du chronomètre...');
+      sendHeartbeat();
+    }
+
+    // Premier heartbeat après 10 secondes
     const firstTimeout = setTimeout(() => {
       sendHeartbeat();
     }, 10000);
@@ -75,6 +82,16 @@ export default function MySession() {
       });
       
       const data = await res.json();
+      
+      console.log('[MySession] Heartbeat response:', data);
+      
+      // Si c'est le démarrage du chronomètre
+      if (data.message === 'Chronomètre démarré') {
+        console.log('🎬 [MySession] Chronomètre démarré maintenant !');
+        // Recharger la session pour avoir started_at à jour
+        loadSession();
+        return;
+      }
       
       if (data.session_completed) {
         // Session terminée, recharger pour voir le statut completed
