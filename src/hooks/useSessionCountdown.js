@@ -76,16 +76,19 @@ export function useSessionCountdown(initialSession, onSessionEnd) {
   }, [initialSession]);
 
   // Calculer le pourcentage de progression
-  const progressPercent = session?.total_minutes
+  const progressPercent = session?.total_minutes && localRemainingMinutes !== null
     ? Math.round(((session.total_minutes - localRemainingMinutes) / session.total_minutes) * 100)
     : 0;
 
   // Calculer le temps utilisé
-  const usedMinutes = session?.total_minutes
+  const usedMinutes = session?.total_minutes && localRemainingMinutes !== null
     ? session.total_minutes - localRemainingMinutes
     : 0;
 
-  const isExpired = localRemainingMinutes !== null && localRemainingMinutes === 0;
+  // Ne marquer comme expiré QUE si remaining = 0 ET la session est active depuis au moins 1 minute
+  const hasStarted = session && session.started_at && 
+    (new Date() - new Date(session.started_at)) > 60000; // 1 minute
+  const isExpired = localRemainingMinutes !== null && localRemainingMinutes === 0 && hasStarted;
   
   return {
     session,
