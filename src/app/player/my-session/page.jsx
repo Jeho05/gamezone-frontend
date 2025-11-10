@@ -36,18 +36,46 @@ export default function MySession() {
     loadSession();
   }, []);
 
-  // Synchronisation avec le serveur toutes les 30 secondes (au lieu de 5)
+  // Heartbeat et synchronisation toutes les 30 secondes
   useEffect(() => {
     if (!serverSession || serverSession.status !== 'active') {
       return;
     }
 
     const interval = setInterval(() => {
-      loadSession();
-    }, 30000); // 30 secondes au lieu de 5
+      sendHeartbeat();
+    }, 30000); // 30 secondes
 
     return () => clearInterval(interval);
   }, [serverSession]);
+
+  const sendHeartbeat = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/player/session_heartbeat.php`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      const data = await res.json();
+      
+      if (data.session_completed) {
+        // Session terminée, recharger pour voir le statut completed
+        await loadSession();
+        toast.error('Votre session est terminée !', {
+          duration: 10000,
+          description: 'Votre temps de jeu est écoulé.'
+        });
+        setTimeout(() => {
+          navigate('/player/my-purchases');
+        }, 5000);
+      } else {
+        // Recharger la session pour avoir les données à jour
+        await loadSession();
+      }
+    } catch (err) {
+      console.error('Heartbeat error:', err);
+    }
+  };
 
   const loadSession = async () => {
     try {
