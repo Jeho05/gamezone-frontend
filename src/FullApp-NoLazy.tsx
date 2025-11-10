@@ -20,6 +20,7 @@ import PlayerMyReservations from './app/player/my-reservations/page';
 import PlayerMySession from './app/player/my-session/page';
 import AdminDashboard from './app/admin/dashboard/page';
 import AdminPlayers from './app/admin/players/page';
+import AdminPlayerDetail from './app/admin/players/[id]/page';
 import AdminRewards from './app/admin/rewards/page';
 import AdminPoints from './app/admin/points/page';
 import AdminShop from './app/admin/shop/page';
@@ -184,6 +185,10 @@ export default function FullApp() {
     {
       path: "/admin/players",
       element: <AdminPlayers />,
+    },
+    {
+      path: "/admin/players/:id",
+      element: <AdminPlayerDetail />,
     },
     {
       path: "/admin/rewards",

@@ -28,6 +28,7 @@ const PlayerConvertPoints = lazy(() => import('./app/player/convert-points/page'
 
 const AdminDashboard = lazy(() => import('./app/admin/dashboard/page'));
 const AdminPlayers = lazy(() => import('./app/admin/players/page'));
+const AdminPlayerDetail = lazy(() => import('./app/admin/players/[id]/page'));
 const AdminSessions = lazy(() => import('./app/admin/sessions/page'));
 const AdminActiveSessions = lazy(() => import('./app/admin/active-sessions/page'));
 const AdminRewards = lazy(() => import('./app/admin/rewards/page'));
@@ -110,6 +111,7 @@ export default function FullApp() {
                 {/* Admin routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/players" element={<AdminPlayers />} />
+                <Route path="/admin/players/:id" element={<AdminPlayerDetail />} />
                 <Route path="/admin/sessions" element={<AdminSessions />} />
                 <Route path="/admin/active-sessions" element={<AdminActiveSessions />} />
                 <Route path="/admin/rewards" element={<AdminRewards />} />
