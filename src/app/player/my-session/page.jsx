@@ -42,11 +42,29 @@ export default function MySession() {
       return;
     }
 
+    // Log pour debug
+    console.log('[MySession] Setting up heartbeat interval for session:', {
+      id: serverSession.id,
+      status: serverSession.status,
+      total: serverSession.total_minutes,
+      used: serverSession.used_minutes,
+      remaining: serverSession.remaining_minutes
+    });
+
+    // Premier heartbeat après 10 secondes (pas immédiatement)
+    const firstTimeout = setTimeout(() => {
+      sendHeartbeat();
+    }, 10000);
+
+    // Puis toutes les 30 secondes
     const interval = setInterval(() => {
       sendHeartbeat();
-    }, 30000); // 30 secondes
+    }, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(firstTimeout);
+      clearInterval(interval);
+    };
   }, [serverSession]);
 
   const sendHeartbeat = async () => {
@@ -85,6 +103,8 @@ export default function MySession() {
       
       const data = await res.json();
       
+      console.log('[MySession] Loaded session from server:', data.session);
+      
       if (data.session) {
         setServerSession(data.session);
         setLastSync(Date.now());
@@ -92,7 +112,7 @@ export default function MySession() {
         setServerSession(null);
       }
     } catch (err) {
-      console.error(err);
+      console.error('[MySession] Error loading session:', err);
     } finally {
       setLoading(false);
     }

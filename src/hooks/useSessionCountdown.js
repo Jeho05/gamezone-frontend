@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 export function useSessionCountdown(initialSession, onSessionEnd) {
   const [session, setSession] = useState(initialSession);
   const [localRemainingMinutes, setLocalRemainingMinutes] = useState(
-    initialSession?.remaining_minutes || 0
+    initialSession?.remaining_minutes ?? null
   );
   const [localSeconds, setLocalSeconds] = useState(0);
   const lastUpdateRef = useRef(Date.now());
@@ -16,9 +16,17 @@ export function useSessionCountdown(initialSession, onSessionEnd) {
 
   // Décompte local chaque seconde
   useEffect(() => {
-    if (!session || session.status !== 'active') {
+    if (!session || session.status !== 'active' || localRemainingMinutes === null) {
       return;
     }
+    
+    // Debug: vérifier les valeurs initiales
+    console.log('[Countdown] Starting countdown:', {
+      total: session.total_minutes,
+      used: session.used_minutes,
+      remaining: localRemainingMinutes,
+      status: session.status
+    });
 
     const interval = setInterval(() => {
       const now = Date.now();
@@ -54,8 +62,14 @@ export function useSessionCountdown(initialSession, onSessionEnd) {
   // Mettre à jour quand la session change (sync serveur)
   useEffect(() => {
     if (initialSession) {
+      console.log('[Countdown] Session updated from server:', {
+        total: initialSession.total_minutes,
+        used: initialSession.used_minutes,
+        remaining: initialSession.remaining_minutes,
+        status: initialSession.status
+      });
       setSession(initialSession);
-      setLocalRemainingMinutes(initialSession.remaining_minutes || 0);
+      setLocalRemainingMinutes(initialSession.remaining_minutes ?? 0);
       setLocalSeconds(0);
       lastUpdateRef.current = Date.now();
     }
@@ -71,14 +85,16 @@ export function useSessionCountdown(initialSession, onSessionEnd) {
     ? session.total_minutes - localRemainingMinutes
     : 0;
 
+  const isExpired = localRemainingMinutes !== null && localRemainingMinutes === 0;
+  
   return {
     session,
-    remainingMinutes: localRemainingMinutes,
+    remainingMinutes: localRemainingMinutes ?? 0,
     remainingSeconds: localSeconds,
     usedMinutes,
     progressPercent,
     totalMinutes: session?.total_minutes || 0,
-    isLowTime: localRemainingMinutes <= 5 && localRemainingMinutes > 0,
-    isExpired: localRemainingMinutes === 0
+    isLowTime: localRemainingMinutes !== null && localRemainingMinutes <= 5 && localRemainingMinutes > 0,
+    isExpired
   };
 }
