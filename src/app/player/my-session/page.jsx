@@ -31,12 +31,75 @@ export default function MySession() {
   // Hook personnalisé pour le décompte local
   const countdown = useSessionCountdown(serverSession, handleSessionEnd);
 
+  // Définir loadSession AVEC useCallback
+  const loadSession = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/player/my_active_session.php`, {
+        credentials: 'include'
+      });
+      
+      const data = await res.json();
+      
+      console.log('[MySession] Loaded session from server:', data.session);
+      
+      if (data.session) {
+        setServerSession(data.session);
+        setLastSync(Date.now());
+      } else {
+        setServerSession(null);
+      }
+    } catch (err) {
+      console.error('[MySession] Error loading session:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Définir sendHeartbeat AVEC useCallback (dépend de loadSession)
+  const sendHeartbeat = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/player/session_heartbeat.php`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      const data = await res.json();
+      
+      console.log('[MySession] Heartbeat response:', data);
+      
+      // Si c'est le démarrage du chronomètre
+      if (data.message === 'Chronomètre démarré') {
+        console.log('🎬 [MySession] Chronomètre démarré maintenant !');
+        // Recharger la session pour avoir started_at à jour
+        await loadSession();
+        return;
+      }
+      
+      if (data.session_completed) {
+        // Session terminée, recharger pour voir le statut completed
+        await loadSession();
+        toast.error('Votre session est terminée !', {
+          duration: 10000,
+          description: 'Votre temps de jeu est écoulé.'
+        });
+        setTimeout(() => {
+          navigate('/player/my-purchases');
+        }, 5000);
+      } else {
+        // Recharger la session pour avoir les données à jour
+        await loadSession();
+      }
+    } catch (err) {
+      console.error('Heartbeat error:', err);
+    }
+  }, [loadSession, navigate]);
+
   // Charger la session initiale
   useEffect(() => {
     loadSession();
-  }, []);
+  }, [loadSession]);
 
-  // Heartbeat et synchronisation toutes les 30 secondes
+  // Heartbeat et synchronisation
   useEffect(() => {
     if (!serverSession || serverSession.status !== 'active') {
       return;
@@ -72,68 +135,7 @@ export default function MySession() {
       clearTimeout(firstTimeout);
       clearInterval(interval);
     };
-  }, [serverSession]);
-
-  const sendHeartbeat = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/player/session_heartbeat.php`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      const data = await res.json();
-      
-      console.log('[MySession] Heartbeat response:', data);
-      
-      // Si c'est le démarrage du chronomètre
-      if (data.message === 'Chronomètre démarré') {
-        console.log('🎬 [MySession] Chronomètre démarré maintenant !');
-        // Recharger la session pour avoir started_at à jour
-        loadSession();
-        return;
-      }
-      
-      if (data.session_completed) {
-        // Session terminée, recharger pour voir le statut completed
-        await loadSession();
-        toast.error('Votre session est terminée !', {
-          duration: 10000,
-          description: 'Votre temps de jeu est écoulé.'
-        });
-        setTimeout(() => {
-          navigate('/player/my-purchases');
-        }, 5000);
-      } else {
-        // Recharger la session pour avoir les données à jour
-        await loadSession();
-      }
-    } catch (err) {
-      console.error('Heartbeat error:', err);
-    }
-  };
-
-  const loadSession = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/player/my_active_session.php`, {
-        credentials: 'include'
-      });
-      
-      const data = await res.json();
-      
-      console.log('[MySession] Loaded session from server:', data.session);
-      
-      if (data.session) {
-        setServerSession(data.session);
-        setLastSync(Date.now());
-      } else {
-        setServerSession(null);
-      }
-    } catch (err) {
-      console.error('[MySession] Error loading session:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [serverSession, sendHeartbeat]);
 
   const formatTime = (minutes) => {
     const h = Math.floor(minutes / 60);
