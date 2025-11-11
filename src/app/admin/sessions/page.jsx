@@ -170,6 +170,38 @@ export default function AdminSessions() {
     }
   };
 
+  // Forcer le démarrage d'une session en attente
+  const handleForceStart = async (sessionId) => {
+    if (!confirm('Démarrer le chronomètre de cette session maintenant ?')) return;
+
+    try {
+      setActionLoading(sessionId);
+
+      const res = await fetch(`${API_BASE}/admin/force_start_session.php`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success('🎬 Chronomètre démarré !', {
+          description: `Session démarrée à ${data.started_at}`
+        });
+        loadSessions();
+      } else {
+        toast.error(data.error || 'Erreur lors du démarrage');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Erreur de connexion');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   // Terminer toutes les sessions expirées en un clic
   const handleTerminateAllExpired = async () => {
     if (expiredSessions.length === 0) return;
@@ -575,6 +607,18 @@ export default function AdminSessions() {
                           
                           <td className="px-4 py-4">
                             <div className="flex gap-2">
+                              {/* Bouton Démarrer pour sessions en attente (active mais started_at = NULL) */}
+                              {session.status === 'active' && !session.started_at && (
+                                <button
+                                  onClick={() => handleForceStart(session.id)}
+                                  disabled={actionLoading === session.id}
+                                  className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1 font-semibold shadow-lg"
+                                >
+                                  <Play className="w-4 h-4" />
+                                  {actionLoading === session.id ? 'Démarrage...' : 'Démarrer'}
+                                </button>
+                              )}
+                              
                               {session.status === 'ready' && (
                                 <button
                                   onClick={() => handleAction(session.id, 'start')}
@@ -586,7 +630,7 @@ export default function AdminSessions() {
                                 </button>
                               )}
                               
-                              {session.status === 'active' && (
+                              {session.status === 'active' && session.started_at && (
                                 <>
                                   {!isExpired && (
                                     <button
