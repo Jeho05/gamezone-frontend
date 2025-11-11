@@ -31,6 +31,31 @@ export default function MySession() {
   // Hook personnalisé pour le décompte local
   const countdown = useSessionCountdown(serverSession, handleSessionEnd);
 
+  // Démarrer le chronomètre si started_at est NULL
+  const startChronometerIfNeeded = useCallback(async () => {
+    try {
+      console.log('[MySession] Appel start_session pour démarrer le chronomètre...');
+      const res = await fetch(`${API_BASE}/player/start_session.php`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      const data = await res.json();
+      
+      console.log('[MySession] start_session response:', data);
+      
+      if (data.success) {
+        toast.success('🎬 Chronomètre démarré !', {
+          description: 'Votre session commence maintenant'
+        });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('[MySession] Error starting chronometer:', err);
+      return false;
+    }
+  }, []);
+
   // Définir loadSession AVEC useCallback
   const loadSession = useCallback(async () => {
     try {
@@ -45,6 +70,16 @@ export default function MySession() {
       if (data.session) {
         setServerSession(data.session);
         setLastSync(Date.now());
+        
+        // Si started_at est NULL, démarrer le chronomètre
+        if (!data.session.started_at) {
+          console.log('[MySession] started_at est NULL, démarrage automatique...');
+          const started = await startChronometerIfNeeded();
+          if (started) {
+            // Recharger pour avoir started_at
+            setTimeout(() => loadSession(), 1000);
+          }
+        }
       } else {
         setServerSession(null);
       }
@@ -53,88 +88,38 @@ export default function MySession() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [startChronometerIfNeeded]);
 
-  // Définir sendHeartbeat AVEC useCallback (dépend de loadSession)
+  // Définir sendHeartbeat simplifié
   const sendHeartbeat = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/player/session_heartbeat.php`, {
+      const res = await fetch(`${API_BASE}/player/simple_heartbeat.php`, {
         method: 'POST',
         credentials: 'include'
       });
       
       const data = await res.json();
-      
-      console.log('[MySession] Heartbeat response:', data);
-      
-      // Si c'est le démarrage du chronomètre
-      if (data.message === 'Chronomètre démarré') {
-        console.log('🎬 [MySession] Chronomètre démarré maintenant !');
-        // Recharger la session pour avoir started_at à jour
-        await loadSession();
-        return;
-      }
-      
-      if (data.session_completed) {
-        // Session terminée, recharger pour voir le statut completed
-        await loadSession();
-        toast.error('Votre session est terminée !', {
-          duration: 10000,
-          description: 'Votre temps de jeu est écoulé.'
-        });
-        setTimeout(() => {
-          navigate('/player/my-purchases');
-        }, 5000);
-      } else {
-        // Recharger la session pour avoir les données à jour
-        await loadSession();
-      }
+      console.log('[MySession] Heartbeat:', data);
     } catch (err) {
-      console.error('Heartbeat error:', err);
+      console.error('[MySession] Heartbeat error:', err);
     }
-  }, [loadSession, navigate]);
+  }, []);
 
   // Charger la session initiale
   useEffect(() => {
     loadSession();
   }, [loadSession]);
 
-  // Heartbeat et synchronisation
+  // Heartbeat simple toutes les 30 secondes
   useEffect(() => {
-    if (!serverSession || serverSession.status !== 'active') {
+    if (!serverSession || serverSession.status !== 'active' || !serverSession.started_at) {
       return;
     }
 
-    // Log pour debug
-    console.log('[MySession] Setting up heartbeat interval for session:', {
-      id: serverSession.id,
-      status: serverSession.status,
-      total: serverSession.total_minutes,
-      used: serverSession.used_minutes,
-      remaining: serverSession.remaining_minutes,
-      started_at: serverSession.started_at
-    });
+    console.log('[MySession] Setting up heartbeat interval');
 
-    // Si started_at est NULL, appeler IMMÉDIATEMENT pour démarrer le chronomètre
-    if (!serverSession.started_at) {
-      console.log('[MySession] started_at est NULL, démarrage immédiat du chronomètre...');
-      sendHeartbeat();
-    }
-
-    // Premier heartbeat après 10 secondes
-    const firstTimeout = setTimeout(() => {
-      sendHeartbeat();
-    }, 10000);
-
-    // Puis toutes les 30 secondes
-    const interval = setInterval(() => {
-      sendHeartbeat();
-    }, 30000);
-
-    return () => {
-      clearTimeout(firstTimeout);
-      clearInterval(interval);
-    };
+    const interval = setInterval(sendHeartbeat, 30000);
+    return () => clearInterval(interval);
   }, [serverSession, sendHeartbeat]);
 
   const formatTime = (minutes) => {
