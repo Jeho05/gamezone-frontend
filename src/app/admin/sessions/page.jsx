@@ -34,6 +34,11 @@ export default function AdminSessions() {
       return session.remaining_minutes || 0;
     }
     
+    // Si started_at est NULL, la session n'a pas encore démarré
+    if (!session.started_at) {
+      return session.total_minutes || 0; // Temps complet disponible
+    }
+    
     const lastUpdate = new Date(session.last_countdown_update || session.started_at).getTime();
     const elapsedMinutes = Math.floor((currentTime - lastUpdate) / 60000);
     const remaining = Math.max(0, session.remaining_minutes - elapsedMinutes);
@@ -44,6 +49,11 @@ export default function AdminSessions() {
   const calculateUsedTime = (session) => {
     if (session.status !== 'active') {
       return session.used_minutes || 0;
+    }
+    
+    // Si started_at est NULL, aucun temps n'a été utilisé
+    if (!session.started_at) {
+      return 0;
     }
     
     const lastUpdate = new Date(session.last_countdown_update || session.started_at).getTime();
@@ -68,6 +78,10 @@ export default function AdminSessions() {
   const detectExpiredSessions = () => {
     const expired = sessions.filter(session => {
       if (!['active', 'paused'].includes(session.status)) return false;
+      
+      // Ne PAS considérer comme expirée si pas encore démarrée
+      if (!session.started_at) return false;
+      
       const remaining = calculateRemainingTime(session);
       return remaining === 0;
     });
@@ -462,6 +476,16 @@ export default function AdminSessions() {
                                     {formatTime(session.used_minutes)} / {formatTime(session.total_minutes)}
                                   </div>
                                 </>
+                              ) : !session.started_at ? (
+                                <>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <Clock className="w-4 h-4 text-blue-500" />
+                                    <span className="text-blue-600 font-semibold">⏳ En attente de démarrage</span>
+                                  </div>
+                                  <div className="text-xs text-blue-500">
+                                    {formatTime(session.total_minutes)} disponible
+                                  </div>
+                                </>
                               ) : (
                                 <>
                                   <div className="flex items-center gap-2 text-sm">
@@ -480,21 +504,35 @@ export default function AdminSessions() {
                           
                           <td className="px-4 py-4">
                             <div className="w-32">
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className={isExpired ? 'text-red-600 font-bold' : ''}>{progressPercent}%</span>
-                                {isExpired && <span className="text-red-600 font-bold">EXPIRÉ!</span>}
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-3">
-                                <div
-                                  className={`h-3 rounded-full transition-all ${
-                                    isExpired ? 'bg-red-600' :
-                                    progressPercent >= 90 ? 'bg-red-500' :
-                                    progressPercent >= 70 ? 'bg-yellow-500' :
-                                    'bg-green-500'
-                                  }`}
-                                  style={{ width: `${progressPercent}%` }}
-                                />
-                              </div>
+                              {!session.started_at ? (
+                                <>
+                                  <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-blue-600 font-semibold">0%</span>
+                                    <span className="text-blue-500">Pas démarré</span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-3">
+                                    <div className="h-3 rounded-full bg-blue-500" style={{ width: '0%' }} />
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <div className="flex justify-between text-xs mb-1">
+                                    <span className={isExpired ? 'text-red-600 font-bold' : ''}>{progressPercent}%</span>
+                                    {isExpired && <span className="text-red-600 font-bold">EXPIRÉ!</span>}
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-3">
+                                    <div
+                                      className={`h-3 rounded-full transition-all ${
+                                        isExpired ? 'bg-red-600' :
+                                        progressPercent >= 90 ? 'bg-red-500' :
+                                        progressPercent >= 70 ? 'bg-yellow-500' :
+                                        'bg-green-500'
+                                      }`}
+                                      style={{ width: `${progressPercent}%` }}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </div>
                           </td>
                           
@@ -524,8 +562,15 @@ export default function AdminSessions() {
                             )}
                           </td>
                           
-                          <td className="px-4 py-4 text-sm text-gray-600">
-                            {formatDate(session.started_at)}
+                          <td className="px-4 py-4 text-sm">
+                            {!session.started_at ? (
+                              <div className="flex items-center gap-2 text-blue-600">
+                                <Clock className="w-4 h-4" />
+                                <span className="font-semibold">En attente...</span>
+                              </div>
+                            ) : (
+                              <span className="text-gray-600">{formatDate(session.started_at)}</span>
+                            )}
                           </td>
                           
                           <td className="px-4 py-4">
