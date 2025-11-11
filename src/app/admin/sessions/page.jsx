@@ -31,6 +31,10 @@ export default function AdminSessions() {
   // Fonction pour calculer le temps restant réel d'une session
   const calculateRemainingTime = (session) => {
     if (session.status !== 'active') {
+      // Utiliser valeur serveur si fournie
+      if (session.server_remaining_minutes !== undefined && session.server_remaining_minutes !== null) {
+        return Number(session.server_remaining_minutes) || 0;
+      }
       return session.remaining_minutes || 0;
     }
     
@@ -38,16 +42,31 @@ export default function AdminSessions() {
     if (!session.started_at) {
       return session.total_minutes || 0; // Temps complet disponible
     }
+    // Si le serveur fournit la valeur, c'est la source de vérité
+    if (session.server_remaining_minutes !== undefined && session.server_remaining_minutes !== null) {
+      return Math.max(0, Number(session.server_remaining_minutes) || 0);
+    }
+    // Si expires_at est disponible, se baser sur la date de fin côté serveur
+    if (session.expires_at) {
+      const expiresTs = new Date(session.expires_at).getTime();
+      const diffMs = expiresTs - currentTime;
+      return Math.max(0, Math.ceil(diffMs / 60000));
+    }
     
     const lastUpdate = new Date(session.last_countdown_update || session.started_at).getTime();
     const elapsedMinutes = Math.floor((currentTime - lastUpdate) / 60000);
-    const remaining = Math.max(0, session.remaining_minutes - elapsedMinutes);
+    // Ne JAMAIS se baser sur session.remaining_minutes côté admin (peut être NULL)
+    const baseRemaining = Math.max(0, (Number(session.total_minutes) || 0) - (Number(session.used_minutes) || 0));
+    const remaining = Math.max(0, baseRemaining - elapsedMinutes);
     return remaining;
   };
 
   // Fonction pour calculer le temps utilisé réel d'une session
   const calculateUsedTime = (session) => {
     if (session.status !== 'active') {
+      if (session.server_used_minutes !== undefined && session.server_used_minutes !== null) {
+        return Number(session.server_used_minutes) || 0;
+      }
       return session.used_minutes || 0;
     }
     
@@ -55,10 +74,18 @@ export default function AdminSessions() {
     if (!session.started_at) {
       return 0;
     }
+    // Si le serveur fournit la valeur, c'est la source de vérité
+    if (session.server_used_minutes !== undefined && session.server_used_minutes !== null) {
+      const total = Number(session.total_minutes) || 0;
+      return Math.min(total, Number(session.server_used_minutes) || 0);
+    }
     
     const lastUpdate = new Date(session.last_countdown_update || session.started_at).getTime();
     const elapsedMinutes = Math.floor((currentTime - lastUpdate) / 60000);
-    return session.used_minutes + elapsedMinutes;
+    const baseUsed = Number(session.used_minutes) || 0;
+    const total = Number(session.total_minutes) || 0;
+    const used = Math.min(total, baseUsed + elapsedMinutes);
+    return used;
   };
 
   // Fonction pour calculer la progression réelle d'une session
@@ -78,12 +105,10 @@ export default function AdminSessions() {
   const detectExpiredSessions = () => {
     const expired = sessions.filter(session => {
       if (!['active', 'paused'].includes(session.status)) return false;
-      
-      // Ne PAS considérer comme expirée si pas encore démarrée
       if (!session.started_at) return false;
-      
-      const remaining = calculateRemainingTime(session);
-      return remaining === 0;
+      const total = Number(session.total_minutes) || 0;
+      const used = session.server_used_minutes != null ? Number(session.server_used_minutes) : (Number(session.used_minutes) || 0);
+      return total > 0 && used >= total;
     });
     setExpiredSessions(expired);
   };
@@ -472,7 +497,10 @@ export default function AdminSessions() {
                       const usedTime = calculateUsedTime(session);
                       const progressPercent = calculateProgressPercent(session);
                       const isLowTime = remainingTime <= 10 && session.status === 'active';
-                      const isExpired = remainingTime === 0 && ['active', 'paused'].includes(session.status);
+                      const isExpired = (
+                        (session.expires_at ? new Date(session.expires_at).getTime() <= currentTime : false)
+                        || ((Number(session.server_used_minutes ?? session.used_minutes) || 0) >= (Number(session.total_minutes) || 0))
+                      ) && ['active', 'paused'].includes(session.status);
 
                       return (
                         <tr 
