@@ -300,7 +300,7 @@ export default function AdminSessions() {
       <div className="lg:pl-64">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6" data-aos="fade-down">
             <h1 className="text-3xl font-bold text-purple-600 mb-2 flex items-center gap-3">
               <Activity className="w-8 h-8" />
               Gestion des Sessions
@@ -310,7 +310,7 @@ export default function AdminSessions() {
 
           {/* ALERTE SESSIONS EXPIRÉES */}
           {expiredSessions.length > 0 && (
-            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl shadow-2xl p-6 mb-6 animate-pulse">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl shadow-2xl p-6 mb-6 animate-pulse" data-aos="fade-right">
               <div className="flex items-start gap-4">
                 <div className="bg-white rounded-full p-3">
                   <AlertTriangle className="w-8 h-8 text-red-600" />
@@ -376,7 +376,7 @@ export default function AdminSessions() {
           )}
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6" data-aos="fade-up">
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
@@ -432,7 +432,7 @@ export default function AdminSessions() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 mb-6" data-aos="zoom-in">
             <div className="flex flex-wrap gap-3 items-center">
               <div className="flex items-center gap-2 text-gray-700">
                 <Filter className="w-5 h-5" />
@@ -462,7 +462,7 @@ export default function AdminSessions() {
           </div>
 
           {/* Sessions List */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up">
             {loading ? (
               <div className="text-center py-20">
                 <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600 mb-4"></div>

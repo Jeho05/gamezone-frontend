@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ChakraProvider } from '@chakra-ui/react';
 import HelpWidget from './components/HelpWidget';
+import { initAOS } from '../utils/aosConfig';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,10 +16,17 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout({children}) {
+  useEffect(() => {
+    // Initialize AOS animations
+    initAOS();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
-      <HelpWidget />
+      <ChakraProvider>
+        {children}
+        <HelpWidget />
+      </ChakraProvider>
     </QueryClientProvider>
   );
 }

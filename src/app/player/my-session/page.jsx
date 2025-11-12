@@ -65,7 +65,8 @@ export default function MySession() {
       
       const data = await res.json();
       
-      console.log('[MySession] Loaded session from server:', data.session);
+      console.log('[MySession] Loaded session from server:', data);
+      console.log('[MySession] Session data:', data.session);
       
       if (data.session) {
         setServerSession(data.session);
@@ -81,6 +82,7 @@ export default function MySession() {
           }
         }
       } else {
+        console.log('[MySession] No session returned from API');
         setServerSession(null);
       }
     } catch (err) {
@@ -171,7 +173,7 @@ export default function MySession() {
       
       <div className="lg:ml-64 p-4 md:p-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8" data-aos="fade-down">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
@@ -193,28 +195,39 @@ export default function MySession() {
         </div>
 
         {loading && !countdown.session ? (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-12 text-center border border-white/20">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-12 text-center border border-white/20" data-aos="fade-up">
             <RefreshCw className="w-12 h-12 text-purple-400 animate-spin mx-auto mb-4" />
             <p className="text-gray-300">Chargement de votre session...</p>
           </div>
         ) : !countdown.session ? (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-12 text-center border border-white/20">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-12 text-center border border-white/20" data-aos="zoom-in">
             <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">Aucune session active</h3>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-400 mb-4">
               Vous n'avez pas de session de jeu en cours actuellement.
             </p>
-            <a
-              href="/player/shop"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
-            >
-              Acheter du temps de jeu
-            </a>
+            <p className="text-gray-500 text-sm mb-6">
+              Vérifiez que vous avez des sessions en statut "prête", "active" ou "en pause".
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/player/shop"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
+              >
+                Acheter du temps de jeu
+              </a>
+              <button
+                onClick={() => window.location.href = '/player/invoices'}
+                className="inline-block px-6 py-3 bg-gray-700 text-white font-semibold rounded-xl hover:bg-gray-600 transition-all"
+              >
+                Voir mes factures
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
             {/* Status Card */}
-            <div className={`${getStatusConfig(countdown.session.status).bg} rounded-xl p-8 text-white relative overflow-hidden`}>
+            <div className={`${getStatusConfig(countdown.session.status).bg} rounded-xl p-8 text-white relative overflow-hidden`} data-aos="fade-right">
               {getStatusConfig(countdown.session.status).pulse && (
                 <div className="absolute inset-0 bg-white/10 animate-pulse" />
               )}

@@ -394,9 +394,18 @@ export default function GalleryPage() {
     ...streams.map(item => ({ ...item, type: 'stream' }))
   ];
 
+  // Sort: pinned first, then by date
+  const sortedContent = allContent.sort((a, b) => {
+    // Pinned items first
+    if (a.is_pinned && !b.is_pinned) return -1;
+    if (!a.is_pinned && b.is_pinned) return 1;
+    // Then by date (newest first)
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
   const filteredContent = activeFilter === 'all' 
-    ? allContent 
-    : allContent.filter(item => item.type === activeFilter);
+    ? sortedContent 
+    : sortedContent.filter(item => item.type === activeFilter);
 
   const getEventIcon = (type) => {
     switch (type) {
@@ -442,7 +451,7 @@ export default function GalleryPage() {
       <div className="lg:pl-64">
         <div className="p-4 lg:p-8">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-8" data-aos="fade-down">
             <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2 flex items-center space-x-3">
               <Calendar className="w-10 h-10 text-purple-400" />
               <span>Galerie & Actus</span>
@@ -451,7 +460,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Filters */}
-          <div className="mb-8">
+          <div className="mb-8" data-aos="fade-up">
             <div className="flex flex-wrap gap-2">
               {filters.map((filter) => {
                 const IconComponent = filter.icon;
@@ -475,7 +484,7 @@ export default function GalleryPage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Events Gallery */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2" data-aos="fade-right">
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-between">
                   <span>
@@ -501,8 +510,8 @@ export default function GalleryPage() {
                   </div>
                 ) : (
                   <div className="grid gap-6">
-                    {filteredContent.map((item) => (
-                      <div key={item.id} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-200 group">
+                    {filteredContent.map((item, index) => (
+                      <div key={item.id} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-200 group" data-aos="zoom-in" data-aos-delay={index * 50}>
                         {item.image_url && (
                           <div 
                             className="aspect-video relative overflow-hidden cursor-pointer"
@@ -523,8 +532,8 @@ export default function GalleryPage() {
                               </span>
                             </div>
                             {item.is_pinned == 1 && (
-                              <div className="absolute top-4 right-4 bg-amber-500/80 backdrop-blur-sm rounded-full px-3 py-1">
-                                <span className="text-white text-sm font-semibold">
+                              <div className="absolute top-4 right-4 bg-amber-500 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg border-2 border-amber-300">
+                                <span className="text-white text-sm font-bold drop-shadow-lg">
                                   📌 Épinglé
                                 </span>
                               </div>
@@ -604,7 +613,7 @@ export default function GalleryPage() {
             </div>
 
             {/* News Sidebar */}
-            <div>
+            <div data-aos="fade-left">
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
                   <MessageCircle className="w-6 h-6 text-blue-400" />
@@ -649,62 +658,62 @@ export default function GalleryPage() {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="mt-8 p-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-purple-400/30">
+                <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-purple-400/30 p-4">
                   <h3 className="text-white font-semibold mb-4 flex items-center justify-between">
-                    <span>Statistiques</span>
+                    <span className="text-lg">📊 Statistiques</span>
                     <button 
                       onClick={loadStats}
-                      className="text-xs text-gray-400 hover:text-white transition-colors"
+                      className="text-xs text-white bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg transition-colors font-semibold"
                       title="Actualiser"
                     >
-                      🔄
+                      🔄 Actualiser
                     </button>
                   </h3>
                   {stats ? (
                     <div className="space-y-4">
                       {/* Stats par type */}
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-300 text-sm">🖼️ Images galerie</span>
-                          <span className="text-purple-400 font-bold">{stats.by_type.gallery.count}</span>
+                        <div className="flex justify-between items-center bg-gray-700/30 px-3 py-2 rounded-lg">
+                          <span className="text-white text-sm font-semibold">🖼️ Images galerie</span>
+                          <span className="text-purple-400 font-bold text-lg">{stats.by_type.gallery.count}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-300 text-sm">📅 Événements</span>
-                          <span className="text-blue-400 font-bold">{stats.by_type.event.count}</span>
+                        <div className="flex justify-between items-center bg-gray-700/30 px-3 py-2 rounded-lg">
+                          <span className="text-white text-sm font-semibold">📅 Événements</span>
+                          <span className="text-blue-400 font-bold text-lg">{stats.by_type.event.count}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-300 text-sm">📰 Actualités</span>
-                          <span className="text-green-400 font-bold">{stats.by_type.news.count}</span>
+                        <div className="flex justify-between items-center bg-gray-700/30 px-3 py-2 rounded-lg">
+                          <span className="text-white text-sm font-semibold">📰 Actualités</span>
+                          <span className="text-green-400 font-bold text-lg">{stats.by_type.news.count}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-300 text-sm">▶️ Streams</span>
-                          <span className="text-red-400 font-bold">{stats.by_type.stream.count}</span>
+                        <div className="flex justify-between items-center bg-gray-700/30 px-3 py-2 rounded-lg">
+                          <span className="text-white text-sm font-semibold">▶️ Streams</span>
+                          <span className="text-red-400 font-bold text-lg">{stats.by_type.stream.count}</span>
                         </div>
                       </div>
                       
                       {/* Stats globales */}
                       <div className="pt-3 border-t border-white/20 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400 text-xs">👁️ Vues totales</span>
-                          <span className="text-gray-300 text-sm font-semibold">
+                        <div className="flex justify-between items-center bg-gray-800/50 px-3 py-2 rounded">
+                          <span className="text-white text-xs font-semibold">👁️ Vues totales</span>
+                          <span className="text-cyan-400 text-sm font-bold">
                             {Object.values(stats.by_type).reduce((sum, type) => sum + type.views, 0).toLocaleString()}
                           </span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400 text-xs">❤️ Likes totaux</span>
-                          <span className="text-red-400 text-sm font-semibold">
+                        <div className="flex justify-between items-center bg-gray-800/50 px-3 py-2 rounded">
+                          <span className="text-white text-xs font-semibold">❤️ Likes totaux</span>
+                          <span className="text-red-400 text-sm font-bold">
                             {stats.total_likes.toLocaleString()}
                           </span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400 text-xs">💬 Commentaires</span>
-                          <span className="text-blue-400 text-sm font-semibold">
+                        <div className="flex justify-between items-center bg-gray-800/50 px-3 py-2 rounded">
+                          <span className="text-white text-xs font-semibold">💬 Commentaires</span>
+                          <span className="text-blue-400 text-sm font-bold">
                             {stats.total_comments.toLocaleString()}
                           </span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400 text-xs">🔗 Partages</span>
-                          <span className="text-green-400 text-sm font-semibold">
+                        <div className="flex justify-between items-center bg-gray-800/50 px-3 py-2 rounded">
+                          <span className="text-white text-xs font-semibold">🔗 Partages</span>
+                          <span className="text-green-400 text-sm font-bold">
                             {Object.values(stats.by_type).reduce((sum, type) => sum + type.shares, 0).toLocaleString()}
                           </span>
                         </div>
@@ -713,14 +722,14 @@ export default function GalleryPage() {
                       {/* Top contenu */}
                       {stats.top_views && stats.top_views.length > 0 && (
                         <div className="pt-3 border-t border-white/20">
-                          <h4 className="text-xs text-gray-400 font-semibold mb-2">🔥 Plus vus</h4>
-                          <div className="space-y-1">
+                          <h4 className="text-sm text-white font-bold mb-3">🔥 Plus vus</h4>
+                          <div className="space-y-2">
                             {stats.top_views.slice(0, 3).map((item, idx) => (
-                              <div key={item.id} className="flex items-center justify-between text-xs">
-                                <span className="text-gray-300 truncate flex-1" title={item.title}>
+                              <div key={item.id} className="flex items-center justify-between text-xs bg-gray-800/50 px-2 py-2 rounded">
+                                <span className="text-white truncate flex-1 font-semibold" title={item.title}>
                                   {idx + 1}. {item.title.substring(0, 20)}{item.title.length > 20 ? '...' : ''}
                                 </span>
-                                <span className="text-purple-400 ml-2">{item.views_count}</span>
+                                <span className="text-purple-400 ml-2 font-bold bg-purple-500/20 px-2 py-1 rounded">{item.views_count}</span>
                               </div>
                             ))}
                           </div>

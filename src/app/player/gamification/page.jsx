@@ -92,7 +92,7 @@ export default function GamificationPage() {
       <div className="lg:pl-64 relative z-10">
         <div className="container mx-auto px-4 py-8 pt-20 lg:pt-8 max-w-7xl">
         {/* Header with better visual hierarchy */}
-        <div className="mb-10 animate-fade-in">
+        <div className="mb-10 animate-fade-in" data-aos="fade-down">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -121,7 +121,7 @@ export default function GamificationPage() {
         </div>
 
         {/* Tabs - Modern design with better indicators */}
-        <div className="flex gap-4 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-4 mb-10 overflow-x-auto pb-2 scrollbar-hide" data-aos="fade-up">
           <button
             onClick={() => setActiveTab('overview')}
             className={`relative px-10 py-5 rounded-2xl font-black text-lg whitespace-nowrap transition-all transform hover:scale-105 ${
@@ -176,7 +176,7 @@ export default function GamificationPage() {
         {activeTab === 'overview' && (
           <div className="space-y-8 animate-fade-in">
             {/* Level Progress - Enhanced */}
-            <section className="mb-10">
+            <section className="mb-10" data-aos="zoom-in">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-2xl shadow-lg">
                   ⚡
@@ -200,13 +200,13 @@ export default function GamificationPage() {
 
             {/* Streak */}
             {stats?.streak && (
-              <section>
+              <section data-aos="fade-right">
                 <StreakCard streak={stats.streak} />
               </section>
             )}
 
             {/* Statistics - Enhanced */}
-            <section className="mb-10">
+            <section className="mb-10" data-aos="fade-left">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-2xl shadow-lg">
                   📈
@@ -226,7 +226,7 @@ export default function GamificationPage() {
             )}
 
             {/* Quick Actions - Enhanced design */}
-            <section>
+            <section data-aos="zoom-in-up">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-2xl shadow-lg">
                   ⚡
