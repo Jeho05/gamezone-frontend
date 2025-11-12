@@ -1,5 +1,5 @@
-// Central API base: prefer Vite env, fallback to dev proxy or local Apache
-let API_BASE = import.meta.env.NEXT_PUBLIC_API_BASE;
+// Central API base: prefer Vite env, fallback to Next-style env, then dev proxy or local Apache
+let API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.NEXT_PUBLIC_API_BASE;
 
 if (!API_BASE) {
   if (typeof window !== 'undefined' && (window.location.port === '4000' || window.location.port === '5173' || window.location.port === '5174')) {

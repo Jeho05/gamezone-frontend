@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ChakraProvider } from '@chakra-ui/react';
 import HelpWidget from './components/HelpWidget';
 import { initAOS } from '../utils/aosConfig';
 
@@ -23,10 +22,10 @@ export default function RootLayout({children}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider>
+      <div data-aos="fade-up" data-aos-duration="600" data-aos-easing="ease-out-cubic">
         {children}
-        <HelpWidget />
-      </ChakraProvider>
+      </div>
+      <HelpWidget />
     </QueryClientProvider>
   );
 }
