@@ -133,7 +133,7 @@ export default function HomePage() {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80')",
+              backgroundImage: "url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1920&q=80')",
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
@@ -149,7 +149,7 @@ export default function HomePage() {
                 borderRadius="xl"
                 overflow="hidden"
                 border="1px solid rgba(255,255,255,0.08)"
-                bgImage="url('https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1600&q=80')"
+                bgImage="url('https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=1600&q=80')"
                 bgSize="cover"
                 bgPos="center"
                 h={{ base: '220px', md: '260px' }}
@@ -172,7 +172,7 @@ export default function HomePage() {
                 borderRadius="xl"
                 overflow="hidden"
                 border="1px solid rgba(255,255,255,0.08)"
-                bgImage="url('https://images.unsplash.com/photo-1542751371-8ffd1f0e6b22?auto=format&fit=crop&w=1600&q=80')"
+                bgImage="url('https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=1600&q=80')"
                 bgSize="cover"
                 bgPos="center"
                 h={{ base: '220px', md: '260px' }}
@@ -195,7 +195,7 @@ export default function HomePage() {
                 borderRadius="xl"
                 overflow="hidden"
                 border="1px solid rgba(255,255,255,0.08)"
-                bgImage="url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80')"
+                bgImage="url('https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=1600&q=80')"
                 bgSize="cover"
                 bgPos="center"
                 h={{ base: '220px', md: '260px' }}
@@ -218,7 +218,7 @@ export default function HomePage() {
                 borderRadius="xl"
                 overflow="hidden"
                 border="1px solid rgba(255,255,255,0.08)"
-                bgImage="url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80')"
+                bgImage="url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1600&q=80')"
                 bgSize="cover"
                 bgPos="center"
                 h={{ base: '220px', md: '260px' }}
@@ -240,7 +240,18 @@ export default function HomePage() {
       </section>
 
       {/* Section Avantages */}
-      <section id="features" className="relative py-32 bg-gradient-to-b from-black via-zinc-900 to-black overflow-x-hidden scroll-mt-24">
+      <section id="features" className="relative py-32 overflow-x-hidden scroll-mt-24">
+          <div className="absolute inset-0">
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
+            <div className="absolute inset-0 bg-black/70" />
+          </div>
           <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10">
             <div className="text-center mb-16 animate-slide-in-up">
               <NeonText color="purple" className="text-4xl md:text-5xl mb-4">
