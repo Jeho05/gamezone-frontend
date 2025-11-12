@@ -5,6 +5,7 @@ import FloatingObjects from '@/components/ui/FloatingObjects';
 import GlassCard from '@/components/ui/GlassCard';
 import NeonText from '@/components/ui/NeonText';
 import ParallaxObject from '@/components/ui/ParallaxObject';
+import { ChakraProvider, SimpleGrid, Box, Stack, Heading, Text, Icon } from '@chakra-ui/react';
 
 export default function HomePage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -121,45 +122,102 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Feature Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3">
-                  <GamepadIcon className="w-8 h-8 text-purple-400" />
-                  <div>
-                    <div className="text-white font-bold">Consoles Next-Gen</div>
-                    <div className="text-gray-300 text-sm">PS5, Xbox Series X, Switch</div>
-                  </div>
-                </div>
-              </GlassCard>
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3">
-                  <Trophy className="w-8 h-8 text-yellow-400" />
-                  <div>
-                    <div className="text-white font-bold">Tournois & Prix</div>
-                    <div className="text-gray-300 text-sm">Compétitions régulières</div>
-                  </div>
-                </div>
-              </GlassCard>
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3">
-                  <Users className="w-8 h-8 text-pink-400" />
-                  <div>
-                    <div className="text-white font-bold">Multijoueur Local</div>
-                    <div className="text-gray-300 text-sm">Jouez entre amis</div>
-                  </div>
-                </div>
-              </GlassCard>
-              <GlassCard className="p-6">
-                <div className="flex items-center gap-3">
-                  <Zap className="w-8 h-8 text-blue-400" />
-                  <div>
-                    <div className="text-white font-bold">Points & Récompenses</div>
-                    <div className="text-gray-300 text-sm">Gagnez en jouant</div>
-                  </div>
-                </div>
-              </GlassCard>
-            </div>
+            {/* Feature Cards Grid - Chakra enhanced */}
+            <ChakraProvider>
+              <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} spacing={{ base: 4, lg: 6 }}>
+                {/* Consoles Next-Gen */}
+                <Box
+                  position="relative"
+                  borderRadius="xl"
+                  overflow="hidden"
+                  border="1px solid rgba(255,255,255,0.08)"
+                  bgImage="url('/images/objet/Console-PNG-Clipart.png')"
+                  bgSize="cover"
+                  bgPos="center"
+                  h={{ base: '220px', md: '260px' }}
+                  transition="all 0.3s ease"
+                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                  data-aos="fade-up"
+                  data-aos-delay="0"
+                >
+                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                    <Icon as={GamepadIcon} boxSize={10} color="purple.300" />
+                    <Heading as="h3" size="xl" color="white">Consoles Next-Gen</Heading>
+                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>PS5, Xbox Series X, Switch</Text>
+                  </Stack>
+                </Box>
+
+                {/* Tournois & Prix */}
+                <Box
+                  position="relative"
+                  borderRadius="xl"
+                  overflow="hidden"
+                  border="1px solid rgba(255,255,255,0.08)"
+                  bgImage="url('/images/objet/Dragon-Ball-FighterZ-PNG-Background-Image.png')"
+                  bgSize="cover"
+                  bgPos="center"
+                  h={{ base: '220px', md: '260px' }}
+                  transition="all 0.3s ease"
+                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                  data-aos="fade-up"
+                  data-aos-delay="100"
+                >
+                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                    <Icon as={Trophy} boxSize={10} color="yellow.300" />
+                    <Heading as="h3" size="xl" color="white">Tournois & Prix</Heading>
+                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Compétitions régulières</Text>
+                  </Stack>
+                </Box>
+
+                {/* Multijoueur Local */}
+                <Box
+                  position="relative"
+                  borderRadius="xl"
+                  overflow="hidden"
+                  border="1px solid rgba(255,255,255,0.08)"
+                  bgImage="url('/images/objet/Naruto-Akatsuki-PNG-Photo.png')"
+                  bgSize="cover"
+                  bgPos="center"
+                  h={{ base: '220px', md: '260px' }}
+                  transition="all 0.3s ease"
+                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                  data-aos="fade-up"
+                  data-aos-delay="200"
+                >
+                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                    <Icon as={Users} boxSize={10} color="pink.300" />
+                    <Heading as="h3" size="xl" color="white">Multijoueur Local</Heading>
+                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Jouez entre amis</Text>
+                  </Stack>
+                </Box>
+
+                {/* Points & Récompenses */}
+                <Box
+                  position="relative"
+                  borderRadius="xl"
+                  overflow="hidden"
+                  border="1px solid rgba(255,255,255,0.08)"
+                  bgImage="url('/images/objet/Dragon-Ball-Z-Logo-PNG-HD.png')"
+                  bgSize="cover"
+                  bgPos="center"
+                  h={{ base: '220px', md: '260px' }}
+                  transition="all 0.3s ease"
+                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                  data-aos="fade-up"
+                  data-aos-delay="300"
+                >
+                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                    <Icon as={Zap} boxSize={10} color="blue.300" />
+                    <Heading as="h3" size="xl" color="white">Points & Récompenses</Heading>
+                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Gagnez en jouant</Text>
+                  </Stack>
+                </Box>
+              </SimpleGrid>
+            </ChakraProvider>
           </div>
         </section>
       </VideoBackground>
