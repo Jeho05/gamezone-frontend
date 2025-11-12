@@ -120,107 +120,124 @@ export default function HomePage() {
                   <span>Découvrir</span>
                 </button>
               </div>
-            </div>
+              </div>
             
-            {/* Feature Cards Grid - Chakra enhanced */}
-            <ChakraProvider>
-              <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} spacing={{ base: 4, lg: 6 }}>
-                {/* Consoles Next-Gen */}
-                <Box
-                  position="relative"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  border="1px solid rgba(255,255,255,0.08)"
-                  bgImage="url('/images/objet/Console-PNG-Clipart.png')"
-                  bgSize="cover"
-                  bgPos="center"
-                  h={{ base: '220px', md: '260px' }}
-                  transition="all 0.3s ease"
-                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
-                  data-aos="fade-up"
-                  data-aos-delay="0"
-                >
-                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
-                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                    <Icon as={GamepadIcon} boxSize={10} color="purple.300" />
-                    <Heading as="h3" size="xl" color="white">Consoles Next-Gen</Heading>
-                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>PS5, Xbox Series X, Switch</Text>
-                  </Stack>
-                </Box>
-
-                {/* Tournois & Prix */}
-                <Box
-                  position="relative"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  border="1px solid rgba(255,255,255,0.08)"
-                  bgImage="url('/images/objet/Dragon-Ball-FighterZ-PNG-Background-Image.png')"
-                  bgSize="cover"
-                  bgPos="center"
-                  h={{ base: '220px', md: '260px' }}
-                  transition="all 0.3s ease"
-                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
-                  data-aos="fade-up"
-                  data-aos-delay="100"
-                >
-                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
-                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                    <Icon as={Trophy} boxSize={10} color="yellow.300" />
-                    <Heading as="h3" size="xl" color="white">Tournois & Prix</Heading>
-                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Compétitions régulières</Text>
-                  </Stack>
-                </Box>
-
-                {/* Multijoueur Local */}
-                <Box
-                  position="relative"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  border="1px solid rgba(255,255,255,0.08)"
-                  bgImage="url('/images/objet/Naruto-Akatsuki-PNG-Photo.png')"
-                  bgSize="cover"
-                  bgPos="center"
-                  h={{ base: '220px', md: '260px' }}
-                  transition="all 0.3s ease"
-                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
-                  data-aos="fade-up"
-                  data-aos-delay="200"
-                >
-                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
-                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                    <Icon as={Users} boxSize={10} color="pink.300" />
-                    <Heading as="h3" size="xl" color="white">Multijoueur Local</Heading>
-                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Jouez entre amis</Text>
-                  </Stack>
-                </Box>
-
-                {/* Points & Récompenses */}
-                <Box
-                  position="relative"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  border="1px solid rgba(255,255,255,0.08)"
-                  bgImage="url('/images/objet/Dragon-Ball-Z-Logo-PNG-HD.png')"
-                  bgSize="cover"
-                  bgPos="center"
-                  h={{ base: '220px', md: '260px' }}
-                  transition="all 0.3s ease"
-                  _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
-                  data-aos="fade-up"
-                  data-aos-delay="300"
-                >
-                  <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
-                  <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                    <Icon as={Zap} boxSize={10} color="blue.300" />
-                    <Heading as="h3" size="xl" color="white">Points & Récompenses</Heading>
-                    <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Gagnez en jouant</Text>
-                  </Stack>
-                </Box>
-              </SimpleGrid>
-            </ChakraProvider>
+            
           </div>
         </section>
       </VideoBackground>
+
+      {/* Feature Showcase Section (separate from video) */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+        <div className="relative z-10 container mx-auto px-6 md:px-8 max-w-7xl">
+          <ChakraProvider>
+            <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} spacing={{ base: 4, lg: 6 }}>
+              {/* Consoles Next-Gen */}
+              <Box
+                position="relative"
+                borderRadius="xl"
+                overflow="hidden"
+                border="1px solid rgba(255,255,255,0.08)"
+                bgImage="url('https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1600&q=80')"
+                bgSize="cover"
+                bgPos="center"
+                h={{ base: '220px', md: '260px' }}
+                transition="all 0.3s ease"
+                _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                data-aos="fade-up"
+                data-aos-delay="0"
+              >
+                <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                  <Icon as={GamepadIcon} boxSize={10} color="purple.300" />
+                  <Heading as="h3" size="xl" color="white">Consoles Next-Gen</Heading>
+                  <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>PS5, Xbox Series X, Switch</Text>
+                </Stack>
+              </Box>
+
+              {/* Tournois & Prix */}
+              <Box
+                position="relative"
+                borderRadius="xl"
+                overflow="hidden"
+                border="1px solid rgba(255,255,255,0.08)"
+                bgImage="url('https://images.unsplash.com/photo-1542751371-8ffd1f0e6b22?auto=format&fit=crop&w=1600&q=80')"
+                bgSize="cover"
+                bgPos="center"
+                h={{ base: '220px', md: '260px' }}
+                transition="all 0.3s ease"
+                _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                  <Icon as={Trophy} boxSize={10} color="yellow.300" />
+                  <Heading as="h3" size="xl" color="white">Tournois & Prix</Heading>
+                  <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Compétitions régulières</Text>
+                </Stack>
+              </Box>
+
+              {/* Multijoueur Local */}
+              <Box
+                position="relative"
+                borderRadius="xl"
+                overflow="hidden"
+                border="1px solid rgba(255,255,255,0.08)"
+                bgImage="url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80')"
+                bgSize="cover"
+                bgPos="center"
+                h={{ base: '220px', md: '260px' }}
+                transition="all 0.3s ease"
+                _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                  <Icon as={Users} boxSize={10} color="pink.300" />
+                  <Heading as="h3" size="xl" color="white">Multijoueur Local</Heading>
+                  <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Jouez entre amis</Text>
+                </Stack>
+              </Box>
+
+              {/* Points & Récompenses */}
+              <Box
+                position="relative"
+                borderRadius="xl"
+                overflow="hidden"
+                border="1px solid rgba(255,255,255,0.08)"
+                bgImage="url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80')"
+                bgSize="cover"
+                bgPos="center"
+                h={{ base: '220px', md: '260px' }}
+                transition="all 0.3s ease"
+                _hover={{ transform: 'translateY(-3px) scale(1.02)', boxShadow: 'lg', borderColor: 'rgba(255,255,255,0.18)' }}
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
+                <Stack position="relative" zIndex={1} spacing={2} p={7}>
+                  <Icon as={Zap} boxSize={10} color="blue.300" />
+                  <Heading as="h3" size="xl" color="white">Points & Récompenses</Heading>
+                  <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Gagnez en jouant</Text>
+                </Stack>
+              </Box>
+            </SimpleGrid>
+          </ChakraProvider>
+        </div>
+      </section>
 
       {/* Section Avantages */}
       <section id="features" className="relative py-32 bg-gradient-to-b from-black via-zinc-900 to-black overflow-x-hidden scroll-mt-24">
@@ -279,7 +296,18 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="relative py-24 bg-gradient-to-b from-black via-zinc-900 to-black overflow-x-hidden">
+      <section className="relative py-24 overflow-x-hidden">
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1920&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
         <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10">
           <div className="text-center mb-12 animate-slide-in-up">
             <div className="inline-flex items-center gap-2 mb-6">
@@ -341,7 +369,18 @@ export default function HomePage() {
       </section>
 
       {/* Info Section */}
-      <section className="relative py-32 bg-gradient-to-b from-black via-zinc-900 to-black overflow-x-hidden">
+      <section className="relative py-32 overflow-x-hidden">
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('https://images.unsplash.com/photo-1520975922324-32ec614f2a66?auto=format&fit=crop&w=1920&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
         <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             <div className="animate-slide-in-right">
