@@ -134,16 +134,17 @@ export default function HelpWidget() {
           width: 48,
           height: 48,
           borderRadius: 9999,
-          background: "#111827",
+          background: "linear-gradient(135deg, #06b6d4 0%, #9333ea 100%)",
           color: "#fff",
           fontWeight: 800,
           fontSize: 20,
-          boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+          boxShadow: "0 0 30px rgba(6, 182, 212, 0.5), 0 10px 20px rgba(0,0,0,0.3)",
           zIndex: 10000,
-          border: "1px solid rgba(255,255,255,0.15)",
+          border: "2px solid rgba(6, 182, 212, 0.5)",
+          cursor: "pointer",
         }}
       >
-        !
+        ?
       </button>
 
       {open && (
@@ -167,26 +168,28 @@ export default function HelpWidget() {
             style={{
               width: "100%",
               maxWidth: 560,
-              background: "#ffffff",
+              background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 27, 75, 0.95) 100%)",
               borderRadius: 12,
               padding: 20,
               maxHeight: "80vh",
               overflow: "auto",
+              border: "2px solid rgba(6, 182, 212, 0.3)",
+              boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700 }}>{content.title}</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 700, background: "linear-gradient(135deg, #06b6d4 0%, #ec4899 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{content.title}</h2>
               <button
                 aria-label="Fermer"
                 onClick={() => setOpen(false)}
-                style={{ background: "transparent", border: 0, fontSize: 20, cursor: "pointer" }}
+                style={{ background: "transparent", border: 0, fontSize: 20, cursor: "pointer", color: "#06b6d4", fontWeight: "bold" }}
               >
                 ×
               </button>
             </div>
             <ul style={{ paddingLeft: 18, lineHeight: 1.6 }}>
               {content.items.map((it, idx) => (
-                <li key={idx} style={{ marginBottom: 6 }}>{it}</li>
+                <li key={idx} style={{ marginBottom: 6, color: "#e0e7ff" }}>{it}</li>
               ))}
             </ul>
           </div>
