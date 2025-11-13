@@ -141,6 +141,7 @@ export default function RegisterPage() {
                   onChange={handleImageUpload}
                   label="Photo de profil (optionnel)"
                   userType="user"
+                  context="public"
                 />
               </div>
             </div>
