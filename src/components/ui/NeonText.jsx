@@ -14,6 +14,7 @@ export default function NeonText({
     green: 'text-green-400',
     yellow: 'text-yellow-400',
     red: 'text-red-400',
+    cyan: 'text-cyan-400',
   };
 
   const glows = {
@@ -23,6 +24,7 @@ export default function NeonText({
     green: 'drop-shadow-[0_0_15px_rgba(34,197,94,0.8)] drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]',
     yellow: 'drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] drop-shadow-[0_0_30px_rgba(234,179,8,0.5)]',
     red: 'drop-shadow-[0_0_15px_rgba(239,68,68,0.8)] drop-shadow-[0_0_30px_rgba(239,68,68,0.5)]',
+    cyan: 'drop-shadow-[0_0_15px_rgba(87,191,225,0.8)] drop-shadow-[0_0_30px_rgba(87,191,225,0.5)]',
   };
 
   const Tag = as;
