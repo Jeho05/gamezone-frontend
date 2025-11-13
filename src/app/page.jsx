@@ -56,9 +56,12 @@ export default function HomePage() {
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/10">
         <div className="container mx-auto px-6 md:px-8 max-w-7xl">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <GamepadIcon className="w-8 h-8 text-purple-400" />
-              <span className="text-xl font-bold gradient-text">GameZone</span>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
+                <GamepadIcon className="w-8 h-8 text-white relative" />
+              </div>
+              <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-wider">OnieGame</span>
             </div>
             <button
               onClick={() => setShowAuthModal(true)}
@@ -87,37 +90,37 @@ export default function HomePage() {
             {/* Hero Text */}
             <div className="text-center mb-12 animate-slide-in-up">
               <div className="inline-flex items-center gap-2 mb-8">
-                <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
-                <span className="text-purple-300 font-semibold tracking-widest uppercase text-sm">Bienvenue dans le futur du gaming</span>
-                <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
+                <Zap className="w-6 h-6 text-cyan-400 animate-pulse" />
+                <span className="text-cyan-300 font-bold tracking-widest uppercase text-sm">⚡ Bienvenue dans l'arène ultime ⚡</span>
+                <Zap className="w-6 h-6 text-cyan-400 animate-pulse" />
               </div>
-              <NeonText color="purple" className="text-4xl sm:text-6xl md:text-7xl mb-8">
-                Votre Salle de Jeux
+              <NeonText color="cyan" className="text-5xl sm:text-7xl md:text-8xl mb-4 font-black">
+                OnieGame
               </NeonText>
-              <NeonText color="pink" className="text-2xl sm:text-4xl md:text-6xl mb-12">
-                Nouvelle Génération
+              <NeonText color="pink" className="text-2xl sm:text-4xl md:text-5xl mb-12 font-bold">
+                La Salle de Jeu du Futur
               </NeonText>
-              <p className="text-xl text-gray-200 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
-                Rejoignez notre communauté grandissante et découvrez pourquoi nous sommes le gaming #1 de la région.
-                Expérience gaming ultime avec consoles dernière génération et système de récompenses innovant!
+              <p className="text-lg text-gray-100 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
+                Plongez dans l'expérience gaming la plus immersive. Consoles dernière génération, tournois épiques, système de récompenses révolutionnaire.
+                <span className="block mt-2 text-cyan-300 font-semibold">Où les champions se rencontrent.</span>
               </p>
               
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20 animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center gap-3 neon-border-purple hover-lift"
+                  className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-600 hover:from-cyan-600 hover:via-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center gap-3 shadow-2xl shadow-cyan-500/50 hover-lift"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                   <Rocket className="w-6 h-6 animate-bounce-soft" />
-                  <span>Commencer à jouer</span>
+                  <span>Entrer dans l'Arène</span>
                 </button>
                 <button 
                   onClick={scrollToFeatures}
-                  className="glass-strong border-2 border-purple-400/50 hover:border-pink-400 text-white px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 hover:bg-purple-400/20 hover-lift flex items-center justify-center gap-3"
+                  className="glass-strong border-2 border-cyan-400/50 hover:border-cyan-300 text-white px-12 py-6 rounded-full font-bold text-lg transition-all duration-300 hover:bg-cyan-400/20 hover-lift flex items-center justify-center gap-3 shadow-lg shadow-cyan-500/30"
                 >
                   <Sparkles className="w-5 h-5" />
-                  <span>Découvrir</span>
+                  <span>Explorer les Jeux</span>
                 </button>
               </div>
               </div>
@@ -160,7 +163,7 @@ export default function HomePage() {
               >
                 <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
                 <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                  <Icon as={GamepadIcon} boxSize={10} color="purple.300" />
+                  <Icon as={GamepadIcon} boxSize={10} color="cyan.400" />
                   <Heading as="h3" size="xl" color="white">Consoles Next-Gen</Heading>
                   <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>PS5, Xbox Series X, Switch</Text>
                 </Stack>
@@ -183,7 +186,7 @@ export default function HomePage() {
               >
                 <Box position="absolute" inset={0} bgGradient="linear(to-b, blackAlpha.700, blackAlpha.500)" />
                 <Stack position="relative" zIndex={1} spacing={2} p={7}>
-                  <Icon as={Trophy} boxSize={10} color="yellow.300" />
+                  <Icon as={Trophy} boxSize={10} color="purple.300" />
                   <Heading as="h3" size="xl" color="white">Tournois & Prix</Heading>
                   <Text color="gray.200" fontSize={{ base: 'md', md: 'lg' }}>Compétitions régulières</Text>
                 </Stack>
@@ -456,11 +459,11 @@ export default function HomePage() {
       <footer className="bg-black py-12 border-t border-purple-500/20">
         <div className="container mx-auto px-6 md:px-8 max-w-7xl">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
-            {/* GameZone Info */}
+            {/* OnieGame Info */}
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <GamepadIcon className="w-8 h-8 text-purple-400" />
-                <span className="text-xl font-bold text-white">GameZone</span>
+                <GamepadIcon className="w-8 h-8 text-cyan-400" />
+                <span className="text-xl font-bold text-white">OnieGame</span>
               </div>
               <p className="text-gray-400 text-sm">
                 Le gaming #1 de la région<br />

@@ -84,15 +84,18 @@ export default function LoginPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-6">
-              <GamepadIcon className="w-12 h-12 text-purple-400 animate-glow-pulse" />
-              <span className="text-3xl font-bold gradient-text">GameZone</span>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
+                <GamepadIcon className="w-12 h-12 text-white relative animate-glow-pulse" />
+              </div>
+              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnieGame</span>
             </div>
             <div className="inline-flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
-              <span className="text-purple-300 font-semibold tracking-widest uppercase text-sm">Espace Gamer</span>
-              <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
+              <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />
+              <span className="text-cyan-300 font-semibold tracking-widest uppercase text-sm">Espace Gamer</span>
+              <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />
             </div>
-            <NeonText color="purple" className="text-4xl md:text-5xl mb-3">
+            <NeonText color="cyan" className="text-4xl md:text-5xl mb-3">
               Bon retour !
             </NeonText>
             <p className="text-gray-300 text-lg">Connectez-vous à votre compte</p>

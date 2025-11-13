@@ -107,10 +107,13 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
       <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-slate-900/95 backdrop-blur-md border-r border-white/10 z-50">
         {/* Logo */}
         <div className="flex items-center space-x-3 p-6 border-b border-white/10">
-          <GamepadIcon className="w-8 h-8 text-purple-400" />
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
+            <GamepadIcon className="w-8 h-8 text-white relative" />
+          </div>
           <div>
-            <div className="text-lg font-bold text-white">GameZone</div>
-            <div className="text-xs text-purple-400 capitalize">{userType}</div>
+            <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnieGame</div>
+            <div className="text-xs text-cyan-400 capitalize">{userType}</div>
           </div>
         </div>
 
@@ -156,10 +159,13 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-b border-white/10 z-50">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-3">
-            <GamepadIcon className="w-8 h-8 text-purple-400" />
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
+              <GamepadIcon className="w-8 h-8 text-white relative" />
+            </div>
             <div>
-              <div className="text-lg font-bold text-white">GameZone</div>
-              <div className="text-xs text-purple-400 capitalize">{userType}</div>
+              <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnieGame</div>
+              <div className="text-xs text-cyan-400 capitalize">{userType}</div>
             </div>
           </div>
           

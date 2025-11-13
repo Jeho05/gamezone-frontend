@@ -108,16 +108,19 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-6">
-              <GamepadIcon className="w-12 h-12 text-purple-400 animate-glow-pulse" />
-              <span className="text-3xl font-bold gradient-text">GameZone</span>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
+                <GamepadIcon className="w-12 h-12 text-white relative animate-glow-pulse" />
+              </div>
+              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnieGame</span>
             </div>
             <div className="inline-flex items-center gap-2 mb-4">
-              <Trophy className="w-5 h-5 text-yellow-400 animate-bounce-soft" />
-              <span className="text-purple-300 font-semibold tracking-widest uppercase text-sm">Nouveau Joueur</span>
-              <Trophy className="w-5 h-5 text-yellow-400 animate-bounce-soft" />
+              <Sparkles className="w-5 h-5 text-pink-400 animate-bounce-soft" />
+              <span className="text-pink-300 font-semibold tracking-widest uppercase text-sm">Nouveau Joueur</span>
+              <Sparkles className="w-5 h-5 text-pink-400 animate-bounce-soft" />
             </div>
             <NeonText color="pink" className="text-4xl md:text-5xl mb-3">
-              Rejoignez-nous !
+              Rejoignez OnieGame !
             </NeonText>
             <p className="text-gray-300 text-lg">Créez votre compte gamer</p>
           </div>
