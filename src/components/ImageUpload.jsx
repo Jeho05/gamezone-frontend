@@ -3,7 +3,7 @@ import { Upload, X, Image as ImageIcon, Loader } from 'lucide-react';
 import API_BASE from '../utils/apiBase';
 import { toast } from 'sonner';
 
-export default function ImageUpload({ value, onChange, label = "Image" }) {
+export default function ImageUpload({ value, onChange, label = "Image", userType = "user" }) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(value || '');
@@ -70,7 +70,12 @@ export default function ImageUpload({ value, onChange, label = "Image" }) {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await fetch(`${API_BASE}/admin/upload_image.php`, {
+      // Choisir l'endpoint selon le type d'utilisateur
+      const endpoint = userType === "admin" 
+        ? `${API_BASE}/admin/upload_image.php`
+        : `${API_BASE}/users/upload_image.php`;
+      
+      const res = await fetch(endpoint, {
         method: 'POST',
         credentials: 'include',
         body: formData

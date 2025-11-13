@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Eye, EyeOff, GamepadIcon, Mail, Lock, User, Upload, Sparkles, Zap, Trophy } from 'lucide-react';
+import ImageUpload from '../../../components/ImageUpload';
 import API_BASE from '../../../utils/apiBase';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
@@ -19,7 +20,7 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    profileImage: null
+    profileImageUrl: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
@@ -34,26 +35,23 @@ export default function RegisterPage() {
     }
     setIsLoading(true);
     try {
-      let res;
-      if (formData.profileImage) {
-        const fd = new FormData();
-        fd.append('username', formData.username);
-        fd.append('email', formData.email);
-        fd.append('password', formData.password);
-        fd.append('profileImage', formData.profileImage);
-        res = await fetch(`${API_BASE}/auth/register.php`, {
-          method: 'POST',
-          body: fd,
-          credentials: 'include',
-        });
-      } else {
-        res = await fetch(`${API_BASE}/auth/register.php`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password })
-        });
+      const payload = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      };
+      
+      // Ajouter l'URL de l'avatar si elle existe
+      if (formData.profileImageUrl) {
+        payload.avatar_url = formData.profileImageUrl;
       }
+      
+      const res = await fetch(`${API_BASE}/auth/register.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+      });
       let data;
       const text = await res.text();
       try {
@@ -84,21 +82,11 @@ export default function RegisterPage() {
     });
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        profileImage: file
-      });
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageUpload = (imageUrl) => {
+    setFormData({
+      ...formData,
+      profileImageUrl: imageUrl
+    });
   };
 
   return (
@@ -147,27 +135,12 @@ export default function RegisterPage() {
             )}
             {/* Profile Image Upload */}
             <div className="text-center">
-              <label className="block text-white font-bold mb-4 flex items-center justify-center gap-2">
-                <Upload className="w-4 h-4 text-purple-400" />
-                Photo de profil (optionnel)
-              </label>
-              <div className="relative inline-block">
-                <div className="w-28 h-28 rounded-full glass-strong border-2 border-dashed border-purple-400/50 flex items-center justify-center overflow-hidden hover:border-purple-400 transition-all duration-300">
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <Upload className="w-8 h-8 text-gray-400" />
-                  )}
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
+              <div className="max-w-xs mx-auto">
+                <ImageUpload
+                  value={formData.profileImageUrl}
                   onChange={handleImageUpload}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  label="Photo de profil (optionnel)"
+                  userType="user"
                 />
               </div>
             </div>
