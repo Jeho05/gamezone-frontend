@@ -158,12 +158,12 @@ export default function PlayerDashboard() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" data-aos="fade-up">
             {/* Points */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+            <div className="bg-white/10 backdrop-blur-md border border-cyan-400/30 hover:border-cyan-400/60 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20" data-aos="fade-up" data-aos-delay="0">
               <div className="flex items-center space-x-4">
-                <div className="p-3 bg-yellow-500/20 rounded-xl">
-                  <Coins className="w-8 h-8 text-yellow-400" />
+                <div className="p-3 bg-cyan-500/20 rounded-xl">
+                  <Coins className="w-8 h-8 text-cyan-400" />
                 </div>
                 <div>
                   <p className="text-gray-300 text-sm">Points totaux</p>
@@ -173,7 +173,7 @@ export default function PlayerDashboard() {
             </div>
 
             {/* Niveau */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+            <div className="bg-white/10 backdrop-blur-md border border-purple-400/30 hover:border-purple-400/60 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20" data-aos="fade-up" data-aos-delay="100">
               <div className="flex items-center space-x-4">
                 <div className="p-3 bg-purple-500/20 rounded-xl">
                   <Star className="w-8 h-8 text-purple-400" />
@@ -186,10 +186,10 @@ export default function PlayerDashboard() {
             </div>
 
             {/* Classement */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+            <div className="bg-white/10 backdrop-blur-md border border-pink-400/30 hover:border-pink-400/60 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/20" data-aos="fade-up" data-aos-delay="200">
               <div className="flex items-center space-x-4">
-                <div className="p-3 bg-blue-500/20 rounded-xl">
-                  <Trophy className="w-8 h-8 text-blue-400" />
+                <div className="p-3 bg-pink-500/20 rounded-xl">
+                  <Trophy className="w-8 h-8 text-pink-400" />
                 </div>
                 <div>
                   <p className="text-gray-300 text-sm">Classement</p>
@@ -199,17 +199,17 @@ export default function PlayerDashboard() {
             </div>
 
             {/* Progression */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+            <div className="bg-white/10 backdrop-blur-md border border-cyan-400/30 hover:border-cyan-400/60 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20" data-aos="fade-up" data-aos-delay="300">
               <div className="flex items-center space-x-4">
-                <div className="p-3 bg-green-500/20 rounded-xl">
-                  <TrendingUp className="w-8 h-8 text-green-400" />
+                <div className="p-3 bg-cyan-500/20 rounded-xl">
+                  <TrendingUp className="w-8 h-8 text-cyan-400" />
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-300 text-sm">Prochain niveau</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <div className="flex-1 bg-gray-600 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-purple-400 to-blue-400 h-2 rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${progressPercentage}%` }}
                       />
                     </div>

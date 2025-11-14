@@ -112,7 +112,7 @@ export default function RegisterPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
                 <GamepadIcon className="w-12 h-12 text-white relative animate-glow-pulse" />
               </div>
-              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnieGame</span>
+              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnileGame</span>
             </div>
             <div className="inline-flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-pink-400 animate-bounce-soft" />
@@ -120,7 +120,7 @@ export default function RegisterPage() {
               <Sparkles className="w-5 h-5 text-pink-400 animate-bounce-soft" />
             </div>
             <NeonText color="pink" className="text-4xl md:text-5xl mb-3">
-              Rejoignez OnieGame !
+              Rejoignez OnileGame !
             </NeonText>
             <p className="text-gray-300 text-lg">Créez votre compte gamer</p>
           </div>

@@ -88,7 +88,7 @@ export default function LoginPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
                 <GamepadIcon className="w-12 h-12 text-white relative animate-glow-pulse" />
               </div>
-              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnieGame</span>
+              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">OnileGame</span>
             </div>
             <div className="inline-flex items-center gap-2 mb-4">
               <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />

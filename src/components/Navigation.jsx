@@ -112,7 +112,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
             <GamepadIcon className="w-8 h-8 text-white relative" />
           </div>
           <div>
-            <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnieGame</div>
+            <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnileGame</div>
             <div className="text-xs text-cyan-400 capitalize">{userType}</div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
               <GamepadIcon className="w-8 h-8 text-white relative" />
             </div>
             <div>
-              <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnieGame</div>
+              <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">OnileGame</div>
               <div className="text-xs text-cyan-400 capitalize">{userType}</div>
             </div>
           </div>

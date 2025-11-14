@@ -61,7 +61,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
                 <GamepadIcon className="w-8 h-8 text-white relative" />
               </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-wider">OnieGame</span>
+              <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-wider">OnileGame</span>
             </div>
             <button
               onClick={() => setShowAuthModal(true)}
@@ -95,7 +95,7 @@ export default function HomePage() {
                 <Zap className="w-6 h-6 text-cyan-400 animate-pulse" />
               </div>
               <NeonText color="cyan" className="text-5xl sm:text-7xl md:text-8xl mb-4 font-black">
-                OnieGame
+                OnileGame
               </NeonText>
               <NeonText color="pink" className="text-2xl sm:text-4xl md:text-5xl mb-12 font-bold">
                 La Salle de Jeu du Futur
@@ -459,11 +459,11 @@ export default function HomePage() {
       <footer className="bg-black py-12 border-t border-purple-500/20">
         <div className="container mx-auto px-6 md:px-8 max-w-7xl">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
-            {/* OnieGame Info */}
+            {/* OnileGame Info */}
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <GamepadIcon className="w-8 h-8 text-cyan-400" />
-                <span className="text-xl font-bold text-white">OnieGame</span>
+                <span className="text-xl font-bold text-white">OnileGame</span>
               </div>
               <p className="text-gray-400 text-sm">
                 Le gaming #1 de la région<br />
