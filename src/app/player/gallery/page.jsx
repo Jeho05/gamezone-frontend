@@ -831,8 +831,8 @@ export default function GalleryPage() {
                 )}
 
                 {/* Stats & Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                  <div className="flex items-center space-x-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between pt-4 border-t border-white/10">
+                  <div className="flex flex-wrap items-center gap-4 text-sm md:text-base">
                     <div className="flex items-center space-x-2 text-gray-400">
                       <Eye className="w-5 h-5" />
                       <span>{detailContent.views_count || 0} vues</span>
@@ -928,7 +928,7 @@ export default function GalleryPage() {
                         </button>
                       </div>
                     )}
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:space-x-2">
                       <input
                         type="text"
                         value={newComment}

@@ -132,13 +132,13 @@ export default function MyReservations() {
           <div className="mb-8">
             <button
               onClick={() => navigate('/player/shop')}
-              className="flex items-center gap-2 text-gray-300 hover:text-white mb-4 transition-colors"
+              className="inline-flex items-center gap-2 text-gray-300 hover:text-white mb-4 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               Retour à la boutique
             </button>
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
                   <Calendar className="w-10 h-10 text-cyan-400" />
@@ -159,7 +159,7 @@ export default function MyReservations() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4">
               <div className="text-3xl font-bold text-white mb-1">{stats.total || 0}</div>
               <div className="text-sm text-gray-300">Total</div>

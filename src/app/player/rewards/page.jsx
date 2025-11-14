@@ -203,7 +203,7 @@ export default function RewardsPage() {
       <div className="max-w-7xl mx-auto">
         {/* En-tête */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
                 <span className="text-5xl">🎁</span>
@@ -223,14 +223,14 @@ export default function RewardsPage() {
 
           {/* Solde de points */}
           <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <p className="text-yellow-900 font-semibold mb-1">Vos Points</p>
                 <p className="text-5xl font-bold text-white">{userPoints.toLocaleString()}</p>
               </div>
-              <div className="text-7xl">⭐</div>
+              <div className="text-6xl sm:text-7xl">⭐</div>
             </div>
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               <button
                 onClick={() => navigate('/player/gamification')}
                 className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm transition-all"
@@ -270,7 +270,7 @@ export default function RewardsPage() {
         </div>
 
         {/* Statistiques rapides */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <div className="bg-white/10 backdrop-blur rounded-xl p-4 text-white">
             <div className="flex items-center justify-between">
               <div>
