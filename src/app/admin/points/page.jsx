@@ -103,7 +103,7 @@ export default function PointsRulesPage() {
         <div className="p-4 lg:p-8">
           <div className="max-w-6xl mx-auto">
             {/* Header */}
-            <div className="mb-8 flex items-start justify-between">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
                 <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">
                   💰 Règles de Points

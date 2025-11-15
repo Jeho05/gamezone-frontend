@@ -247,7 +247,7 @@ export default function AdminContent() {
       <Navigation userType="admin" />
       
       <div className="lg:pl-64">
-        <div className="container mx-auto px-4 py-8">
+        <div className="px-4 py-8 max-w-6xl mx-auto">
           {/* Header */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <h1 className="text-3xl font-bold text-purple-600 mb-2 flex items-center gap-3">
@@ -427,7 +427,7 @@ export default function AdminContent() {
 
           {/* Content List */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input

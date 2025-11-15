@@ -130,7 +130,7 @@ export default function HelpWidget() {
         style={{
           position: "fixed",
           right: 16,
-          bottom: 16,
+          bottom: 80,
           width: 44,
           height: 44,
           borderRadius: 9999,
