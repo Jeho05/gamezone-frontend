@@ -234,7 +234,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
       const ids = userType === 'admin' ? adminIds : playerIds;
       const items = ids.map(id => navItems.find(i => i.id === id)).filter(Boolean);
       return (
-        <nav className="grid grid-cols-5">
+        <nav className="grid grid-cols-5 gap-x-1">
           {items.map((item) => {
             const Icon = item.icon;
             const isActive = activePage === item.id;
@@ -243,12 +243,12 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
                 key={item.id}
                 onClick={() => handleNavClick(item)}
                 aria-label={item.label}
-                className={`flex flex-col items-center justify-center py-2.5 text-[11px] leading-tight ${
+                className={`flex flex-col items-center justify-center py-2 text-[10px] leading-tight ${
                   isActive ? 'text-white' : 'text-gray-300 hover:text-white'
                 }`}
               >
-                <Icon className="w-5 h-5 mb-0.5" />
-                <span className="font-medium truncate px-1">{item.label}</span>
+                <Icon className="w-4 h-4 mb-0.5" />
+                <span className="font-medium truncate max-w-[64px] px-0.5">{item.label}</span>
               </button>
             );
           })}

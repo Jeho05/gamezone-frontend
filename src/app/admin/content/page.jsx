@@ -247,7 +247,7 @@ export default function AdminContent() {
       <Navigation userType="admin" />
       
       <div className="lg:pl-64">
-        <div className="px-4 py-8 max-w-6xl mx-auto">
+        <div className="px-4 pt-8 pb-24 max-w-6xl mx-auto">
           {/* Header */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <h1 className="text-3xl font-bold text-purple-600 mb-2 flex items-center gap-3">
@@ -257,14 +257,14 @@ export default function AdminContent() {
             <p className="text-gray-600">Gérez vos actualités, événements, galerie et streams</p>
 
             {/* Tabs */}
-            <div className="flex gap-4 mt-6 border-b">
+            <div className="flex flex-wrap gap-2 md:gap-4 mt-6 border-b pb-2">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 font-semibold border-b-2 transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 text-sm md:text-base font-semibold border-b-2 transition-colors ${
                       activeTab === tab.id
                         ? 'border-purple-600 text-purple-600'
                         : 'border-transparent text-gray-500 hover:text-purple-600'
