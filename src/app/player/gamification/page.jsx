@@ -79,7 +79,7 @@ export default function GamificationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white relative overflow-x-hidden">
       {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
@@ -90,7 +90,7 @@ export default function GamificationPage() {
       <Navigation userType="player" />
       
       <div className="lg:pl-64 relative z-10">
-        <div className="container mx-auto px-4 py-8 pt-20 lg:pt-8 max-w-7xl">
+        <div className="container mx-auto px-4 pt-20 pb-24 lg:pt-8 max-w-7xl">
         {/* Header with better visual hierarchy */}
         <div className="mb-10 animate-fade-in" data-aos="fade-down">
           <div className="flex items-start justify-between gap-4 mb-4">
@@ -99,11 +99,11 @@ export default function GamificationPage() {
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/50">
                   🎮
                 </div>
-                <h1 className="text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-transparent bg-clip-text">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-transparent bg-clip-text">
                   Gamification
                 </h1>
               </div>
-              <p className="text-gray-400 text-lg ml-20">
+              <p className="text-gray-400 text-base sm:text-lg ml-0 md:ml-20 leading-snug">
                 Suivez votre progression et débloquez des récompenses
               </p>
             </div>
