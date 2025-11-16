@@ -11,6 +11,8 @@ import HomePage from './app/page';
 // Import auth pages
 import LoginPage from './app/auth/login/page';
 import RegisterPage from './app/auth/register/page';
+import ForgotPasswordPage from './app/auth/forgot-password/page';
+import ResetPasswordPage from './app/auth/reset-password/[token]/page';
 
 // Import player pages
 import PlayerDashboard from './app/player/dashboard/page';
@@ -66,6 +68,8 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth/login" element={<LoginPage />} />
                 <Route path="/auth/register" element={<RegisterPage />} />
+                <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/auth/reset-password/:token" element={<ResetPasswordPage />} />
 
                 {/* Player routes */}
                 <Route path="/player/dashboard" element={<PlayerDashboard />} />

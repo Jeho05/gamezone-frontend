@@ -31,6 +31,8 @@ import AdminSessions from './app/admin/sessions/page';
 import AdminInvoiceScanner from './app/admin/invoice-scanner/page';
 import LoginPage from './app/auth/login/page';
 import RegisterPage from './app/auth/register/page';
+import ForgotPasswordPage from './app/auth/forgot-password/page';
+import ResetPasswordPage from './app/auth/reset-password/[token]/page';
 
 // Import global styles
 import './app/global.css';
@@ -62,7 +64,7 @@ function NotFoundPage() {
       <div>
         <h1 style={{ fontSize: '5rem', margin: 0 }}>404</h1>
         <p style={{ fontSize: '1.5rem', marginTop: '20px' }}>Page non trouvée</p>
-        <a href="/gamezone/" style={{ 
+        <a href="/" style={{ 
           display: 'inline-block',
           marginTop: '30px',
           padding: '15px 30px',
@@ -95,7 +97,7 @@ function ComingSoonPage({ title }: { title: string }) {
       <div>
         <h1 style={{ fontSize: '3rem', marginBottom: '20px' }}>🚧 {title}</h1>
         <p style={{ fontSize: '1.3rem', marginBottom: '30px' }}>Cette page est en construction</p>
-        <a href="/gamezone/" style={{ 
+        <a href="/" style={{ 
           display: 'inline-block',
           padding: '15px 30px',
           background: 'white',
@@ -229,6 +231,14 @@ export default function FullApp() {
     {
       path: "/auth/register",
       element: <RegisterPage />,
+    },
+    {
+      path: "/auth/forgot-password",
+      element: <ForgotPasswordPage />,
+    },
+    {
+      path: "/auth/reset-password/:token",
+      element: <ResetPasswordPage />,
     },
     {
       path: "*",
