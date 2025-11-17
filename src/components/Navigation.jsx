@@ -74,6 +74,10 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
 
   useEffect(() => {
     if (!isMobileMenuOpen) return;
+    if (typeof window === 'undefined') return;
+
+    const isMobileViewport = window.innerWidth < 1024;
+    if (!isMobileViewport) return;
 
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;

@@ -9,12 +9,20 @@ if (!API_BASE) {
     // Alternative: Accès direct (peut causer NetworkError)
     // API_BASE = 'http://localhost/EXAMEN/projet%20ismo/api';
   } else if (typeof window !== 'undefined') {
-    // Served from Apache/XAMPP directly
+    // Served from Apache/XAMPP or another web server
     const origin = window.location.origin;
     const path = window.location.pathname;
-    API_BASE = path.includes('/EXAMEN/projet%20ismo/') || path.includes('/EXAMEN/projet ismo/')
-      ? origin + '/EXAMEN/projet%20ismo/api'
-      : origin + '/api';
+    const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+
+    if (isLocalhost) {
+      // En local (XAMPP), cibler explicitement le backend projet ismo
+      API_BASE = origin + '/EXAMEN/projet%20ismo/api';
+    } else if (path.includes('/EXAMEN/projet%20ismo/') || path.includes('/EXAMEN/projet ismo/')) {
+      API_BASE = origin + '/EXAMEN/projet%20ismo/api';
+    } else {
+      // Par défaut en prod: backend monté sous /api sur le même domaine
+      API_BASE = origin + '/api';
+    }
   } else {
     // SSR or tools
     API_BASE = 'http://localhost/EXAMEN/projet%20ismo/api';

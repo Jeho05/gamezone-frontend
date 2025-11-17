@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Eye, EyeOff, GamepadIcon, Mail, Lock, Sparkles, Zap } from 'lucide-react';
 import API_BASE from '../../../utils/apiBase';
 import VideoBackground from '@/components/ui/VideoBackground';
@@ -9,6 +10,7 @@ import NeonText from '@/components/ui/NeonText';
 import ParallaxObject from '@/components/ui/ParallaxObject';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -179,7 +181,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                onClick={() => window.location.href = '/auth/forgot-password'}
+                onClick={() => navigate('/auth/forgot-password')}
               >
                 Mot de passe oublié ?
               </button>
@@ -214,7 +216,7 @@ export default function LoginPage() {
             <p className="text-gray-300 text-lg">
               Pas encore de compte ?{' '}
               <button
-                onClick={() => window.location.href = '/auth/register'}
+                onClick={() => navigate('/auth/register')}
                 className="text-purple-400 hover:text-purple-300 font-bold transition-colors hover:underline"
               >
                 S'inscrire maintenant
@@ -225,7 +227,7 @@ export default function LoginPage() {
           {/* Back to home */}
           <div className="text-center mt-6">
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => navigate('/')}
               className="text-gray-400 hover:text-white transition-colors font-semibold flex items-center gap-2 mx-auto"
             >
               ← Retour à l'accueil

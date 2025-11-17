@@ -8,9 +8,12 @@
   }
   html {
     -webkit-text-size-adjust: 100%;
+    min-height: 100%;
   }
   body {
     overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100%;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
