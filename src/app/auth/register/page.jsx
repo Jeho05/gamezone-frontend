@@ -25,6 +25,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState(null);
+  const [recoveryCode, setRecoveryCode] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,11 +64,19 @@ export default function RegisterPage() {
       if (!res.ok) {
         throw new Error(data?.error || 'Échec de l\'inscription');
       }
+      const recoveryCodeFromApi = data?.recovery_code || null;
+      if (recoveryCodeFromApi) {
+        setRecoveryCode(recoveryCodeFromApi);
+      }
       toast.success('Compte créé avec succès !', {
-        description: 'Redirection vers la page de connexion...',
-        duration: 2000
+        description: recoveryCodeFromApi
+          ? `Note soigneusement ton code de récupération : ${recoveryCodeFromApi}`
+          : 'Redirection vers la page de connexion...',
+        duration: recoveryCodeFromApi ? 10000 : 2000
       });
-      setTimeout(() => navigate('/auth/login'), 2000);
+      if (!recoveryCodeFromApi) {
+        setTimeout(() => navigate('/auth/login'), 2000);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -133,6 +142,14 @@ export default function RegisterPage() {
                 <div className="flex items-center gap-2">
                   <Zap className="w-5 h-5 text-red-400" />
                   <div>{error}</div>
+                </div>
+              </div>
+            )}
+            {recoveryCode && (
+              <div className="p-4 rounded-xl bg-emerald-500/20 border-2 border-emerald-400/50 text-emerald-200 text-sm backdrop-blur-sm animate-scale-in">
+                <div className="flex flex-col gap-1">
+                  <span>Code de récupération (note-le et garde-le en lieu sûr) :</span>
+                  <code className="font-mono text-base break-all">{recoveryCode}</code>
                 </div>
               </div>
             )}

@@ -186,6 +186,15 @@ export default function LoginPage() {
                 Mot de passe oublié ?
               </button>
             </div>
+            <div className="flex justify-end mt-1">
+              <button
+                type="button"
+                className="text-xs text-gray-400 hover:text-gray-300 transition-colors"
+                onClick={() => navigate('/auth/reset-with-recovery-code')}
+              >
+                Réinitialiser avec un code de récupération
+              </button>
+            </div>
 
             {/* Submit Button */}
             <button
