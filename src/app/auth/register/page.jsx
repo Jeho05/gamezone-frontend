@@ -67,12 +67,13 @@ export default function RegisterPage() {
       const recoveryCodeFromApi = data?.recovery_code || null;
       if (recoveryCodeFromApi) {
         setRecoveryCode(recoveryCodeFromApi);
+        setTimeout(() => navigate('/auth/login'), 60000);
       }
       toast.success('Compte créé avec succès !', {
         description: recoveryCodeFromApi
-          ? `Note soigneusement ton code de récupération : ${recoveryCodeFromApi}`
+          ? `Note soigneusement ton code de récupération : ${recoveryCodeFromApi}\nTu seras redirigé vers la page de connexion dans 1 minute.`
           : 'Redirection vers la page de connexion...',
-        duration: recoveryCodeFromApi ? 10000 : 2000
+        duration: recoveryCodeFromApi ? 15000 : 2000
       });
       if (!recoveryCodeFromApi) {
         setTimeout(() => navigate('/auth/login'), 2000);
@@ -96,6 +97,16 @@ export default function RegisterPage() {
       ...formData,
       profileImageUrl: imageUrl
     });
+  };
+
+  const handleCopyRecoveryCode = async () => {
+    if (!recoveryCode) return;
+    try {
+      await navigator.clipboard.writeText(recoveryCode);
+      toast.success('Code de récupération copié dans le presse-papiers');
+    } catch (err) {
+      toast.error('Impossible de copier automatiquement le code, copie-le manuellement.');
+    }
   };
 
   return (
@@ -147,9 +158,26 @@ export default function RegisterPage() {
             )}
             {recoveryCode && (
               <div className="p-4 rounded-xl bg-emerald-500/20 border-2 border-emerald-400/50 text-emerald-200 text-sm backdrop-blur-sm animate-scale-in">
-                <div className="flex flex-col gap-1">
-                  <span>Code de récupération (note-le et garde-le en lieu sûr) :</span>
-                  <code className="font-mono text-base break-all">{recoveryCode}</code>
+                <div className="flex flex-col gap-2">
+                  <span className="font-semibold">
+                    Code de récupération (garde-le en lieu sûr, ne le partage avec personne) :
+                  </span>
+                  <code className="font-mono text-base break-all px-3 py-2 bg-black/40 rounded-lg border border-emerald-400/40">
+                    {recoveryCode}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={handleCopyRecoveryCode}
+                    className="self-start mt-1 px-3 py-1 rounded-md bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-50 text-xs font-semibold transition-colors"
+                  >
+                    Copier le code dans le presse-papiers
+                  </button>
+                  <p className="text-xs text-emerald-100/80">
+                    Si tu perds ce code, la réinitialisation de ton mot de passe devra être faite manuellement par un administrateur.
+                  </p>
+                  <p className="text-xs text-emerald-100/80">
+                    Tu seras redirigé automatiquement vers la page de connexion dans environ 1 minute après ton inscription.
+                  </p>
                 </div>
               </div>
             )}

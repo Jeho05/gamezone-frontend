@@ -208,6 +208,16 @@ export default function ResetWithRecoveryCodePage() {
                 </span>
               </button>
             </form>
+            <div className="mt-6 text-xs text-gray-300 space-y-1">
+              <p className="font-semibold text-amber-300">Code de récupération oublié ?</p>
+              <p>
+                Si tu n'as plus accès à ton code, contacte l'admin (Ismael Moustapha) en utilisant les
+                informations de contact disponibles sur la page d'accueil.
+              </p>
+              <p>
+                Tu peux utiliser le bouton « Retour à l'accueil » ci-dessous pour retrouver ces informations.
+              </p>
+            </div>
           </GlassCard>
 
           <div className="text-center mt-6 space-y-2">
