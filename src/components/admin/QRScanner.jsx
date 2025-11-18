@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, XCircle, AlertTriangle } from 'lucide-react';
 
-export default function QRScanner({ onScan, onClose }) {
+export default function QRScanner({ onScan, onDetected, onClose }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState(null);
@@ -66,7 +66,11 @@ export default function QRScanner({ onScan, onClose }) {
         if (code && code.data) {
           // QR Code détecté
           stopCamera();
-          onScan(code.data);
+          if (typeof onScan === 'function') {
+            onScan(code.data);
+          } else if (typeof onDetected === 'function') {
+            onDetected(code.data);
+          }
           return;
         }
       } else if (!window.jsQR) {
