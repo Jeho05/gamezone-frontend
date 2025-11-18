@@ -123,7 +123,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-slate-900/95 backdrop-blur-md border-r border-white/10 z-50 overflow-y-auto sidebar-scroll">
+      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-slate-900/95 backdrop-blur-md border-r border-white/10 z-50">
         {/* Logo */}
         <div className="flex items-center space-x-3 p-6 border-b border-white/10">
           <div className="relative">
@@ -137,7 +137,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 min-h-0 p-4">
+        <nav className="flex-1 min-h-0 p-4 overflow-y-auto sidebar-scroll">
           <ul className="space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
