@@ -5,7 +5,6 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState(null);
-  const [scanning, setScanning] = useState(false);
   const streamRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
-        setScanning(true);
         requestAnimationFrame(scanFrame);
       }
     } catch (err) {
@@ -40,11 +38,10 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
-    setScanning(false);
   };
 
   const scanFrame = () => {
-    if (!scanning || !videoRef.current || !canvasRef.current) return;
+    if (!streamRef.current || !videoRef.current || !canvasRef.current) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -78,7 +75,7 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
       }
     }
     
-    if (scanning) {
+    if (streamRef.current) {
       requestAnimationFrame(scanFrame);
     }
   };
