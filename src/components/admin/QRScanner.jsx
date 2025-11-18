@@ -5,7 +5,7 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState(null);
-  const [debugInfo, setDebugInfo] = useState('');
+  const [debugInfo, setDebugInfo] = useState('Initialisation du scanner...');
   const streamRef = useRef(null);
   const frameCountRef = useRef(0);
 
