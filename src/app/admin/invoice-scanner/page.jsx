@@ -253,6 +253,27 @@ export default function InvoiceScanner() {
     }
   };
 
+  // Extrait un code de validation (8 ou 16 caractères alphanumériques) depuis une chaîne brute
+  const extractValidationCode = (raw) => {
+    if (!raw) return '';
+
+    const upper = raw.toString().toUpperCase();
+
+    // Découper sur tout ce qui n'est pas alphanumérique
+    const tokens = upper.split(/[^A-Z0-9]+/).filter(Boolean);
+
+    // Priorité aux codes de 16 caractères
+    const sixteen = tokens.find((t) => /^[A-Z0-9]{16}$/.test(t));
+    if (sixteen) return sixteen;
+
+    // Sinon, essayer 8 caractères
+    const eight = tokens.find((t) => /^[A-Z0-9]{8}$/.test(t));
+    if (eight) return eight;
+
+    // Fallback : garder uniquement les caractères alphanumériques
+    return upper.replace(/[^A-Z0-9]/g, '');
+  };
+
   const processCode = useCallback(async (code, isRetry = false) => {
     // Validation du code
     if (!code || code.trim().length === 0) {
@@ -271,8 +292,8 @@ export default function InvoiceScanner() {
       return;
     }
 
-    // Nettoyer le code : enlever les tirets et espaces, mettre en majuscules
-    const cleanCode = code.trim().toUpperCase().replace(/[-\s]/g, '');
+    // Extraire et nettoyer le code : gérer les QR qui contiennent une URL ou du texte autour
+    const cleanCode = extractValidationCode(code);
     
     // Validation format (8 OU 16 caractères alphanumériques pour compatibilité)
     if (!/^[A-Z0-9]{8}$/.test(cleanCode) && !/^[A-Z0-9]{16}$/.test(cleanCode)) {
