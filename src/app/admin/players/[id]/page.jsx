@@ -39,6 +39,12 @@ export default function UserProfile() {
   const [customReason, setCustomReason] = useState('');
   const [deactivationReason, setDeactivationReason] = useState('');
   const [deletionReason, setDeletionReason] = useState('');
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [resetRecoveryCode, setResetRecoveryCode] = useState(null);
+  const [resetError, setResetError] = useState(null);
+  const [resetLoading, setResetLoading] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -305,6 +311,57 @@ export default function UserProfile() {
   // Check if viewing own profile
   const isOwnProfile = currentUser && profile?.user && currentUser.id === profile.user.id;
 
+  const handleAdminResetPassword = async () => {
+    if (!profile?.user) return;
+
+    if (!newPassword || newPassword.length < 6) {
+      toast.error('Mot de passe trop court', {
+        description: 'Le nouveau mot de passe doit contenir au moins 6 caractères.',
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      toast.error('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      setResetError(null);
+
+      const res = await fetch(`${API_BASE}/admin/reset_user_password.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          user_id: parseInt(id),
+          new_password: newPassword,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Échec de la réinitialisation du mot de passe");
+      }
+
+      setResetRecoveryCode(data?.recovery_code || null);
+      toast.success('Mot de passe réinitialisé', {
+        description: 'Communique le nouveau mot de passe au joueur et note le nouveau code de récupération.',
+        duration: 5000,
+      });
+    } catch (e) {
+      console.error(e);
+      setResetError(e.message);
+      toast.error('Erreur lors de la réinitialisation du mot de passe', {
+        description: e.message,
+      });
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -366,6 +423,20 @@ export default function UserProfile() {
             {/* Action Buttons - Hidden if viewing own profile */}
             {!isOwnProfile && (
               <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    setShowResetPasswordModal(true);
+                    setNewPassword('');
+                    setConfirmNewPassword('');
+                    setResetRecoveryCode(null);
+                    setResetError(null);
+                  }}
+                  className="px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 rounded-xl text-indigo-300 transition-colors flex items-center space-x-2"
+                  title="Réinitialiser le mot de passe et générer un nouveau code de récupération"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span>Réinitialiser le mot de passe</span>
+                </button>
                 <button
                   onClick={() => setShowSanctionModal(true)}
                   className="px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-400/30 rounded-xl text-yellow-400 transition-colors flex items-center space-x-2"
@@ -625,6 +696,105 @@ export default function UserProfile() {
                 } disabled:opacity-50 text-white py-3 rounded-xl font-semibold transition-colors`}
               >
                 {actionLoading ? 'Traitement...' : 'Confirmer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Reset Password Modal */}
+      {showResetPasswordModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white/10 backdrop-blur-md border border-indigo-400/30 rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="p-3 bg-indigo-500/20 rounded-full">
+                <Shield className="w-6 h-6 text-indigo-300" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">
+                Réinitialiser le mot de passe
+              </h3>
+            </div>
+
+            <p className="text-gray-300 text-sm mb-3">
+              Cette action définira un <span className="font-semibold text-white">nouveau mot de passe</span> pour{' '}
+              <span className="font-semibold text-white">{user.username}</span> et générera un{' '}
+              <span className="font-semibold text-indigo-200">nouveau code de récupération</span>.
+            </p>
+            <p className="text-xs text-indigo-100/90 mb-4">
+              Communique le nouveau mot de passe et le code de récupération uniquement par un canal sûr (en personne,
+              téléphone, WhatsApp vérifié...).
+            </p>
+
+            {resetError && (
+              <div className="mb-4 bg-red-500/20 border border-red-400/40 text-red-100 text-xs rounded-lg px-3 py-2 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                <span>{resetError}</span>
+              </div>
+            )}
+
+            <div className="space-y-4 mb-4">
+              <div>
+                <label className="block text-white font-semibold mb-2 text-sm">
+                  Nouveau mot de passe
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  placeholder="Nouveau mot de passe"
+                />
+              </div>
+
+              <div>
+                <label className="block text-white font-semibold mb-2 text-sm">
+                  Confirmer le nouveau mot de passe
+                </label>
+                <input
+                  type="password"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  placeholder="Confirme le mot de passe"
+                />
+              </div>
+            </div>
+
+            {resetRecoveryCode && (
+              <div className="mb-4 bg-indigo-500/15 border border-indigo-400/40 rounded-lg p-3 text-xs text-indigo-50 space-y-2">
+                <p className="font-semibold text-indigo-200">
+                  Nouveau code de récupération généré :
+                </p>
+                <code className="block font-mono text-sm break-all px-3 py-2 bg-black/40 rounded-lg border border-indigo-400/40">
+                  {resetRecoveryCode}
+                </code>
+                <p>
+                  Note ce code et communique-le au joueur. Il lui permettra de réinitialiser son mot de passe sans
+                  passer par l'email.
+                </p>
+              </div>
+            )}
+
+            <div className="flex space-x-4 mt-4">
+              <button
+                onClick={() => {
+                  setShowResetPasswordModal(false);
+                  setNewPassword('');
+                  setConfirmNewPassword('');
+                  setResetRecoveryCode(null);
+                  setResetError(null);
+                }}
+                disabled={resetLoading}
+                className="flex-1 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-700 text-white py-3 rounded-xl font-semibold transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleAdminResetPassword}
+                disabled={resetLoading}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white py-3 rounded-xl font-semibold transition-colors"
+              >
+                {resetLoading ? 'Réinitialisation...' : 'Confirmer'}
               </button>
             </div>
           </div>

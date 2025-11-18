@@ -195,6 +195,15 @@ export default function LoginPage() {
                 Réinitialiser avec un code de récupération
               </button>
             </div>
+            <div className="flex justify-end mt-1">
+              <button
+                type="button"
+                className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                onClick={() => navigate('/auth/reset-help')}
+              >
+                Besoin d'aide ? Tout est oublié
+              </button>
+            </div>
 
             {/* Submit Button */}
             <button
