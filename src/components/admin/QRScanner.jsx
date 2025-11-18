@@ -5,7 +5,9 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState(null);
+  const [debugInfo, setDebugInfo] = useState('');
   const streamRef = useRef(null);
+  const frameCountRef = useRef(0);
 
   useEffect(() => {
     startCamera();
@@ -21,6 +23,8 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
       });
       
       streamRef.current = stream;
+      setDebugInfo('Caméra démarrée, en attente du QR code...');
+      console.log('QRScanner: caméra démarrée');
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -30,6 +34,7 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
     } catch (err) {
       console.error('Erreur caméra:', err);
       setError('Impossible d\'accéder à la caméra. Vérifiez les permissions.');
+      setDebugInfo('Erreur lors de l\'accès à la caméra');
     }
   };
 
@@ -41,11 +46,22 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
   };
 
   const scanFrame = () => {
-    if (!streamRef.current || !videoRef.current || !canvasRef.current) return;
+    // Si le flux caméra est arrêté, on arrête la boucle
+    if (!streamRef.current) {
+      return;
+    }
+
+    // S'assurer que les refs vidéo/canvas sont prêtes
+    if (!videoRef.current || !canvasRef.current) {
+      requestAnimationFrame(scanFrame);
+      return;
+    }
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
+
+    frameCountRef.current += 1;
 
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       canvas.height = video.videoHeight;
@@ -61,6 +77,8 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
         });
         
         if (code && code.data) {
+          console.log('QRScanner: QR code détecté', code.data);
+          setDebugInfo('QR détecté, traitement en cours...');
           // QR Code détecté
           stopCamera();
           if (typeof onScan === 'function') {
@@ -70,8 +88,9 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
           }
           return;
         }
-      } else if (!window.jsQR) {
-        console.warn('jsQR not loaded yet');
+      } else if (typeof window !== 'undefined' && !window.jsQR) {
+        console.warn('QRScanner: jsQR non chargé pour le moment');
+        setDebugInfo('Chargement du moteur de scan QR...');
       }
     }
     
@@ -148,6 +167,11 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
                 <p className="text-sm text-gray-500">
                   Le code sera scanné automatiquement
                 </p>
+                {debugInfo && (
+                  <p className="text-xs text-gray-400">
+                    {debugInfo}
+                  </p>
+                )}
               </div>
 
               <button
