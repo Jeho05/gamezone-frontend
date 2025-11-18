@@ -33,6 +33,7 @@ import LoginPage from './app/auth/login/page';
 import RegisterPage from './app/auth/register/page';
 import ForgotPasswordPage from './app/auth/forgot-password/page';
 import ResetPasswordPage from './app/auth/reset-password/[token]/page';
+import ResetWithRecoveryCodePage from './app/auth/reset-with-recovery-code/page';
 
 // Import global styles
 import './app/global.css';
@@ -235,6 +236,10 @@ export default function FullApp() {
     {
       path: "/auth/forgot-password",
       element: <ForgotPasswordPage />,
+    },
+    {
+      path: "/auth/reset-with-recovery-code",
+      element: <ResetWithRecoveryCodePage />,
     },
     {
       path: "/auth/reset-password/:token",
