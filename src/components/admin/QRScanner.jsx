@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, XCircle, AlertTriangle } from 'lucide-react';
+import jsQR from 'jsqr';
 
 export default function QRScanner({ onScan, onDetected, onClose }) {
   const videoRef = useRef(null);
@@ -71,8 +72,8 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       
       // Utiliser jsQR pour décoder
-      if (typeof window !== 'undefined' && window.jsQR) {
-        const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
+      try {
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
           inversionAttempts: 'dontInvert',
         });
         
@@ -88,9 +89,9 @@ export default function QRScanner({ onScan, onDetected, onClose }) {
           }
           return;
         }
-      } else if (typeof window !== 'undefined' && !window.jsQR) {
-        console.warn('QRScanner: jsQR non chargé pour le moment');
-        setDebugInfo('Chargement du moteur de scan QR...');
+      } catch (err) {
+        console.error('QRScanner: erreur lors du décodage jsQR', err);
+        setDebugInfo('Erreur du moteur de scan QR');
       }
     }
     
