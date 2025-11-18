@@ -210,14 +210,16 @@ export default function MySession() {
               Vérifiez que vous avez des sessions en statut "prête", "active" ou "en pause".
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/player/shop"
+              <button
+                type="button"
+                onClick={() => navigate('/player/shop')}
                 className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
               >
                 Acheter du temps de jeu
-              </a>
+              </button>
               <button
-                onClick={() => window.location.href = '/player/invoices'}
+                type="button"
+                onClick={() => navigate('/player/my-invoices')}
                 className="inline-block px-6 py-3 bg-gray-700 text-white font-semibold rounded-xl hover:bg-gray-600 transition-all"
               >
                 Voir mes factures

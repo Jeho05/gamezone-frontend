@@ -15,6 +15,7 @@ export default function ActiveSessions() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   useEffect(() => {
     loadSessions();
@@ -23,6 +24,14 @@ export default function ActiveSessions() {
     const interval = autoRefresh ? setInterval(loadSessions, 30000) : null;
     return () => clearInterval(interval);
   }, [autoRefresh]);
+
+  // Mettre à jour l'heure courante côté client pour un décompte fluide
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const loadSessions = async () => {
     try {
@@ -87,6 +96,47 @@ export default function ActiveSessions() {
         {c.text}
       </span>
     );
+  };
+
+   // Calcul du temps restant réel pour une session
+  const calculateRemainingTime = (session) => {
+    const total = Number(session.total_minutes) || 0;
+
+    // Pour les sessions non actives, utiliser la valeur serveur si disponible
+    if (session.status !== 'active') {
+      if (session.remaining_minutes !== undefined && session.remaining_minutes !== null) {
+        return Number(session.remaining_minutes) || 0;
+      }
+      const used = Number(session.used_minutes) || 0;
+      return Math.max(0, total - used);
+    }
+
+    // Si la session n'a pas encore de started_at, tout le temps est disponible
+    if (!session.started_at) {
+      return total;
+    }
+
+    const lastUpdateTs = new Date(session.last_countdown_update || session.started_at).getTime();
+    const elapsedMinutes = Math.max(0, Math.floor((currentTime - lastUpdateTs) / 60000));
+    const baseRemaining = Math.max(0, total - (Number(session.used_minutes) || 0));
+    const remaining = Math.max(0, baseRemaining - elapsedMinutes);
+    return remaining;
+  };
+
+  // Calcul du temps utilisé réel pour une session
+  const calculateUsedTime = (session) => {
+    const total = Number(session.total_minutes) || 0;
+
+    // Pour les sessions non actives ou non démarrées, utiliser used_minutes directement
+    if (session.status !== 'active' || !session.started_at) {
+      return Math.min(total, Number(session.used_minutes) || 0);
+    }
+
+    const lastUpdateTs = new Date(session.last_countdown_update || session.started_at).getTime();
+    const elapsedMinutes = Math.max(0, Math.floor((currentTime - lastUpdateTs) / 60000));
+    const baseUsed = Number(session.used_minutes) || 0;
+    const used = Math.min(total, baseUsed + elapsedMinutes);
+    return used;
   };
 
   const formatTime = (minutes) => {
@@ -198,11 +248,18 @@ export default function ActiveSessions() {
                 key={session.id}
                 className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20"
               >
+                {(() => {
+                  // Pré-calculer les valeurs de temps pour cette session
+                  // afin que le rendu soit cohérent
+                  session.__remainingTime = calculateRemainingTime(session);
+                  session.__usedTime = calculateUsedTime(session);
+                  return null;
+                })()}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       {getStatusBadge(session.status)}
-                      {session.remaining_minutes <= 5 && session.status === 'active' && (
+                      {session.__remainingTime <= 5 && session.status === 'active' && (
                         <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 animate-pulse">
                           <AlertTriangle className="w-4 h-4" />
                           Temps faible !
@@ -293,14 +350,14 @@ export default function ActiveSessions() {
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-400">Temps restant</span>
                     <span className="text-white font-semibold">
-                      {formatTime(session.remaining_minutes)} / {formatTime(session.total_minutes)}
+                      {formatTime(session.__remainingTime)} / {formatTime(session.total_minutes)}
                     </span>
                   </div>
                   
                   <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
                     <div
-                      className={`h-full transition-all duration-1000 ${getProgressColor(session.remaining_minutes, session.total_minutes)}`}
-                      style={{ width: `${(session.remaining_minutes / session.total_minutes) * 100}%` }}
+                      className={`h-full transition-all duration-1000 ${getProgressColor(session.__remainingTime, session.total_minutes)}`}
+                      style={{ width: `${(session.__remainingTime / session.total_minutes) * 100}%` }}
                     />
                   </div>
                   
