@@ -18,6 +18,7 @@ import PlayerGallery from './app/player/gallery/page';
 import PlayerMyPurchases from './app/player/my-purchases/page';
 import PlayerMyReservations from './app/player/my-reservations/page';
 import PlayerMySession from './app/player/my-session/page';
+import PlayerMyInvoices from './app/player/my-invoices/page';
 import AdminDashboard from './app/admin/dashboard/page';
 import AdminPlayers from './app/admin/players/page';
 import AdminPlayerDetail from './app/admin/players/[id]/page';
@@ -172,6 +173,10 @@ export default function FullApp() {
     {
       path: "/player/my-purchases",
       element: <PlayerMyPurchases />,
+    },
+    {
+      path: "/player/my-invoices",
+      element: <PlayerMyInvoices />,
     },
     {
       path: "/player/my-reservations",
