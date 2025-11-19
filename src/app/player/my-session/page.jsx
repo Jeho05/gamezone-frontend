@@ -14,18 +14,27 @@ export default function MySession() {
   const [serverSession, setServerSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastSync, setLastSync] = useState(Date.now());
+  const [hasEnded, setHasEnded] = useState(false);
 
   // Callback quand la session se termine côté client
   const handleSessionEnd = useCallback(() => {
-    toast.error('Votre session de jeu est terminée !', {
-      duration: 10000,
-      description: 'Votre facture a été utilisée et est maintenant inactive.'
+    setHasEnded((alreadyEnded) => {
+      if (alreadyEnded) {
+        return alreadyEnded;
+      }
+
+      toast.error('Votre session de jeu est terminée !', {
+        duration: 10000,
+        description: 'Votre facture a été utilisée et est maintenant inactive.'
+      });
+      
+      // Redirection après 5 secondes
+      setTimeout(() => {
+        navigate('/player/my-purchases');
+      }, 5000);
+
+      return true;
     });
-    
-    // Redirection après 5 secondes
-    setTimeout(() => {
-      navigate('/player/my-purchases');
-    }, 5000);
   }, [navigate]);
 
   // Hook personnalisé pour le décompte local
@@ -123,6 +132,59 @@ export default function MySession() {
     const interval = setInterval(sendHeartbeat, 30000);
     return () => clearInterval(interval);
   }, [serverSession, sendHeartbeat]);
+
+  // Polling régulier de l'état serveur pour rester synchronisé avec l'admin
+  useEffect(() => {
+    if (!serverSession || hasEnded) {
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_BASE}/player/session_status.php`, {
+          credentials: 'include'
+        });
+        const data = await res.json();
+
+        console.log('[MySession] Polled session_status:', data);
+
+        if (!data.success) {
+          return;
+        }
+
+        if (!data.has_session || !data.session) {
+          handleSessionEnd();
+          return;
+        }
+
+        const status = data.session.status;
+
+        if (['completed', 'expired', 'terminated'].includes(status)) {
+          handleSessionEnd();
+          return;
+        }
+
+        // Rester synchronisé sur le temps côté serveur
+        setServerSession((prev) => {
+          if (!prev || prev.id !== data.session.id) {
+            return prev;
+          }
+          return {
+            ...prev,
+            total_minutes: data.session.total_minutes,
+            used_minutes: data.session.used_minutes,
+            remaining_minutes: data.session.remaining_minutes,
+            status: data.session.status
+          };
+        });
+        setLastSync(Date.now());
+      } catch (err) {
+        console.error('[MySession] Error polling session_status:', err);
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [serverSession, hasEnded, handleSessionEnd]);
 
   const formatTime = (minutes) => {
     const h = Math.floor(minutes / 60);
@@ -235,7 +297,7 @@ export default function MySession() {
               )}
               
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                   <div className="flex items-center gap-4">
                     {React.createElement(getStatusConfig(countdown.session.status).icon, {
                       className: "w-12 h-12"
@@ -254,7 +316,7 @@ export default function MySession() {
                   )}
                   
                   {(countdown.session.status === 'completed' || countdown.isExpired) && (
-                    <div className="bg-red-600/20 border-2 border-red-500 rounded-lg px-4 py-2 animate-pulse">
+                    <div className="w-full bg-red-600/20 border-2 border-red-500 rounded-lg px-4 py-3 animate-pulse text-center sm:w-auto sm:text-left">
                       <div className="text-red-100 font-bold">SESSION TERMINÉE</div>
                       <div className="text-red-200 text-sm">Redirection en cours...</div>
                     </div>
