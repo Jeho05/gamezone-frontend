@@ -78,7 +78,25 @@ export default function MySession() {
       console.log('[MySession] Session data:', data.session);
       
       if (data.session) {
-        setServerSession(data.session);
+        setServerSession((prev) => {
+          // Première session ou changement de session: prendre le snapshot serveur
+          if (!prev || prev.id !== data.session.id) {
+            return data.session;
+          }
+
+          const serverRemaining = data.session.remaining_minutes ?? prev.remaining_minutes ?? 0;
+          const clientRemaining = prev.remaining_minutes ?? serverRemaining;
+
+          const serverUsed = data.session.used_minutes ?? prev.used_minutes ?? 0;
+          const clientUsed = prev.used_minutes ?? serverUsed;
+
+          return {
+            ...prev,
+            ...data.session,
+            used_minutes: Math.max(clientUsed, serverUsed),
+            remaining_minutes: Math.min(clientRemaining, serverRemaining)
+          };
+        });
         setLastSync(Date.now());
         
         // Si started_at est NULL, démarrer le chronomètre
@@ -169,12 +187,18 @@ export default function MySession() {
           if (!prev || prev.id !== data.session.id) {
             return prev;
           }
+          const serverRemaining = data.session.remaining_minutes ?? prev.remaining_minutes ?? 0;
+          const clientRemaining = prev.remaining_minutes ?? serverRemaining;
+
+          const serverUsed = data.session.used_minutes ?? prev.used_minutes ?? 0;
+          const clientUsed = prev.used_minutes ?? serverUsed;
+
           return {
             ...prev,
             total_minutes: data.session.total_minutes,
-            used_minutes: data.session.used_minutes,
-            remaining_minutes: data.session.remaining_minutes,
-            status: data.session.status
+            status: data.session.status,
+            used_minutes: Math.max(clientUsed, serverUsed),
+            remaining_minutes: Math.min(clientRemaining, serverRemaining)
           };
         });
         setLastSync(Date.now());
