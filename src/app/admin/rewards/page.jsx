@@ -342,6 +342,44 @@ function RewardModal({ reward, games, onSave, onClose }) {
               <option value="item">🎉 Objet/Cadeau</option>
               <option value="badge">🏆 Badge</option>
             </select>
+            <div className="mt-2 text-xs text-gray-300 space-y-1 bg-gray-900/60 border border-gray-700 rounded px-3 py-2">
+              {formData.reward_type === 'physical' && (
+                <p>
+                  🎁 <span className="font-semibold">Physique</span> : objet matériel à remettre en salle (t-shirt, casquette, figurine, etc.).
+                  L'échange débite les points et enregistre une demande que l'équipe doit honorer physiquement.
+                </p>
+              )}
+              {formData.reward_type === 'game_time' && (
+                <p>
+                  ⏱️ <span className="font-semibold">Temps de jeu</span> : convertit les points en minutes de jeu génériques.
+                  Le joueur gagne un crédit temps utilisable ensuite pour ses sessions (suivi dans les minutes converties).
+                </p>
+              )}
+              {formData.reward_type === 'game_package' && (
+                <p>
+                  🎮 <span className="font-semibold">Package de Jeu</span> : crée automatiquement un package pour un jeu précis,
+                  payable uniquement en points. Lors de l'échange, une vraie facture/session est créée pour ce jeu et cette durée.
+                </p>
+              )}
+              {formData.reward_type === 'discount' && (
+                <p>
+                  🏷️ <span className="font-semibold">Réduction</span> : donne droit à une remise (par exemple -10% ou -1.000 XOF) à appliquer
+                  manuellement sur un achat par le staff. Débiter les points et laisser une description claire de la remise accordée.
+                </p>
+              )}
+              {formData.reward_type === 'item' && (
+                <p>
+                  🎉 <span className="font-semibold">Objet / Cadeau</span> : petit avantage non physique complexe (boisson offerte,
+                  goodies simple, bonus spécial, etc.). L'échange est tracé, puis l'équipe remet ou applique le cadeau au joueur.
+                </p>
+              )}
+              {formData.reward_type === 'badge' && (
+                <p>
+                  🏆 <span className="font-semibold">Badge</span> : badge ou titre spécial pour récompenser la fidélité.
+                  L'échange est enregistré et le staff peut attribuer ou afficher ce badge sur le profil du joueur.
+                </p>
+              )}
+            </div>
           </div>
 
           {formData.reward_type === 'game_time' && (
@@ -360,7 +398,7 @@ function RewardModal({ reward, games, onSave, onClose }) {
                 placeholder="Ex: 60 pour 1 heure"
               />
               <p className="text-xs text-cyan-300 mt-2">
-                Les minutes seront ajoutées au crédit de temps de jeu de l'utilisateur lors de l'échange
+                Les minutes seront ajoutées au crédit de temps de jeu global de l'utilisateur lors de l'échange (utilisable sur ses futures sessions).
               </p>
             </div>
           )}
@@ -369,7 +407,8 @@ function RewardModal({ reward, games, onSave, onClose }) {
             <div className="bg-purple-500/10 border border-purple-500/30 rounded p-4 space-y-4">
               <div className="bg-blue-900/30 border border-blue-500/30 rounded p-3">
                 <p className="text-sm text-blue-300">
-                  🎮 <strong>Package de Jeu:</strong> Créera automatiquement un package de jeu échangeable uniquement contre des points.
+                  🎮 <strong>Package de Jeu:</strong> créera automatiquement un package pour un jeu précis, échangeable uniquement contre des points.
+                  Lorsqu'un joueur échange ses points, une vraie facture + session de jeu est créée pour ce jeu et cette durée.
                 </p>
               </div>
 
