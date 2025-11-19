@@ -45,6 +45,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
     { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, href: '/admin/dashboard' },
     { id: 'invoice-scanner', label: 'Scanner Factures', icon: QrCode, href: '/admin/invoice-scanner' },
     { id: 'sessions', label: 'Sessions Actives', icon: Activity, href: '/admin/sessions' },
+    { id: 'reservations', label: 'Réservations', icon: Calendar, href: '/admin/reservations' },
     { id: 'shop', label: 'Gestion Boutique', icon: ShoppingCart, href: '/admin/shop' },
     { id: 'players', label: 'Gestion joueurs', icon: Users, href: '/admin/players' },
     { id: 'points', label: 'Règles de points', icon: Coins, href: '/admin/points' },

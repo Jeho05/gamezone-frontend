@@ -42,6 +42,13 @@ export function useUserBadges(userId) {
 
   const fetchBadges = useCallback(async () => {
     try {
+      // Attendre d'avoir un userId valide avant d'appeler l'API
+      if (!userId) {
+        setBadges(null);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       const data = await GamificationAPI.getUserBadges(userId);
       setBadges(data);
@@ -71,6 +78,13 @@ export function useLevelProgress(userId) {
 
   const fetchLevelProgress = useCallback(async () => {
     try {
+      // Nécessite un userId pour calculer une progression de niveau personnalisée
+      if (!userId) {
+        setLevelData(null);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       const data = await GamificationAPI.getUserLevelProgress(userId);
       setLevelData(data);

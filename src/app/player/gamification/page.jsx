@@ -20,8 +20,9 @@ export default function GamificationPage() {
   
   // Utilise les endpoints existants qui fonctionnent
   const { stats, loading: statsLoading, refetch: refetchStats } = useGamificationStats();
-  const { badges, loading: badgesLoading, refetch: refetchBadges } = useUserBadges();
-  const { levelData, loading: levelLoading, refetch: refetchLevel } = useLevelProgress();
+  const userId = stats?.user?.id;
+  const { badges, loading: badgesLoading, refetch: refetchBadges } = useUserBadges(userId);
+  const { levelData, loading: levelLoading, refetch: refetchLevel } = useLevelProgress(userId);
   const { recordLogin, hasLoggedInToday, streakData, showRewardModal, closeRewardModal } = useDailyLogin();
 
   const loading = statsLoading || badgesLoading || levelLoading;

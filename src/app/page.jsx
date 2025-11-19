@@ -54,18 +54,18 @@ export default function HomePage() {
       <FloatingObjects count={8} opacity={0.2} />
       {/* Header Navigation */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/10">
-        <div className="container mx-auto px-6 md:px-8 max-w-7xl">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex justify-between items-center h-14 md:h-16">
+            <div className="flex items-center space-x-2 md:space-x-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-75 animate-pulse"></div>
-                <GamepadIcon className="w-8 h-8 text-white relative" />
+                <GamepadIcon className="w-6 h-6 md:w-8 md:h-8 text-white relative" />
               </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-wider">OnileGame</span>
+              <span className="text-lg md:text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-wider">OnileGame</span>
             </div>
             <button
               onClick={() => setShowAuthModal(true)}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
             >
               Se connecter
             </button>

@@ -22,15 +22,28 @@ export default function ProgressionPage() {
       // Load stats
       const statsRes = await fetch(`${API_BASE}/gamification/user_stats.php`, { credentials: 'include' });
       const statsData = await statsRes.json();
-      if (statsData.stats) setStats(statsData.stats);
+      let uid = null;
+      if (statsData) {
+        uid = statsData.user?.id ?? null;
+        const mappedStats = {
+          points: statsData.user?.points ?? 0,
+          games_played: statsData.statistics?.games_played ?? 0,
+          tournaments_won: statsData.statistics?.tournaments_won ?? 0,
+          events_attended: statsData.statistics?.events_attended ?? 0,
+        };
+        setStats(mappedStats);
+      }
       
       // Load level
       const levelRes = await fetch(`${API_BASE}/gamification/level_progress.php`, { credentials: 'include' });
       const levelData = await levelRes.json();
       if (levelData.level) setLevel(levelData.level);
       
-      // Load badges
-      const badgesRes = await fetch(`${API_BASE}/gamification/badges.php`, { credentials: 'include' });
+      // Load badges (prefer user-specific version when possible)
+      const badgesUrl = uid
+        ? `${API_BASE}/gamification/badges.php?user_id=${uid}`
+        : `${API_BASE}/gamification/badges.php`;
+      const badgesRes = await fetch(badgesUrl, { credentials: 'include' });
       const badgesData = await badgesRes.json();
       if (badgesData.badges) setBadges(badgesData.badges.slice(0, 6));
       

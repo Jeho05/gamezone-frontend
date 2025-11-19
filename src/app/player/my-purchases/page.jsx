@@ -94,6 +94,35 @@ export default function MyPurchases() {
     setShowConfirmModal(true);
   };
 
+  const fetchInvoiceById = async (invoiceId, purchaseId) => {
+    try {
+      setLoadingInvoice(true);
+      const invoiceRes = await fetch(`${API_BASE}/invoices/my_invoices.php?id=${invoiceId}`, {
+        credentials: 'include'
+      });
+      const invoiceData = await invoiceRes.json();
+
+      if (invoiceRes.ok && invoiceData.invoice) {
+        const purchase = purchases.find((p) => p.id === purchaseId) || { id: purchaseId };
+        setSelectedPurchase({ ...purchase, invoice: invoiceData.invoice });
+        setShowInvoiceModal(true);
+        toast.success('✅ Facture prête !', { duration: 2000 });
+
+        setTimeout(() => {
+          loadPurchases();
+        }, 500);
+
+        return true;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération de la facture par ID:', error);
+    } finally {
+      setLoadingInvoice(false);
+    }
+
+    return false;
+  };
+
   const confirmStartSession = async () => {
     const purchaseId = pendingPurchaseId;
     console.log('confirmStartSession appelé avec purchaseId:', purchaseId);
@@ -143,10 +172,16 @@ export default function MyPurchases() {
         showSuccess('Session Activée', 'Récupération de votre facture en cours...');
       }
       
-      // Afficher un indicateur de chargement
+      const invoiceId = confirmData.purchase?.invoice_id;
+      if (invoiceId) {
+        const loaded = await fetchInvoiceById(invoiceId, purchaseId);
+        if (loaded) {
+          return;
+        }
+      }
+
       setLoadingInvoice(true);
-      
-      // Récupérer la facture générée (avec timeout)
+
       const fetchInvoiceWithTimeout = async (retries = 3) => {
         for (let i = 0; i < retries; i++) {
           console.log(`Tentative ${i + 1}/${retries} de récupération de facture...`);
