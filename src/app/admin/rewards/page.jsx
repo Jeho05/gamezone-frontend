@@ -363,33 +363,50 @@ function RewardModal({ reward, games, onSave, onClose }) {
             <div className="mt-2 text-xs text-gray-300 space-y-1 bg-gray-900/60 border border-gray-700 rounded px-3 py-2">
               {formData.reward_type === 'physical' && (
                 <p>
-                  🎁 <span className="font-semibold">Physique</span> : objet matériel à remettre en salle (t-shirt, casquette, figurine, etc.).
-                  L'échange débite les points et enregistre une demande que l'équipe doit honorer physiquement.
+                  🎁 <span className="font-semibold">Physique</span> : objet matériel à remettre en salle (t-shirt, casquette, figurine, boisson, etc.).
+                  L'échange débite les points et enregistre une ligne dans l'historique. C'est ensuite l'équipe qui remet le cadeau au joueur.
                 </p>
               )}
               {formData.reward_type === 'digital' && (
                 <p>
                   💻 <span className="font-semibold">Digital</span> : avantage 100% numérique (code, abonnement, accès en ligne, etc.).
-                  L'échange débite les points et enregistre une demande ; l'équipe doit ensuite transmettre le code ou activer l'accès.
+                  L'échange débite les points et crée une demande ; l'équipe doit ensuite communiquer le code ou activer l'accès, rien n'est envoyé automatiquement.
+                </p>
+              )}
+              {formData.reward_type === 'discount' && (
+                <p>
+                  🏷️ <span className="font-semibold">Réduction</span> : remise à appliquer manuellement sur un prochain achat (par ex. -X% ou -Y XOF).
+                  L'échange débite les points et laisse une trace dans l'historique ; c'est l'équipe qui applique concrètement la remise au moment du paiement.
+                </p>
+              )}
+              {formData.reward_type === 'item' && (
+                <p>
+                  🎉 <span className="font-semibold">Objet/Cadeau</span> : avantage non lié à un jeu précis (goodie, boisson, snack, bonus en salle, etc.).
+                  L'échange débite les points et signale à l'équipe de fournir cet avantage au joueur.
                 </p>
               )}
               {formData.reward_type === 'game_time' && (
                 <p>
                   ⏱️ <span className="font-semibold">Temps de jeu</span> : convertit les points en minutes de jeu génériques.
-                  Le joueur gagne un crédit temps utilisable ensuite pour ses sessions (suivi dans les minutes converties).
+                  Lors de l'échange, le backend crédite automatiquement un "crédit temps" dans le solde du joueur (utilisable ensuite pour ses sessions, visible dans le dashboard Gamification).
+                </p>
+              )}
+              {formData.reward_type === 'game_package' && (
+                <p>
+                  🎮 <span className="font-semibold">Package de Jeu</span> : lié à un jeu et une durée précis.
+                  Quand le joueur échange ses points, le backend crée automatiquement une véritable facture + une session de jeu prête à être utilisée pour ce package.
                 </p>
               )}
               {formData.reward_type === 'badge' && (
                 <p>
                   🏆 <span className="font-semibold">Badge</span> : badge ou titre spécial pour récompenser la fidélité.
-                  Le nom de la récompense doit correspondre au nom du badge configuré pour que, lors de l'échange, le badge soit
-                  automatiquement attribué au joueur (avec les éventuels points bonus du badge crédités).
+                  Le nom de la récompense doit correspondre au <strong>nom du badge</strong> configuré : lors de l'échange, le backend attribue automatiquement ce badge au joueur, et crédite les éventuels points bonus du badge.
                 </p>
               )}
               {formData.reward_type === 'other' && (
                 <p>
                   ✨ <span className="font-semibold">Autre</span> : type générique pour tout avantage qui ne rentre pas dans les autres catégories.
-                  Utilisez une description très claire ; l'équipe appliquera ensuite manuellement l'avantage sur le joueur.
+                  Décrivez clairement ce que gagne le joueur ; l'échange débite les points et l'équipe applique ensuite manuellement l'avantage (ex: accès VIP exceptionnel, surprise, etc.).
                 </p>
               )}
             </div>
