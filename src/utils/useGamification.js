@@ -231,8 +231,25 @@ export function useRewards() {
       setRedeeming(true);
       const result = await GamificationAPI.redeemReward(rewardId);
       
-      toast.success('Récompense échangée!', {
-        description: result.reward?.name || 'Échange réussi',
+      const title = result.message || 'Récompense échangée!';
+      const rewardName = result.reward?.name || 'Échange réussi';
+
+      let description = rewardName;
+
+      if (typeof result.new_balance === 'number') {
+        description += `\nNouveau solde: ${result.new_balance} points`;
+      }
+
+      if (result.game_time_added && result.game_time_added > 0) {
+        const minutes = result.game_time_added;
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        const timeStr = hours > 0 ? `${hours}h${mins > 0 ? ` ${mins}min` : ''}` : `${mins}min`;
+        description += `\nTemps de jeu ajouté: +${timeStr}`;
+      }
+
+      toast.success(title, {
+        description,
       });
 
       await fetchRewards();

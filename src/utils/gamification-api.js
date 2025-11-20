@@ -276,18 +276,38 @@ export class GamificationAPI {
    * Redeem a reward
    */
   static async redeemReward(rewardId) {
-    const response = await fetch(`${API_BASE}/rewards/redeem.php`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ reward_id: rewardId }),
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to redeem reward');
+    try {
+      const response = await fetch(`${API_BASE}/rewards/redeem.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ reward_id: rewardId }),
+      });
+
+      const text = await response.text();
+      let data;
+
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        console.error('[GamificationAPI.redeemReward] JSON parse error:', parseError);
+        console.error('[GamificationAPI.redeemReward] Raw response:', text);
+        throw new Error('Réponse invalide du serveur lors de l\'échange de la récompense');
+      }
+
+      if (!response.ok || data?.success === false) {
+        const msg =
+          data?.message ||
+          data?.error ||
+          `Échec de l'échange de la récompense (HTTP ${response.status})`;
+        throw new Error(msg);
+      }
+
+      return data;
+    } catch (error) {
+      console.error('[GamificationAPI.redeemReward] Error:', error);
+      throw error;
     }
-    
-    return response.json();
   }
 }
 

@@ -68,7 +68,7 @@ export default function Modal({
       />
       
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all animate-scaleIn">
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all animate-scaleIn max-h-[80vh] flex flex-col">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -90,8 +90,8 @@ export default function Modal({
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+        <div className="p-6 overflow-y-auto">
+          <div className="text-gray-700 leading-relaxed whitespace-pre-line break-words">
             {message}
           </div>
         </div>
