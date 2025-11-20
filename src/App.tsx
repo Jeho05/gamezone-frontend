@@ -26,6 +26,7 @@ import PlayerMySession from './app/player/my-session/page';
 import PlayerMyReservations from './app/player/my-reservations/page';
 import PlayerMyInvoices from './app/player/my-invoices/page';
 import PlayerMyPurchases from './app/player/my-purchases/page';
+import PlayerMyRewards from './app/player/my-rewards/page';
 import PlayerGamification from './app/player/gamification/page';
 import PlayerConvertPoints from './app/player/convert-points/page';
 
@@ -41,6 +42,7 @@ import AdminBonuses from './app/admin/bonuses/page';
 import AdminLevels from './app/admin/levels/page';
 import AdminPoints from './app/admin/points/page';
 import AdminInvoiceScanner from './app/admin/invoice-scanner/page';
+import AdminRewardRedemptions from './app/admin/reward-redemptions/page';
 
 // Import global styles
 import './app/global.css';
@@ -83,6 +85,7 @@ export default function App() {
                 <Route path="/player/my-reservations" element={<PlayerMyReservations />} />
                 <Route path="/player/my-invoices" element={<PlayerMyInvoices />} />
                 <Route path="/player/my-purchases" element={<PlayerMyPurchases />} />
+                <Route path="/player/my-rewards" element={<PlayerMyRewards />} />
                 <Route path="/player/gamification" element={<PlayerGamification />} />
                 <Route path="/player/convert-points" element={<PlayerConvertPoints />} />
 
@@ -98,6 +101,7 @@ export default function App() {
                 <Route path="/admin/levels" element={<AdminLevels />} />
                 <Route path="/admin/points" element={<AdminPoints />} />
                 <Route path="/admin/invoice-scanner" element={<AdminInvoiceScanner />} />
+                <Route path="/admin/reward-redemptions" element={<AdminRewardRedemptions />} />
 
                 {/* 404 redirect */}
                 <Route path="*" element={<Navigate to="/" replace />} />

@@ -31,7 +31,8 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
   const playerNavItems = [
     { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, href: '/player/dashboard' },
     { id: 'shop', label: 'Boutique', icon: ShoppingCart, href: '/player/shop' },
-    { id: 'rewards', label: 'Récompenses', icon: Gift, href: '/player/rewards' },
+    { id: 'rewards', label: 'Boutique Rewards', icon: Gift, href: '/player/rewards' },
+    { id: 'my-rewards', label: 'Mes Récompenses', icon: Star, href: '/player/my-rewards' },
     { id: 'my-purchases', label: 'Mes Achats', icon: ShoppingBag, href: '/player/my-purchases' },
     { id: 'my-reservations', label: 'Mes Réservations', icon: Calendar, href: '/player/my-reservations' },
     { id: 'my-session', label: 'Ma Session', icon: Activity, href: '/player/my-session' },
@@ -50,6 +51,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
     { id: 'players', label: 'Gestion joueurs', icon: Users, href: '/admin/players' },
     { id: 'points', label: 'Règles de points', icon: Coins, href: '/admin/points' },
     { id: 'rewards', label: 'Récompenses', icon: Gift, href: '/admin/rewards' },
+    { id: 'reward-redemptions', label: 'Échanges Rewards', icon: Star, href: '/admin/reward-redemptions' },
     { id: 'levels', label: 'Niveaux/Badges', icon: Star, href: '/admin/levels' },
     { id: 'bonuses', label: 'Bonus spéciaux', icon: Target, href: '/admin/bonuses' },
     { id: 'content', label: 'Contenu & Events', icon: FileText, href: '/admin/content' }

@@ -34,6 +34,15 @@ export function StatsGrid({ stats }) {
 
   const { statistics } = stats;
 
+  const formatMinutes = (minutes) => {
+    if (!minutes || minutes <= 0) return '0 min';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours > 0 && mins > 0) return `${hours}h ${mins}min`;
+    if (hours > 0) return `${hours}h`;
+    return `${mins}min`;
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {/* Parties jouées - Grande carte mise en avant */}
@@ -116,6 +125,20 @@ export function StatsGrid({ stats }) {
               </div>
               <p className="text-xs text-gray-400 mt-1">{Math.round((statistics.badges_earned / statistics.badges_total) * 100)}% complétés</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Crédit de temps de jeu */}
+      <div className="bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 rounded-2xl p-6 border-2 border-cyan-500/50 hover:border-cyan-400 transition-all hover:shadow-xl hover:shadow-cyan-500/20">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-3xl shadow-lg">
+            ⏱️
+          </div>
+          <div className="flex-1">
+            <p className="text-xs text-cyan-300 font-semibold uppercase tracking-wider">Crédit de temps</p>
+            <p className="text-3xl font-black text-white">{formatMinutes(statistics.minutes_available || 0)}</p>
+            <p className="text-xs text-gray-400 mt-1">Minutes de jeu converties disponibles</p>
           </div>
         </div>
       </div>

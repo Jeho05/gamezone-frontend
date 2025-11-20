@@ -309,6 +309,26 @@ export class GamificationAPI {
       throw error;
     }
   }
+
+  /**
+   * Get current user's reward redemptions history
+   */
+  static async getMyRewardRedemptions(page = 1, limit = 50) {
+    try {
+      const url = `${API_BASE}/rewards/my_redemptions.php?page=${page}&limit=${limit}`;
+      const response = await fetch(url, { credentials: 'include' });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('[GamificationAPI.getMyRewardRedemptions] Error:', error);
+      throw error;
+    }
+  }
 }
 
 // Helper to format rarity colors

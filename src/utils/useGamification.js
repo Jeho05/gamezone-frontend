@@ -252,6 +252,17 @@ export function useRewards() {
         description,
       });
 
+      // Show extra toasts if badge(s) have been earned via this reward
+      if (result.badges_earned && Array.isArray(result.badges_earned) && result.badges_earned.length > 0) {
+        result.badges_earned.forEach((badge) => {
+          const icon = badge.icon || '🏆';
+          toast.success(`${icon} Badge débloqué: ${badge.name}!`, {
+            description: badge.description || undefined,
+            duration: 5000,
+          });
+        });
+      }
+
       await fetchRewards();
       return result;
     } catch (err) {
@@ -296,6 +307,40 @@ export function useActiveMultipliers(userId = null) {
   }, [fetchMultipliers]);
 
   return { multipliers, loading, refetch: fetchMultipliers };
+}
+
+/**
+ * Hook to get current user's reward redemptions history
+ */
+export function useMyRewardsHistory() {
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchHistory = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await GamificationAPI.getMyRewardRedemptions();
+      if (data && data.items) {
+        setHistory(data.items);
+      } else {
+        setHistory([]);
+      }
+    } catch (err) {
+      console.error('[useMyRewardsHistory] Error fetching reward redemptions:', err);
+      setError(err.message || 'Erreur lors du chargement de vos récompenses');
+      setHistory([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  return { history, loading, error, refetch: fetchHistory };
 }
 
 /**

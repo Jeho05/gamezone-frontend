@@ -335,12 +335,30 @@ function RewardModal({ reward, games, onSave, onClose }) {
               onChange={(e) => setFormData({ ...formData, reward_type: e.target.value })}
               className="w-full px-4 py-2 bg-gray-700 rounded border border-gray-600 text-white focus:border-cyan-500 focus:outline-none"
             >
-              <option value="physical">🎁 Physique</option>
-              <option value="game_package">🎮 Package de Jeu</option>
-              <option value="game_time">⏱️ Temps de jeu</option>
-              <option value="discount">🏷️ Réduction</option>
-              <option value="item">🎉 Objet/Cadeau</option>
-              <option value="badge">🏆 Badge</option>
+              <option value="physical">
+                🎁 Physique
+              </option>
+              <option value="digital">
+                💻 Digital
+              </option>
+              <option value="game_package">
+                🎮 Package de Jeu
+              </option>
+              <option value="game_time">
+                ⏱️ Temps de jeu
+              </option>
+              <option value="discount">
+                🏷️ Réduction
+              </option>
+              <option value="item">
+                🎉 Objet/Cadeau
+              </option>
+              <option value="badge">
+                🏆 Badge
+              </option>
+              <option value="other">
+                ✨ Autre
+              </option>
             </select>
             <div className="mt-2 text-xs text-gray-300 space-y-1 bg-gray-900/60 border border-gray-700 rounded px-3 py-2">
               {formData.reward_type === 'physical' && (
@@ -349,34 +367,29 @@ function RewardModal({ reward, games, onSave, onClose }) {
                   L'échange débite les points et enregistre une demande que l'équipe doit honorer physiquement.
                 </p>
               )}
+              {formData.reward_type === 'digital' && (
+                <p>
+                  💻 <span className="font-semibold">Digital</span> : avantage 100% numérique (code, abonnement, accès en ligne, etc.).
+                  L'échange débite les points et enregistre une demande ; l'équipe doit ensuite transmettre le code ou activer l'accès.
+                </p>
+              )}
               {formData.reward_type === 'game_time' && (
                 <p>
                   ⏱️ <span className="font-semibold">Temps de jeu</span> : convertit les points en minutes de jeu génériques.
                   Le joueur gagne un crédit temps utilisable ensuite pour ses sessions (suivi dans les minutes converties).
                 </p>
               )}
-              {formData.reward_type === 'game_package' && (
-                <p>
-                  🎮 <span className="font-semibold">Package de Jeu</span> : crée automatiquement un package pour un jeu précis,
-                  payable uniquement en points. Lors de l'échange, une vraie facture/session est créée pour ce jeu et cette durée.
-                </p>
-              )}
-              {formData.reward_type === 'discount' && (
-                <p>
-                  🏷️ <span className="font-semibold">Réduction</span> : donne droit à une remise (par exemple -10% ou -1.000 XOF) à appliquer
-                  manuellement sur un achat par le staff. Débiter les points et laisser une description claire de la remise accordée.
-                </p>
-              )}
-              {formData.reward_type === 'item' && (
-                <p>
-                  🎉 <span className="font-semibold">Objet / Cadeau</span> : petit avantage non physique complexe (boisson offerte,
-                  goodies simple, bonus spécial, etc.). L'échange est tracé, puis l'équipe remet ou applique le cadeau au joueur.
-                </p>
-              )}
               {formData.reward_type === 'badge' && (
                 <p>
                   🏆 <span className="font-semibold">Badge</span> : badge ou titre spécial pour récompenser la fidélité.
-                  L'échange est enregistré et le staff peut attribuer ou afficher ce badge sur le profil du joueur.
+                  Le nom de la récompense doit correspondre au nom du badge configuré pour que, lors de l'échange, le badge soit
+                  automatiquement attribué au joueur (avec les éventuels points bonus du badge crédités).
+                </p>
+              )}
+              {formData.reward_type === 'other' && (
+                <p>
+                  ✨ <span className="font-semibold">Autre</span> : type générique pour tout avantage qui ne rentre pas dans les autres catégories.
+                  Utilisez une description très claire ; l'équipe appliquera ensuite manuellement l'avantage sur le joueur.
                 </p>
               )}
             </div>

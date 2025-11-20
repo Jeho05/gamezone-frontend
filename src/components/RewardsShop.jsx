@@ -12,6 +12,9 @@ export function RewardCard({ reward, userPoints, onRedeem, isRedeeming }) {
       discount: '🏷️',
       item: '🎉',
       badge: '🏆',
+      physical: '📦',
+      digital: '💻',
+      game_package: '🎮',
       other: '🎁'
     };
     return icons[type] || '🎁';
@@ -164,7 +167,7 @@ export function RewardsShop({ userPoints, onPointsUpdate }) {
         </p>
       </div>
 
-      {/* Info Banner si mode demo */}
+      {/* Info Banner explicative */}
       {filteredRewards.length > 0 && (
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
@@ -172,7 +175,7 @@ export function RewardsShop({ userPoints, onPointsUpdate }) {
             <div>
               <p className="text-blue-300 font-semibold mb-1">Boutique de Récompenses</p>
               <p className="text-blue-200 text-sm">
-                Échangez vos points contre des récompenses exclusives. Les échanges seront validés par l'équipe.
+                Échangez vos points contre des récompenses exclusives : temps de jeu, badges, packs de jeu et avantages gérés par l'équipe (cadeaux physiques, codes digitaux, remises).
               </p>
             </div>
           </div>
