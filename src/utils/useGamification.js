@@ -165,6 +165,20 @@ export function useDailyLogin() {
 
   const recordLogin = useCallback(async () => {
     try {
+      let hasPopupAlready = false;
+      let todayKey = '';
+      const STORAGE_KEY = 'daily_reward_popup_date';
+
+      if (typeof window !== 'undefined') {
+        try {
+          todayKey = new Date().toISOString().slice(0, 10);
+          const stored = window.localStorage.getItem(STORAGE_KEY);
+          hasPopupAlready = stored === todayKey;
+        } catch (e) {
+          console.warn('[useDailyLogin] localStorage not available or date error:', e);
+        }
+      }
+
       const result = await GamificationAPI.recordLogin();
       
       if (result.message === 'Déjà connecté aujourd\'hui') {
@@ -176,8 +190,17 @@ export function useDailyLogin() {
       setHasLoggedInToday(true);
       setStreakData(result);
 
-      // Show beautiful modal instead of simple toast
-      setShowRewardModal(true);
+      if (!hasPopupAlready) {
+        setShowRewardModal(true);
+
+        if (typeof window !== 'undefined' && todayKey) {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, todayKey);
+          } catch (e) {
+            console.warn('[useDailyLogin] Failed to write daily reward date to localStorage:', e);
+          }
+        }
+      }
 
       return result;
     } catch (err) {

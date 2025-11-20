@@ -19,6 +19,7 @@ import PlayerMyPurchases from './app/player/my-purchases/page';
 import PlayerMyReservations from './app/player/my-reservations/page';
 import PlayerMySession from './app/player/my-session/page';
 import PlayerMyInvoices from './app/player/my-invoices/page';
+import PlayerMyRewards from './app/player/my-rewards/page';
 import AdminDashboard from './app/admin/dashboard/page';
 import AdminPlayers from './app/admin/players/page';
 import AdminPlayerDetail from './app/admin/players/[id]/page';
@@ -30,6 +31,7 @@ import AdminLevels from './app/admin/levels/page';
 import AdminBonuses from './app/admin/bonuses/page';
 import AdminSessions from './app/admin/sessions/page';
 import AdminInvoiceScanner from './app/admin/invoice-scanner/page';
+import AdminRewardRedemptions from './app/admin/reward-redemptions/page';
 import LoginPage from './app/auth/login/page';
 import RegisterPage from './app/auth/register/page';
 import ForgotPasswordPage from './app/auth/forgot-password/page';
@@ -155,6 +157,10 @@ export default function FullApp() {
       element: <PlayerRewards />,
     },
     {
+      path: "/player/my-rewards",
+      element: <PlayerMyRewards />,
+    },
+    {
       path: "/player/profile",
       element: <PlayerProfile />,
     },
@@ -202,6 +208,10 @@ export default function FullApp() {
     {
       path: "/admin/rewards",
       element: <AdminRewards />,
+    },
+    {
+      path: "/admin/reward-redemptions",
+      element: <AdminRewardRedemptions />,
     },
     {
       path: "/admin/points",
