@@ -20,6 +20,46 @@ export function RewardCard({ reward, userPoints, onRedeem, isRedeeming }) {
     return icons[type] || '🎁';
   };
   
+  const getTypeLabel = (type) => {
+    const labels = {
+      game_time: 'Temps de jeu',
+      game_package: 'Package de jeu',
+      badge: 'Badge',
+      discount: 'Réduction',
+      physical: 'Cadeau physique',
+      digital: 'Avantage digital',
+      item: 'Objet / bonus',
+      other: 'Autre avantage',
+    };
+    return labels[type] || 'Récompense';
+  };
+
+  const getTypeHelper = (reward) => {
+    const type = reward.reward_type;
+    if (type === 'game_time') {
+      return "Crédite automatiquement du temps de jeu dans le solde du joueur.";
+    }
+    if (type === 'game_package') {
+      return "Crée automatiquement une facture + une session de jeu prête à être utilisée.";
+    }
+    if (type === 'badge') {
+      return "Débloque un badge/titre sur le profil du joueur (avec éventuels points bonus).";
+    }
+    if (type === 'discount') {
+      return "Réduction appliquée manuellement par l'équipe sur un prochain achat.";
+    }
+    if (type === 'physical') {
+      return "Cadeau à récupérer physiquement en salle auprès de l'équipe.";
+    }
+    if (type === 'digital') {
+      return "Code ou accès numérique communiqué/activé par l'équipe (rien n'est envoyé automatiquement).";
+    }
+    if (type === 'item' || type === 'other') {
+      return "Avantage spécial géré manuellement par l'équipe (décrit dans la récompense).";
+    }
+    return '';
+  };
+
   const formatGameTime = (minutes) => {
     if (!minutes) return '';
     const hours = Math.floor(minutes / 60);
@@ -41,15 +81,24 @@ export function RewardCard({ reward, userPoints, onRedeem, isRedeeming }) {
             <span className="text-2xl">{getRewardIcon(reward.reward_type)}</span>
             <h3 className="text-lg font-bold text-white">{reward.name}</h3>
           </div>
-          {reward.description && (
-            <p className="text-sm text-gray-400 mb-2">{reward.description}</p>
-          )}
-          {reward.reward_type === 'game_time' && reward.game_time_minutes > 0 && (
-            <div className="bg-cyan-500/10 border border-cyan-500/30 rounded px-2 py-1 inline-block mb-2">
-              <span className="text-xs text-cyan-400 font-semibold">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold bg-gray-700 text-gray-200 border border-gray-600">
+              <span>{getRewardIcon(reward.reward_type)}</span>
+              <span>{getTypeLabel(reward.reward_type)}</span>
+            </span>
+            {reward.reward_type === 'game_time' && reward.game_time_minutes > 0 && (
+              <span className="bg-cyan-500/10 border border-cyan-500/30 rounded px-2 py-1 text-[11px] text-cyan-300 font-semibold">
                 +{formatGameTime(reward.game_time_minutes)} de jeu
               </span>
-            </div>
+            )}
+          </div>
+          {reward.description && (
+            <p className="text-sm text-gray-400 mb-1">{reward.description}</p>
+          )}
+          {getTypeHelper(reward) && (
+            <p className="text-[11px] text-gray-400 mb-2">
+              {getTypeHelper(reward)}
+            </p>
           )}
           {!isAvailable && (
             <span className="inline-block px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-full">
