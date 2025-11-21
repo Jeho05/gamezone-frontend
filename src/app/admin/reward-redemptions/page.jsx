@@ -85,13 +85,17 @@ export default function AdminRewardRedemptionsPage() {
       });
       const data = await res.json();
       if (!res.ok || data.success === false) {
-        throw new Error(data.error || 'Erreur lors de la mise à jour');
+        const details = data.details || '';
+        const base = data.error || 'Erreur lors de la mise à jour';
+        throw new Error(details ? `${base} | Détails: ${details}` : base);
       }
       toast.success('Échange mis à jour');
       await loadData();
     } catch (err) {
       console.error('[AdminRewardRedemptions] updateRedemption error:', err);
-      toast.error("Erreur lors de la mise à jour de l'échange");
+      toast.error("Erreur lors de la mise à jour de l'échange", {
+        description: err?.message,
+      });
     } finally {
       setUpdatingId(null);
     }

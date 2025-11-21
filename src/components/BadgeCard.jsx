@@ -17,6 +17,27 @@ export function BadgeCard({ badge, size = 'md', showProgress = true }) {
   const isEarned = badge.earned || badge.earned_at;
   const progress = badge.progress || 0;
 
+  const getConditionLabel = (badge) => {
+    if (!badge || !badge.requirement_type || !badge.requirement_value) return '';
+    const value = badge.requirement_value;
+    switch (badge.requirement_type) {
+      case 'points_total':
+        return `Condition : Atteindre ${value} points totaux.`;
+      case 'points_earned':
+        return `Condition : Gagner ${value} points au total (toutes sources confondues).`;
+      case 'games_played':
+        return `Condition : Jouer ${value} parties.`;
+      case 'events_attended':
+        return `Condition : Participer à ${value} évènements ou tournois.`;
+      case 'friends_referred':
+        return `Condition : Parrainer ${value} ami(s).`;
+      case 'login_streak':
+        return `Condition : Série de connexion de ${value} jour(s) consécutifs.`;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div
       className={`relative rounded-xl border-2 ${containerSizes[size]} transition-all duration-300 hover:scale-105 ${
@@ -48,6 +69,13 @@ export function BadgeCard({ badge, size = 'md', showProgress = true }) {
         {size !== 'sm' && (
           <p className="text-xs text-gray-400 text-center line-clamp-2">
             {badge.description}
+          </p>
+        )}
+
+        {/* Requirement / Condition */}
+        {size !== 'sm' && getConditionLabel(badge) && (
+          <p className="text-[11px] text-cyan-300 text-center mt-1">
+            {getConditionLabel(badge)}
           </p>
         )}
 
