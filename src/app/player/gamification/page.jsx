@@ -31,11 +31,19 @@ export default function GamificationPage() {
   // Record login on mount
   useEffect(() => {
     if (user && !hasLoggedInToday) {
-      recordLogin().catch((err) => {
-        console.error('Error recording login:', err);
-      });
+      recordLogin()
+        .then(() => {
+          // Après l'enregistrement de la connexion, on recharge les stats
+          // pour que la carte "Série de connexion" et le popup soient cohérents
+          refetchStats();
+          refetchBadges();
+          refetchLevel();
+        })
+        .catch((err) => {
+          console.error('Error recording login:', err);
+        });
     }
-  }, [user, hasLoggedInToday, recordLogin]);
+  }, [user, hasLoggedInToday, recordLogin, refetchStats, refetchBadges, refetchLevel]);
 
   // Refresh all data
   const refreshAllData = () => {
@@ -319,10 +327,22 @@ export default function GamificationPage() {
         )}
 
         {/* Daily Reward Modal */}
+        {/**
+         * On combine les données retournées par login_streak.php
+         * avec les valeurs issues de user_stats (stats.streak)
+         * pour éviter que le popup affiche une série à 0
+         * alors que la carte "Série de connexion" est correcte.
+         */}
         <DailyRewardModal
           isOpen={showRewardModal}
           onClose={closeRewardModal}
-          rewardData={streakData}
+          rewardData={streakData && stats?.streak
+            ? {
+                ...streakData,
+                current_streak: stats.streak.current,
+                longest_streak: stats.streak.longest,
+              }
+            : streakData}
         />
 
         {/* Stats Info Modal */}

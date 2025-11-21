@@ -296,10 +296,18 @@ export class GamificationAPI {
       }
 
       if (!response.ok || data?.success === false) {
-        const msg =
+        const baseMsg =
           data?.message ||
           data?.error ||
           `Échec de l'échange de la récompense (HTTP ${response.status})`;
+
+        const extraDetails =
+          data && typeof data.details === 'string' && data.details.trim().length > 0
+            ? ` | Détails: ${data.details}`
+            : '';
+
+        const msg = `${baseMsg}${extraDetails}`;
+        console.error('[GamificationAPI.redeemReward] Server error:', msg, 'raw:', data);
         throw new Error(msg);
       }
 
