@@ -207,7 +207,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = activePage === item.id;
-                  
+
                   return (
                     <li key={item.id}>
                       <button
@@ -224,7 +224,7 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
                     </li>
                   );
                 })}
-                
+
                 {/* Logout on mobile */}
                 <li>
                   <button
@@ -243,40 +243,49 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-white/10 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-    {(() => {
-      const playerIds = ['dashboard', 'shop', 'my-session', 'rewards', 'profile'];
-      const adminIds = ['dashboard', 'invoice-scanner', 'sessions', 'shop', 'players'];
-      const ids = userType === 'admin' ? adminIds : playerIds;
-      const items = ids.map(id => navItems.find(i => i.id === id)).filter(Boolean);
-      return (
-        <nav className="grid grid-cols-5 gap-x-1">
-          {items.map((item) => {
-            const Icon = item.icon;
-            const isActive = activePage === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item)}
-                aria-label={item.label}
-                className={`flex flex-col items-center justify-center py-2 text-[10px] leading-tight ${
-                  isActive ? 'text-white' : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                <Icon className="w-4 h-4 mb-0.5" />
-                <span className="font-medium truncate max-w-[64px] px-0.5">{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      );
-    })()}
+      {/* Bottom Mobile Nav - scrollable */}
+      <div
+        className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-white/10 z-50"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        {(() => {
+          const playerIds = ['dashboard', 'shop', 'my-session', 'rewards', 'profile'];
+          const adminIds = ['dashboard', 'invoice-scanner', 'sessions', 'shop', 'players'];
+          const ids = userType === 'admin' ? adminIds : playerIds;
+          const items = ids
+            .map((id) => navItems.find((i) => i.id === id))
+            .filter(Boolean);
+
+          return (
+            <div className="overflow-x-auto">
+              <nav className="flex justify-between gap-x-1 px-1 min-w-max">
+                {items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activePage === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleNavClick(item)}
+                      aria-label={item.label}
+                      className={`flex flex-col items-center justify-center py-2 px-1 text-[10px] leading-tight flex-shrink-0 min-w-[70px] ${
+                        isActive ? 'text-white' : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 mb-0.5" />
+                      <span className="font-medium truncate max-w-[72px] px-0.5">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          );
+        })()}
       </div>
     </>
   );

@@ -129,6 +129,34 @@ export default function AdminRewardRedemptionsPage() {
     return map[type] || type || 'Récompense';
   };
 
+  const getHandlingLabel = (rr) => {
+    const type = rr.reward_type;
+    if (type === 'game_time' || type === 'game_package' || type === 'badge') {
+      return 'Traitement automatique déjà effectué côté système.';
+    }
+    if (type === 'discount') {
+      const perc = rr.discount_percentage;
+      const gameName = rr.discount_game_name;
+      if (perc && gameName) {
+        return `Réduction de ${perc}% sur "${gameName}" à appliquer manuellement lors d'un prochain achat.`;
+      }
+      if (perc) {
+        return `Réduction de ${perc}% à appliquer manuellement sur un prochain achat.`;
+      }
+      return "Réduction à appliquer manuellement sur un prochain achat.";
+    }
+    if (type === 'physical') {
+      return 'Cadeau physique à remettre au joueur en salle.';
+    }
+    if (type === 'digital') {
+      return 'Avantage numérique / code à communiquer ou activer pour le joueur.';
+    }
+    if (type === 'item' || type === 'other') {
+      return "Avantage spécial à gérer manuellement (voir description).";
+    }
+    return '';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Navigation userType="admin" currentPage="reward-redemptions" />
@@ -207,7 +235,9 @@ export default function AdminRewardRedemptionsPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                      {items.map((rr) => (
+                      {items.map((rr) => {
+                        const handling = getHandlingLabel(rr);
+                        return (
                         <tr key={rr.id} className="hover:bg-slate-800/60">
                           <td className="px-4 py-3 align-top text-gray-100">
                             <div className="font-semibold text-sm">{rr.user_username}</div>
@@ -220,6 +250,11 @@ export default function AdminRewardRedemptionsPage() {
                             {rr.reward_description && (
                               <div className="text-xs text-gray-400 line-clamp-2" title={rr.reward_description}>
                                 {rr.reward_description}
+                              </div>
+                            )}
+                            {handling && (
+                              <div className="text-[11px] text-cyan-300 mt-1">
+                                {handling}
                               </div>
                             )}
                           </td>
@@ -272,7 +307,8 @@ export default function AdminRewardRedemptionsPage() {
                             </div>
                           </td>
                         </tr>
-                      ))}
+                      );
+                      })}
                     </tbody>
                   </table>
                 </div>

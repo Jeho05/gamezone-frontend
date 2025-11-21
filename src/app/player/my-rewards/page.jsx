@@ -87,7 +87,15 @@ export default function MyRewardsPage() {
       return "Badge spécial sur votre profil (voir onglet Badges dans Gamification).";
     }
     if (type === 'discount') {
-      return "Réduction appliquée manuellement par l'équipe sur un prochain achat.";
+      const perc = item.discount_percentage;
+      const gameName = item.discount_game_name;
+      if (perc && gameName) {
+        return `Réduction de ${perc}% à faire appliquer par l'équipe sur votre prochain achat du jeu "${gameName}".`;
+      }
+      if (perc) {
+        return `Réduction de ${perc}% à faire appliquer manuellement par l'équipe sur un prochain achat.`;
+      }
+      return "Réduction à faire appliquer manuellement par l'équipe sur un prochain achat.";
     }
     if (type === 'physical') {
       return "Cadeau physique à récupérer en salle auprès de l'équipe.";

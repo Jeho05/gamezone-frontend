@@ -275,6 +275,8 @@ function RewardModal({ reward, games, badges, onSave, onClose }) {
     is_featured: reward?.is_featured || 0,
     display_order: reward?.display_order || 0,
     badge_id: reward?.badge_id || null,
+    discount_percentage: reward?.discount_percentage || '',
+    discount_game_id: reward?.discount_game_id || '',
   });
 
   useEffect(() => {
@@ -320,6 +322,18 @@ function RewardModal({ reward, games, badges, onSave, onClose }) {
       }
       if (formData.points_earned < 0) {
         toast.error('Les points gagnés doivent être positifs');
+        return;
+      }
+    }
+
+    if (formData.reward_type === 'discount') {
+      const perc = parseInt(formData.discount_percentage, 10);
+      if (!perc || perc <= 0 || perc > 100) {
+        toast.error('Veuillez saisir un pourcentage de réduction entre 1 et 100');
+        return;
+      }
+      if (!formData.discount_game_id) {
+        toast.error('Veuillez sélectionner le jeu sur lequel appliquer la réduction');
         return;
       }
     }

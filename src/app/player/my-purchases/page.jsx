@@ -531,10 +531,17 @@ export default function MyPurchases() {
 
                     <div className="text-center">
                       <div className="text-gray-400 text-sm mb-1">Prix</div>
-                      <div className="font-bold text-green-400 flex items-center justify-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        {purchase.price} XOF
-                      </div>
+                      {purchase.paid_with_points ? (
+                        <div className="font-bold text-yellow-400 flex items-center justify-center gap-1">
+                          <Star className="w-4 h-4 fill-current" />
+                          {purchase.points_spent} pts
+                        </div>
+                      ) : (
+                        <div className="font-bold text-green-400 flex items-center justify-center gap-1">
+                          <DollarSign className="w-4 h-4" />
+                          {purchase.price} XOF
+                        </div>
+                      )}
                     </div>
 
                     <div className="text-center">
