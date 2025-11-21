@@ -11,6 +11,7 @@ export default function RewardsManagementPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [rewards, setRewards] = useState([]);
   const [games, setGames] = useState([]);
+  const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingReward, setEditingReward] = useState(null);
@@ -52,6 +53,19 @@ export default function RewardsManagementPage() {
     }
   };
 
+  const fetchBadges = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/gamification/badges.php`, {
+        credentials: 'include',
+      });
+      const data = await response.json();
+      setBadges(data.badges || []);
+    } catch (err) {
+      console.error('Erreur chargement badges:', err);
+      toast.error('Impossible de charger les badges');
+    }
+  };
+
   const fetchRewards = async () => {
     try {
       const response = await fetch(`${API_BASE}/admin/rewards.php`, {
@@ -68,6 +82,7 @@ export default function RewardsManagementPage() {
 
   useEffect(() => {
     fetchGames();
+    fetchBadges();
     fetchRewards();
   }, []);
 
@@ -224,6 +239,7 @@ export default function RewardsManagementPage() {
           <RewardModal
             reward={editingReward}
             games={games}
+            badges={badges}
             onSave={saveReward}
             onClose={() => {
               setShowModal(false);
@@ -238,7 +254,7 @@ export default function RewardsManagementPage() {
   );
 }
 
-function RewardModal({ reward, games, onSave, onClose }) {
+function RewardModal({ reward, games, badges, onSave, onClose }) {
   const [formData, setFormData] = useState({
     id: reward?.id || 0,
     name: reward?.name || '',
@@ -258,7 +274,26 @@ function RewardModal({ reward, games, onSave, onClose }) {
     promotional_label: reward?.promotional_label || '',
     is_featured: reward?.is_featured || 0,
     display_order: reward?.display_order || 0,
+    badge_id: reward?.badge_id || null,
   });
+
+  useEffect(() => {
+    if (
+      formData.reward_type === 'badge' &&
+      !formData.badge_id &&
+      Array.isArray(badges) &&
+      badges.length > 0 &&
+      formData.name
+    ) {
+      const matched = badges.find((b) => b.name === formData.name);
+      if (matched) {
+        setFormData((prev) => ({
+          ...prev,
+          badge_id: matched.id,
+        }));
+      }
+    }
+  }, [formData.reward_type, formData.name, formData.badge_id, badges]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -268,6 +303,10 @@ function RewardModal({ reward, games, onSave, onClose }) {
     }
     if (formData.reward_type === 'game_time' && formData.game_time_minutes <= 0) {
       toast.error('Veuillez spécifier le nombre de minutes de jeu');
+      return;
+    }
+    if (formData.reward_type === 'badge' && !formData.badge_id) {
+      toast.error('Veuillez sélectionner un badge à attribuer');
       return;
     }
     if (formData.reward_type === 'game_package') {
@@ -400,7 +439,7 @@ function RewardModal({ reward, games, onSave, onClose }) {
               {formData.reward_type === 'badge' && (
                 <p>
                   🏆 <span className="font-semibold">Badge</span> : badge ou titre spécial pour récompenser la fidélité.
-                  Le nom de la récompense doit correspondre au <strong>nom du badge</strong> configuré : lors de l'échange, le backend attribue automatiquement ce badge au joueur, et crédite les éventuels points bonus du badge.
+                  Lors de l'échange, le backend attribue automatiquement le badge sélectionné au joueur et crédite les éventuels points bonus du badge.
                 </p>
               )}
               {formData.reward_type === 'other' && (
@@ -568,6 +607,45 @@ function RewardModal({ reward, games, onSave, onClose }) {
                   <span className="text-sm text-purple-300">⭐ Mettre en vedette</span>
                 </label>
               </div>
+            </div>
+          )}
+
+          {formData.reward_type === 'badge' && (
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded p-4 space-y-2">
+              <label className="block text-sm font-bold text-amber-300 mb-2">
+                Badge à attribuer *
+              </label>
+              <select
+                value={formData.badge_id || ''}
+                onChange={(e) => {
+                  const selectedId = e.target.value ? parseInt(e.target.value, 10) : null;
+                  const selectedBadge = Array.isArray(badges)
+                    ? badges.find((b) => b.id === selectedId)
+                    : null;
+                  setFormData((prev) => ({
+                    ...prev,
+                    badge_id: selectedId,
+                    // Aligner le nom de la récompense sur le nom du badge pour que le backend retrouve le bon badge
+                    name: selectedBadge ? selectedBadge.name : prev.name,
+                  }));
+                }}
+                className="w-full px-4 py-2 bg-gray-700 rounded border border-amber-500 text-white focus:border-amber-400 focus:outline-none"
+              >
+                <option value="">
+                  {Array.isArray(badges) && badges.length > 0
+                    ? '-- Choisir un badge --'
+                    : '⏳ Chargement des badges...'}
+                </option>
+                {Array.isArray(badges) &&
+                  badges.map((badge) => (
+                    <option key={badge.id} value={badge.id}>
+                      {badge.name}
+                    </option>
+                  ))}
+              </select>
+              <p className="text-xs text-amber-200 mt-1">
+                Le badge choisi sera attribué lorsque le joueur échange ses points pour cette récompense.
+              </p>
             </div>
           )}
 

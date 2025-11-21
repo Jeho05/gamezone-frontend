@@ -30,6 +30,7 @@ import AdminContent from './app/admin/content/page';
 import AdminLevels from './app/admin/levels/page';
 import AdminBonuses from './app/admin/bonuses/page';
 import AdminSessions from './app/admin/sessions/page';
+import AdminReservations from './app/admin/reservations/page';
 import AdminInvoiceScanner from './app/admin/invoice-scanner/page';
 import AdminRewardRedemptions from './app/admin/reward-redemptions/page';
 import LoginPage from './app/auth/login/page';
@@ -236,6 +237,10 @@ export default function FullApp() {
     {
       path: "/admin/sessions",
       element: <AdminSessions />,
+    },
+    {
+      path: "/admin/reservations",
+      element: <AdminReservations />,
     },
     {
       path: "/admin/invoice-scanner",
