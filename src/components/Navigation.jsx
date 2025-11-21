@@ -201,8 +201,8 @@ export default function Navigation({ userType = 'player', currentPage = '', onPa
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="fixed top-[73px] left-0 right-0 border-t border-white/10 bg-slate-900/98 z-50 max-h-[calc(100vh-73px)] overflow-y-auto sidebar-scroll">
-            <nav className="p-4">
+          <div className="fixed top-[73px] left-0 right-0 bottom-[64px] border-t border-white/10 bg-slate-900/98 z-50 overflow-y-auto sidebar-scroll">
+            <nav className="p-4 pb-6">
               <ul className="space-y-2">
                 {navItems.map((item) => {
                   const Icon = item.icon;
