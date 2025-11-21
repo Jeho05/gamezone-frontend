@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Navigation from '../../../components/Navigation';
 import API_BASE from '../../../utils/apiBase';

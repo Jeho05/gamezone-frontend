@@ -326,11 +326,33 @@ export class GamificationAPI {
       const url = `${API_BASE}/rewards/my_redemptions.php?page=${page}&limit=${limit}`;
       const response = await fetch(url, { credentials: 'include' });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const text = await response.text();
+      let data = {};
+
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        console.error('[GamificationAPI.getMyRewardRedemptions] JSON parse error:', parseError);
+        console.error('[GamificationAPI.getMyRewardRedemptions] Raw response:', text);
+        throw new Error(`Réponse invalide du serveur lors du chargement de vos récompenses (HTTP ${response.status})`);
       }
 
-      const data = await response.json();
+      if (!response.ok || data?.success === false) {
+        const baseMsg =
+          data?.message ||
+          data?.error ||
+          `Échec du chargement de vos récompenses (HTTP ${response.status})`;
+
+        const extraDetails =
+          data && typeof data.details === 'string' && data.details.trim().length > 0
+            ? ` | Détails: ${data.details}`
+            : '';
+
+        const msg = `${baseMsg}${extraDetails}`;
+        console.error('[GamificationAPI.getMyRewardRedemptions] Server error:', msg, 'raw:', data);
+        throw new Error(msg);
+      }
+
       return data;
     } catch (error) {
       console.error('[GamificationAPI.getMyRewardRedemptions] Error:', error);
